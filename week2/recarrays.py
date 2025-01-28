@@ -1,6 +1,8 @@
 from astropy.table import Table
 import matplotlib.pyplot as plt
 
+### TASK 1 (RED) ###
+
 # SD calling in fits file
 objs = Table.read("/d/scratch/ASTR5160/week2/struc.fits")
 
@@ -12,10 +14,14 @@ plt.show()
 
 
 
+### TASK 2 (RED) ###
+
 # SD printing first column of 'extinction' 5-array (100 rows, 5 columns)
 print(objs['EXTINCTION'][:,0])
 
 
+
+### TASK 3 (RED) ###
 
 # SD creating Boolean mask for extinction values > 0.22
 ext_mask = objs['EXTINCTION'][:,0] > 0.22
