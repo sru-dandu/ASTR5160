@@ -9,3 +9,6 @@ plt.scatter(objs['RA'], objs['DEC'], s=10, edgecolor='black')
 plt.xlabel(r'$\alpha$')
 plt.ylabel(r'$\delta$')
 plt.show()
+
+# SD printing first column of 'extinction' 5-array
+print(objs['EXTINCTION'][:,0])
