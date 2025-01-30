@@ -46,3 +46,10 @@ z = np.array(np.random.uniform(0, 1000, 100), dtype='int16')
 # SD combining the arrays to create an array of 3 rows and 100 columns
    # SD and then transposing (using .T) to get an array of 100 rows and 3 columns
 randomnum = np.vstack((x, y, z)).T
+
+# SD created a recarray as a table containing RA and DEC from struc.fits, and the newly created 3-array
+table = Table([objs['RA'], objs['DEC'], randomnum],
+	names=('RA', 'DEC', 'randomnum'))
+
+# SD saving table as .fits file
+table.write('recarrays-table.fits')
