@@ -1,6 +1,7 @@
-from astropy.coordinates import SkyCoord
+from astropy.coordinates import SkyCoord, EarthLocation
 from astropy.time import Time
 import numpy as np
+import astropy.units as u
 
 ### TASK 2 (RED) ###
 
@@ -55,3 +56,17 @@ MJD_array = np.arange(mjd_now-4, mjd_now+5, 1)
 print("---TASK 4---")
 print("Range of MJDs from 4 days before today to 4 days after today:")
 print(MJD_array)
+
+
+
+### TASK 5 (BLACK) ###
+
+# SD saved location of WIRO using EarthLocation
+WIRO_lon = '-105d58m33s'   # SD EarthLocation treats eastward as positive, hence westward longitudes need negative
+WIRO_lat = '41d5m49s'
+WIRO_alt = 2943 * u.m   # SD seems like u.m is not needed (answer is same regardless of its inclusion)
+WIRO_loc = EarthLocation(lat=WIRO_lat, lon=WIRO_lon, height=WIRO_alt)
+
+# SD printing EarthLocation for WIRO
+print("---TASK 5---")
+print(f"The geodetic location of WIRO is {WIRO_loc}")   # SD geodetic is for input of lon, lat, height (from EarthLocation documentation)
