@@ -1,4 +1,5 @@
 from astropy.coordinates import SkyCoord
+from astropy.time import Time
 
 ### TASK 2 (RED) ###
 
@@ -11,10 +12,11 @@ fomalhaut_dec = '-29d37m20s'
 fomalhaut_coords = SkyCoord(fomalhaut_ra, fomalhaut_dec)
 
 # SD printing the RA and DEC, in both their original units and in degrees
+print("---TASK 2---")
 print(f"Fomalhaut's declination is {fomalhaut_dec}, or {fomalhaut_coords.dec.deg} degrees.")
 print(f"Fomalhaut's right ascension is {fomalhaut_ra}, or {fomalhaut_coords.ra.deg} degrees.")
 
-# SD converting the coords to degrees using the equations from the notes
+# SD converting the original coords to degrees using the equations from the notes
 fomalhaut_ra_check = 15 * (22 + 57/60 + 39/3600)
 fomalhaut_dec_check = -1 * (29 + 37/60 + 20/3600)
 
@@ -22,3 +24,21 @@ fomalhaut_dec_check = -1 * (29 + 37/60 + 20/3600)
 print('CHECK:')
 print(f"Declination: SkyCoord = {fomalhaut_coords.dec.deg} ; Manual conversion = {fomalhaut_dec_check}.")
 print(f"Right Ascension: SkyCoord = {fomalhaut_coords.ra.deg} ; Manual conversion = {fomalhaut_ra_check}.")
+
+
+
+### TASK 3 (RED) ###
+
+# SD obtained today's JD and MJD
+jd_now = Time.now().jd
+mjd_now = Time.now().mjd
+
+# SD printed the JD and MJD
+print("---TASK 3---")
+print(f"Current time in JD = {jd_now}")
+print(f"Current time in MJD = {mjd_now}")
+
+# SD check that JD - MJD = 2400000.5 (from notes)
+print("CHECK:")
+print(f"From Time.now(): JD - MJD = {jd_now - mjd_now}")
+print("From notes: JD - MJD = 2400000.5")
