@@ -1,5 +1,6 @@
 from astropy.table import Table
 import matplotlib.pyplot as plt
+import numpy as np
 
 ### TASK 1 (RED) ###
 
@@ -31,3 +32,17 @@ plt.scatter(objs['RA'][ext_mask], objs['DEC'][ext_mask], s=10, edgecolor='black'
 plt.xlabel(r'$\alpha$')
 plt.ylabel(r'$\delta$')
 plt.show()
+
+
+
+### TASK 4 (BLACK) ###
+
+# SD creating three different sets of 100 random integers
+   # SD chose random ranges for the three arrays
+x = np.array(np.random.uniform(0, 100, 100), dtype='int16')
+y = np.array(np.random.uniform(0, 500, 100), dtype='int16')
+z = np.array(np.random.uniform(0, 1000, 100), dtype='int16')
+
+# SD combining the arrays to create an array of 3 rows and 100 columns
+   # SD and then transposing (using .T) to get an array of 100 rows and 3 columns
+randomnum = np.vstack((x, y, z)).T
