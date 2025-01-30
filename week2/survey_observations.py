@@ -1,5 +1,6 @@
 from astropy.coordinates import SkyCoord
 from astropy.time import Time
+import numpy as np
 
 ### TASK 2 (RED) ###
 
@@ -42,3 +43,15 @@ print(f"Current time in MJD = {mjd_now}")
 print("CHECK:")
 print(f"From Time.now(): JD - MJD = {jd_now - mjd_now}")
 print("From notes: JD - MJD = 2400000.5")
+
+
+
+### TASK 4 (RED) ###
+
+# SD finding MJDs 4 days before and after today's MJD
+MJD_array = np.arange(mjd_now-4, mjd_now+5, 1)
+
+# SD printing the MJDs
+print("---TASK 4---")
+print("Range of MJDs from 4 days before today to 4 days after today:")
+print(MJD_array)
