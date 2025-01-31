@@ -2,9 +2,7 @@ import numpy as np
 from scipy.optimize import curve_fit
 
 def task1(m, b):
-	
-	"""
-	Finds an array of y values, with error artificially added,
+	"""Finds an array of y values, with error artificially added,
 	using an array of randomly generated x values.
 	
 	PARAMETERS
@@ -16,12 +14,12 @@ def task1(m, b):
 	
 	RETURNS
 	-------
-	x : :class:`~numpy.ndarray`
+	:class:`~numpy.ndarray`
 		An array of 10 randomly generated float values between 1 and 10.
-	y : :class:`~numpy.ndarray`
+	:class:`~numpy.ndarray`
 		An array of 10 float values obtained using the equation 'y = mx + b'.
 		Noise is then artificially added (see NOTES).
-	y_err : :class:`~numpy.ndarray`
+	:class:`~numpy.ndarray`
 		An array of errors for the noise that was artificially added to 'y'.
 		Consists of the value '0.5' repeated 10 times.
 	
@@ -49,6 +47,31 @@ def task1(m, b):
 
 
 def task2(x, y, y_err):
+	"""Uses scipy.optimize.curve_fit() to fit a line to given data.
+	
+	PARAMETERS
+	----------
+	x : :class:`~numpy.ndarray`
+		An array of 10 random float values between 1 and 10.
+	y : :class:`~numpy.ndarray`
+		An array of 10 float values.
+		Linearly related to 'x', but has noise.
+	y_err : :class:`~numpy.ndarray`
+		An array of errors for the noise in 'y'.
+	
+	RETURNS
+	-------
+	:class:`float`
+		The slope of the fitted line.
+	:class:`float`
+		The y-intercept of the fitted line.
+	
+	NOTES
+	-----
+	- Usually, errors are not required when using 
+	  scipy.optimize.curve_fit(). However, this function requires it, 
+	  since it is asked to be used in the homework.
+	"""
 	
 	#SD defined the equation as a function to be used in curve_fit()
 	def eq(x, m, b):
