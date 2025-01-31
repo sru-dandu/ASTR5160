@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.optimize import curve_fit
 
 def task1(m, b):
 	
@@ -44,4 +45,21 @@ def task1(m, b):
 	y = np.random.normal(loc=y_original, scale=y_err)
 	
 	return x, y, y_err
+
+
+
+def task2(x, y, y_err):
+	
+	#SD defined the equation as a function to be used in curve_fit()
+	def eq(x, m, b):
+		return m*x + b
+	
+	#SD used curve_fit() on data
+	#SD optional error on y included
+	param, param_cov = curve_fit(eq, x, y, sigma=y_err)
+	
+	#SD extracting the params m and b from the results of cirve_fit()
+	m2, b2 = param
+	
+	return m2, b2
 
