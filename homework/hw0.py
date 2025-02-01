@@ -172,6 +172,28 @@ def task4(figure, name='hw0-plot.png'):
 
 
 def main(m, b):
+	"""Combines all the previous functions into one.
+	See headers of previous functions for details.
+	
+	PARAMETERS
+	----------
+	m : :class:`float` or `int`
+		The slope of the linear equation 'y = mx + b'.
+	b : :class:`float` or `int`
+		The y-intercept of the linear equation 'y = mx + b'.
+	
+	RETURNS
+	-------
+	`graphic file`
+		File containing figure, named 'hw0-plot.png'.
+	
+	NOTES
+	-----
+	- The function task4() has an optional argument for filenames. 
+	  However, with how main() is set up, a filename cannot be 
+	  given from the command line; therefore, the filename cannot 
+	  be changed from the default.
+	"""
 	
 	#SD calls task1()
 	x, y, y_err, y_original = task1(m, b)
@@ -191,6 +213,7 @@ def main(m, b):
 
 if __name__ == '__main__':
 	
+	#SD for user-generated inputs
 	while True:
 		#SD take inputs for m and b
 		m = input("Enter a slope: ")
