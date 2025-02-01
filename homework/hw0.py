@@ -23,6 +23,9 @@ def task1(m, b):
 	:class:`~numpy.ndarray`
 		An array of errors for the noise that was artificially added to 'y'.
 		Consists of the value '0.5' repeated 10 times.
+	:class:`~numpy.ndarray`
+		An array of the original values for 'y', 
+		before noise was artificially added.
 	
 	NOTES
 	-----
@@ -90,7 +93,35 @@ def task2(x, y, y_err):
 
 
 def task3(x, y, y_original, m2, b2):
+	"""Creates a figure with three plots:
+		- y vs x as scatter plot
+		- original y (without noise) vs x as line plot
+		- fitted y vs x as line plot
 	
+	PARAMETERS
+	----------
+	x : :class:`~numpy.ndarray`
+		An array of 10 random float values between 1 and 10.
+	y : :class:`~numpy.ndarray`
+		An array of 10 float values.
+		Linearly related to 'x', but has noise.
+	y_original : :class:`~numpy.ndarray`
+		An array of 10 float values. Linearly related to 'x'.
+	m2: :class:`float`
+		The slope of the line fitted to 'y' vs 'x'.
+	b2 : :class:`float`
+		The y-intercept of the line fitted to 'y' vs 'x'.
+	
+	RETURNS
+	-------
+	:class:`matplotlib.figure.Figure`
+		Figure consisting of the three plots.
+	
+	NOTES
+	-----
+	- 'y' is just 'y_original' with artificially added noise
+	  (see prior function task1())
+	"""
 	#SD solving for y values of fitted line
 	y2 = m2*x + b2
 	
@@ -109,6 +140,27 @@ def task3(x, y, y_original, m2, b2):
 
 
 def task4(figure, name='hw0-plot.png'):
-
+	"""Saves a figure to file.
+	
+	PARAMETERS
+	----------
+	figure : :class:`matplotlib.figure.Figure`
+		Figure consisting of the three plots.
+	name : :class:`str`, optional, defaults to 'hw0-plot.png'
+		Name that the file should be saved under.
+		
+	
+	RETURNS
+	-------
+	file
+		File containing figure. Defaults to .png, 
+		but can be changed by passing the optional parameter 'name'.
+	
+	NOTES
+	-----
+	- All the default parameters of matplotlib.pyplot.savefig() 
+	  are in effect. Only filename can be specified.
+	"""
+	
 	return figure.savefig(name)
 
