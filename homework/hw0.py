@@ -92,7 +92,7 @@ def task2(x, y, y_err):
 
 
 
-def task3(x, y, y_original, m2, b2):
+def task3(x, y, y_err, y_original, m2, b2):
 	"""Creates a figure with three plots:
 		- y vs x as scatter plot
 		- original y (without noise) vs x as line plot
@@ -105,6 +105,8 @@ def task3(x, y, y_original, m2, b2):
 	y : :class:`~numpy.ndarray`
 		An array of 10 float values.
 		Linearly related to 'x', but has noise.
+	y_err: :class:`~numpy.ndarray`
+		An array of errors for the noise in 'y'.
 	y_original : :class:`~numpy.ndarray`
 		An array of 10 float values. Linearly related to 'x'.
 	m2: :class:`float`
@@ -125,11 +127,11 @@ def task3(x, y, y_original, m2, b2):
 	#SD solving for y values of fitted line
 	y2 = m2*x + b2
 	
-	#SD plotting y w/ noise vs x
-	plt.scatter(x, y, c='black', label='data')
-	#SD plotting original y vs x
+	#SD plotting y w/ noise vs x as scatterplot, with errorbars on y
+	plt.errorbar(x, y, yerr=y_err, fmt='o', c='black', label='data')
+	#SD plotting original y vs x as line
 	plt.plot(x, y_original, label='original line')
-	#SD plotting fitted y vs x
+	#SD plotting fitted y vs x as line
 	plt.plot(x, y2, label='fitted line')
 	
 	plt.legend()
@@ -149,7 +151,6 @@ def task4(figure, name='hw0-plot.png'):
 	name : :class:`str`, optional, defaults to 'hw0-plot.png'
 		Name that the file should be saved under.
 		
-	
 	RETURNS
 	-------
 	file
