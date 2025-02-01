@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.optimize import curve_fit
+import matplotlib.pyplot as plt
 
 def task1(m, b):
 	"""Finds an array of y values, with error artificially added,
@@ -42,7 +43,7 @@ def task1(m, b):
 	#SD creating noise in y
 	y = np.random.normal(loc=y_original, scale=y_err)
 	
-	return x, y, y_err
+	return x, y, y_err, y_original
 
 
 
@@ -85,4 +86,29 @@ def task2(x, y, y_err):
 	m2, b2 = param
 	
 	return m2, b2
+
+
+
+def task3(x, y, y_original, m2, b2):
+	
+	#SD solving for y values of fitted line
+	y2 = m2*x + b2
+	
+	#SD plotting y w/ noise vs x
+	plt.scatter(x, y, c='black', label='data')
+	#SD plotting original y vs x
+	plt.plot(x, y_original, label='original line')
+	#SD plotting fitted y vs x
+	plt.plot(x, y2, label='fitted line')
+	
+	plt.legend()
+	
+	#SD get current figure
+	return plt.gcf()
+
+
+
+def task4(figure, name='hw0-plot.png'):
+
+	return figure.savefig(name)
 
