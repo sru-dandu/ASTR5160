@@ -137,7 +137,11 @@ def task3(x, y, y_err, y_original, m2, b2):
 	plt.legend()
 	
 	#SD get current figure
-	return plt.gcf()
+	figure = plt.gcf()
+	
+	plt.show()
+	
+	return figure
 
 
 
@@ -153,7 +157,7 @@ def task4(figure, name='hw0-plot.png'):
 		
 	RETURNS
 	-------
-	file
+	`graphic file`
 		File containing figure. Defaults to .png, 
 		but can be changed by passing the optional parameter 'name'.
 	
@@ -165,3 +169,43 @@ def task4(figure, name='hw0-plot.png'):
 	
 	return figure.savefig(name)
 
+
+
+def main(m, b):
+	
+	#SD calls task1()
+	x, y, y_err, y_original = task1(m, b)
+	
+	#SD calls task2()
+	m2, b2 = task2(x, y, y_err)
+	
+	#SD calls task3()
+	fig = task3(x, y, y_err, y_original, m2, b2)
+	
+	#SD calls task4()
+	task4(fig)
+	
+	return
+
+
+
+if __name__ == '__main__':
+	
+	while True:
+		#SD take inputs for m and b
+		m = input("Enter a slope: ")
+		b = input("Enter a y-intercept: ")
+		
+		#SD inputs were saved as str, so convert to float
+		#SD print error statement if input is not float or int
+		try:
+			m, b = float(m), float(b)
+		except:
+			print("Error: input should be of type float or int. Please try again.")
+		
+		#SD if m and b are both floats, then execute rest of code
+		if type(m) is float and type(b) is float:
+			break
+	
+	#SD call main function
+	main(m, b)
