@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
+import argparse
 
 def task1(m, b):
 	"""Finds an array of y values, with error artificially added,
@@ -213,22 +214,15 @@ def main(m, b):
 
 if __name__ == '__main__':
 	
-	#SD for user-generated inputs
-	while True:
-		#SD take inputs for m and b
-		m = input("Enter a slope: ")
-		b = input("Enter a y-intercept: ")
-		
-		#SD inputs were saved as str, so convert to float
-		#SD print error statement if input is not float or int
-		try:
-			m, b = float(m), float(b)
-		except:
-			print("Error: input should be of type float or int. Please try again.")
-		
-		#SD if m and b are both floats, then execute rest of code
-		if type(m) is float and type(b) is float:
-			break
+	#SD description when passing -h
+	parser = argparse.ArgumentParser(description="Takes inputs of slope 'm' and y-intercept 'b'. Creates 10 random values between 1 and 10 for x values, and generates y values using linear equation 'y = mx + b'. Adds noise to y using a Gaussian centered at original y values with standard deviation of 0.5, and randomly pulling offset values. Fits a line to the data that has noise to get new fitted y values. Plots y w/ noise vs x as a scatter plot, with both original y vs x and fitted y vs x as lines, and saves figure as 'hw0-plot.png'.")
+	
+	#SD args that have to be passed
+	parser.add_argument("m", type=float,
+			help="['int' or 'float'] slope of linear equation 'y = mx + b'")
+	parser.add_argument("b", type=float,
+			help="['int' or 'float'] y-intercept of linear equation 'y = mx + b'")
+	args = parser.parse_args()
 	
 	#SD call main function
-	main(m, b)
+	main(args.m, args.b)
