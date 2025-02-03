@@ -10,16 +10,16 @@ def task1(m, b):
 	PARAMETERS
 	----------
 	m : :class:`float` or `int`
-		The slope of the linear equation 'y = mx + b'.
+		The slope of the linear equation 'y = m*x + b'.
 	b : :class:`float` or `int`
-		The y-intercept of the linear equation 'y = mx + b'.
+		The y-intercept of the linear equation 'y = m*x + b'.
 	
 	RETURNS
 	-------
 	:class:`~numpy.ndarray`
 		An array of 10 randomly generated float values between 1 and 10.
 	:class:`~numpy.ndarray`
-		An array of 10 float values obtained using the equation 'y = mx + b'.
+		An array of 10 float values obtained using the equation 'y = m*x + b'.
 		Noise is then artificially added (see NOTES).
 	:class:`~numpy.ndarray`
 		An array of errors for the noise that was artificially added to 'y'.
@@ -37,7 +37,7 @@ def task1(m, b):
 	#SD generating array of 10 random float values between 0 and 10
 	x = np.random.uniform(0, 10, 10)
 	
-	#SD finding y using y = mx + b
+	#SD finding y using y = m*x + b
 	y_original = m*x + b
 	
 	#SD standard deviation used to create the noise in y
@@ -179,9 +179,9 @@ def main(m, b):
 	PARAMETERS
 	----------
 	m : :class:`float` or `int`
-		The slope of the linear equation 'y = mx + b'.
+		The slope of the linear equation 'y = m*x + b'.
 	b : :class:`float` or `int`
-		The y-intercept of the linear equation 'y = mx + b'.
+		The y-intercept of the linear equation 'y = m*x + b'.
 	
 	RETURNS
 	-------
@@ -215,13 +215,13 @@ def main(m, b):
 if __name__ == '__main__':
 	
 	#SD description when passing -h
-	parser = argparse.ArgumentParser(description="Takes inputs of slope 'm' and y-intercept 'b'. Creates 10 random values between 1 and 10 for x values, and generates y values using linear equation 'y = mx + b'. Adds noise to y using a Gaussian centered at original y values with standard deviation of 0.5, and randomly pulling offset values. Fits a line to the data that has noise to get new fitted y values. Plots y w/ noise vs x as a scatter plot, with both original y vs x and fitted y vs x as lines, and saves figure as 'hw0-plot.png'.")
+	parser = argparse.ArgumentParser(description="Takes inputs of slope 'm' and y-intercept 'b'. Creates 10 random values between 1 and 10 for x values, and generates y values using linear equation 'y = m*x + b'. Adds noise to y using a Gaussian centered at original y values with standard deviation of 0.5, and randomly pulling offset values. Fits a line to the data that has noise to get new fitted y values. Plots y w/ noise vs x as a scatter plot, with both original y vs x and fitted y vs x as lines, and saves figure as 'hw0-plot.png'.")
 	
 	#SD args that have to be passed
 	parser.add_argument("m", type=float,
-			help="['int' or 'float'] slope of linear equation 'y = mx + b'")
+			help="['int' or 'float'] slope of linear equation 'y = m*x + b'")
 	parser.add_argument("b", type=float,
-			help="['int' or 'float'] y-intercept of linear equation 'y = mx + b'")
+			help="['int' or 'float'] y-intercept of linear equation 'y = m*x + b'")
 	args = parser.parse_args()
 	
 	#SD call main function
