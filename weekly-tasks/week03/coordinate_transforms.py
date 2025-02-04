@@ -20,8 +20,9 @@ fomalhaut_dec = fomalhaut_coords.dec.rad
 fomalhaut_coords.representation_type = "cartesian"
 
 #SD printing the RA and DEC values, in radians
-print("TASK 1")
-print("------")
+print("--------------")
+print("### TASK 1 ###")
+print("--------------")
 print(f"The right ascension of Fomalhaut is {fomalhaut_ra} radians")
 print(f"The declination of Fomalhaut is {fomalhaut_dec} radians")
 
@@ -45,6 +46,8 @@ print("CHECK:")
 print("Check that converting to cartesian with astropy gives same result as manually converting:")
 print(table)
 
+print()
+
 
 
 ### TASK 2 (RED) ###
@@ -56,11 +59,14 @@ gal_coords = SkyCoord(0*u.deg, 0*u.deg, frame='galactic')
 #SD want RA in hms so that I can use constellation chart later
 gal_coords_radec = gal_coords.icrs.to_string('hmsdms')
 
-print("TASK 2")
-print("------")
+print("--------------")
+print("### TASK 2 ###")
+print("--------------")
 print(f"The (RA, DEC) of the Galactic center is ({gal_coords_radec})")
 
 #SD find constellation corresponding to galactic center
 constellation = get_constellation(gal_coords)
 print(f"The Galactic center is in the constellation {constellation}.")
 print("Using the constellation chart, I concluded that the Galactic center is near the edge of the constellation.")
+
+print()
