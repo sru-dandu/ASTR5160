@@ -40,6 +40,8 @@ z_values = np.array([fomalhaut_coords.z, fomalhaut_z])
 table = Table([names, x_values, y_values, z_values],
 		names=[' ', 'x', 'y', 'z'])
 
+print("CHECK:")
+print("Check that converting to cartesian with astropy gives same result as manually converting:")
 print(table)
 
 
