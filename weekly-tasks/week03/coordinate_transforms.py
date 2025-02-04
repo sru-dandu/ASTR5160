@@ -104,3 +104,40 @@ print("--------------")
 print("See plot")
 print()
 
+
+
+### TASK 4 (BLACK)###
+
+#SD save RA and DEC values for sun, moon, and planets (and pluto)
+#SD obtained from links on Canvas page
+ss_ra =	['21h10m25s', '1h42m2s', '20h57m3.2s', '23h54m11.7s', '7h26m1.0s', '4h37m41.3s', '23h16m42.5s', '3h22m20.2s', '23h53m37.0s', '20h19m25.8s']
+ss_dec = ['-16d17m35s', '13d3m42s', '-19d23m58s', '1d59m19s', '26d13m2s', '21d36m10s', '-6d44m29s', '18d15m58s', '-2d4m28s', '-22d59m15s']
+
+#SD also need distances to find ecliptic coords
+dist = np.array([0.9858111 , 1, 1.410, 0.501, 0.698, 4.587, 10.439, 19.390, 30.612, 36.151]) * u.AU
+
+#SD use RAs, DECs, and distacnes to find ecliptic coords
+ss_coords= SkyCoord(ss_ra, ss_dec, distance=dist).heliocentrictrueecliptic
+
+#SD extract longitudes and latitudes from ecliptic coords
+ss_lon = ss_coords.lon.degree
+ss_lat = ss_coords.lat.degree
+
+#SD plot ecliptic coords
+colors = ['black', 'gray', 'sandybrown', 'darkkhaki', 'firebrick', 'orange', 'gold', 'darkturquoise', 'steelblue', 'tan']
+plt.scatter(ss_lon, ss_lat, c=colors)
+plt.xlabel("latitude")
+plt.ylabel("longitude")
+
+#SD label each point with object name
+names = ['Sun', 'Moon', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto']
+for idx in range(len(names)):
+	plt.annotate(names[idx], (ss_lon[idx]+5, ss_lat[idx]+0.1))
+
+plt.show()
+
+print("--------------")
+print("### TASK 4 ###")
+print("--------------")
+print("See plot")
+print()
