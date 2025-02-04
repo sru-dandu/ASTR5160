@@ -1,9 +1,10 @@
 from astropy.coordinates import SkyCoord
 import numpy as np
+from astropy.table import Table
 
 
 
-### TASK 1 (RED)
+### TASK 1 (RED) ###
 
 #SD saving RA and DEC of Fomalhaut using SkyCoord
 #SD coords obtained from Google
@@ -29,9 +30,16 @@ fomalhaut_x = np.cos(fomalhaut_ra) * np.cos(fomalhaut_dec)
 fomalhaut_y = np.sin(fomalhaut_ra) * np.cos(fomalhaut_dec)
 fomalhaut_z = np.sin(fomalhaut_dec)
 
-#SD printing the cartesian coords obtained through both methods
-print("Converting the RA and DEC into cartesian coordinates gives:")
-print( "        |          x         |          y           |            z   ")
-print(f"astropy | {fomalhaut_coords.x} | {fomalhaut_coords.y} | {fomalhaut_coords.z}")
-print(f" manual | {fomalhaut_x} | {fomalhaut_y} | {fomalhaut_z}")
+#SD creating columns to make a table below
+names = ['astropy', 'manual']
+x_values = np.array([fomalhaut_coords.x, fomalhaut_x])
+y_values = np.array([fomalhaut_coords.y, fomalhaut_y])
+z_values = np.array([fomalhaut_coords.z, fomalhaut_z])
+
+#SD creating table for manual and astropy conversions of cartesian coords
+table = Table([names, x_values, y_values, z_values],
+		names=[' ', 'x', 'y', 'z'])
+
+print(table)
+
 
