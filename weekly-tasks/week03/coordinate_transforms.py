@@ -98,3 +98,9 @@ plt.xlabel("l")
 plt.ylabel("b")
 plt.show()
 
+print("--------------")
+print("### TASK 3 ###")
+print("--------------")
+print("See plot")
+print()
+
