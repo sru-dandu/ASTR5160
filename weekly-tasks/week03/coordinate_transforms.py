@@ -1,6 +1,7 @@
-from astropy.coordinates import SkyCoord
+from astropy.coordinates import SkyCoord, get_constellation
 import numpy as np
 from astropy.table import Table
+from astropy import units as u
 
 
 
@@ -45,3 +46,21 @@ print("Check that converting to cartesian with astropy gives same result as manu
 print(table)
 
 
+
+### TASK 2 (RED) ###
+
+#SD save l and b of galactic center
+gal_coords = SkyCoord(0*u.deg, 0*u.deg, frame='galactic')
+
+#SD convert galactic coordinates to RA and DEC
+#SD want RA in hms so that I can use constellation chart later
+gal_coords_radec = gal_coords.icrs.to_string('hmsdms')
+
+print("TASK 2")
+print("------")
+print(f"The (RA, DEC) of the Galactic center is ({gal_coords_radec})")
+
+#SD find constellation corresponding to galactic center
+constellation = get_constellation(gal_coords)
+print(f"The Galactic center is in the constellation {constellation}.")
+print("Using the constellation chart, I concluded that the Galactic center is near the edge of the constellation.")
