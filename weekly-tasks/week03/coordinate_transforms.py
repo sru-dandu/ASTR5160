@@ -2,6 +2,7 @@ from astropy.coordinates import SkyCoord, get_constellation
 import numpy as np
 from astropy.table import Table
 from astropy import units as u
+import matplotlib.pyplot as plt
 
 
 
@@ -70,3 +71,30 @@ print(f"The Galactic center is in the constellation {constellation}.")
 print("Using the constellation chart, I concluded that the Galactic center is near the edge of the constellation.")
 
 print()
+
+
+
+### TASK 3 (RED) ###
+
+#SD generate RA values from 0 to 24
+laramie_ra = np.arange(0, 24, 0.01) * u.h
+
+#SD declination of Laramie
+laramie_dec = 40 * u.deg
+
+#SD save RA and DEC as SkyCoord variable
+laramie_coords = SkyCoord(laramie_ra, laramie_dec)
+
+#SD convert RA and DEC coords to Galactic frame
+laramie_coords_gal = laramie_coords.galactic
+
+#SD extract l and b values from Galactic coords
+laramie_coords_l = laramie_coords_gal.l.degree
+laramie_coords_b = laramie_coords_gal.b.degree
+
+#SD plotting b in terms of l
+plt.plot(laramie_coords_l, laramie_coords_b)
+plt.xlabel("l")
+plt.ylabel("b")
+plt.show()
+
