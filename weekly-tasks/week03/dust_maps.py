@@ -94,7 +94,7 @@ ra2_grid, dec2_grid = np.meshgrid(ra2, dec2)
 
 
 
-### TASK 3 (BLACK) ###
+### TASKS 3 & 4 (BLACK) ###
 
 #SD make SkyCoord items using meshgrid results
 grid1 = SkyCoord(ra1_grid, dec1_grid, unit=u.deg)
@@ -107,10 +107,18 @@ grid2_reddening = sfd(grid2)
 #SD plot colormap of reddening at coordinates in grid1
 plt.contourf(ra1, dec1, grid1_reddening)
 plt.colorbar()
+plt.scatter(236.562, 2.440, c='red', label='quasar')
+plt.xlabel(r'$\alpha$')
+plt.ylabel(r'$\delta$')
+plt.legend()
 plt.show()
 
 #SD plot colormap of reddening at coordinates in grid2
 plt.contourf(ra2, dec2, grid2_reddening)
 plt.colorbar()
+plt.scatter(246.933, 40.795, c='red', label='quasar')
+plt.xlabel(r'$\alpha$')
+plt.ylabel(r'$\delta$')
+plt.legend()
 plt.show()
 
