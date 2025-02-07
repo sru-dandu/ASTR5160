@@ -73,3 +73,22 @@ plt.show()
 
 #SD The colors agree better after correcting for extinction.
 
+
+
+### TASK 2 (RED) ###
+
+#SD create 100x100 grid centered around (236.6 deg, 2.4 deg) with 0.1 deg bins in RA and DEC
+#SD 100 steps of 0.1 deg is 10 steps of 1 deg
+#SD Therefore go 5 below and 5 above of RA and DEC for lower and upper bounds
+ra1 = np.linspace(236.6-5, 236.6+5, 100)
+dec1 = np.linspace(2.4-5, 2.4+5, 100)
+ra1_grid, dec1_grid = np.meshgrid(ra1, dec1)
+
+#SD create 100x100 grid centered around (246.9 deg, 40.8 deg) with 0.13 deg bins in RA and 0.1 deg bins in DEC
+#SD 100 steps of 0.13 deg is 13 steps of 1 deg
+#SD Therefore go 6.5 below and 6.5 above of RA value for lower and upper bounds
+#SD for DEC do same thing as before
+ra2 = np.linspace(246.9-6.5, 246.9+6.5, 100)
+dec2 = np.linspace(40.8-5, 40.8+5, 100)
+ra2_grid, dec2_grid = np.meshgrid(ra2, dec2)
+
