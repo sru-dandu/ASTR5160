@@ -60,8 +60,10 @@ obj2_r_minus_i_corrected = obj2_mags_corrected[2] - obj2_mags_corrected[3]
 obj2_g_minus_r_corrected = obj2_mags_corrected[1] - obj2_mags_corrected[2]
 
 #SD plot original and corrected g-r vs r-i
+#SD original colors
 plt.scatter(obj1_r_minus_i, obj1_g_minus_r, c='blue', label='object 1')
 plt.scatter(obj2_r_minus_i, obj2_g_minus_r, c='red', label='object 2')
+#SD corrected colors
 plt.scatter(obj1_r_minus_i_corrected, obj1_g_minus_r_corrected, c='blue', marker='x', label='object 1 (corrected for extinction)')
 plt.scatter(obj2_r_minus_i_corrected, obj2_g_minus_r_corrected, c='red', marker='x', label='object 2 (corrected for extinction)')
 plt.xlabel('r - i')
@@ -70,3 +72,4 @@ plt.legend()
 plt.show()
 
 #SD The colors agree better after correcting for extinction.
+
