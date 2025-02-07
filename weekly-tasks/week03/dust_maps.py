@@ -92,3 +92,25 @@ ra2 = np.linspace(246.9-6.5, 246.9+6.5, 100)
 dec2 = np.linspace(40.8-5, 40.8+5, 100)
 ra2_grid, dec2_grid = np.meshgrid(ra2, dec2)
 
+
+
+### TASK 3 (BLACK) ###
+
+#SD make SkyCoord items using meshgrid results
+grid1 = SkyCoord(ra1_grid, dec1_grid, unit=u.deg)
+grid2 = SkyCoord(ra2_grid, dec2_grid, unit=u.deg)
+
+#SD find reddening for coords1 and coords2
+grid1_reddening = sfd(grid1)
+grid2_reddening = sfd(grid2)
+
+#SD plot colormap of reddening at coordinates in grid1
+plt.contourf(ra1, dec1, grid1_reddening)
+plt.colorbar()
+plt.show()
+
+#SD plot colormap of reddening at coordinates in grid2
+plt.contourf(ra2, dec2, grid2_reddening)
+plt.colorbar()
+plt.show()
+
