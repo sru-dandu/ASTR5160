@@ -135,6 +135,8 @@ def task3(x, y, y_err, y_original, m2, b2):
 	#SD plotting fitted y vs x as line
 	plt.plot(x, y2, label='fitted line')
 	
+	plt.xlabel('x')
+	plt.ylabel('y')
 	plt.legend()
 	
 	#SD get current figure
