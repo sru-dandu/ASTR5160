@@ -167,3 +167,20 @@ def plot_func2(ra, dec, plate_coord=None, plate_r=None):
 #SD plot DECs va RAs
 plot_func2(ra_tot, dec_tot, plate_coord=None, plate_r=None)
 
+print("TASK 4:")
+print("See plot")
+
+
+
+### TASK 5 (BLACK) ###
+
+#SD save radius and coordinates of plate
+plate_radius = 1.8 * u.radian
+plate_coords = SkyCoord('2h20m5s', '-0d6m12s')
+
+#SD extract RA (in hours) and DEC (in deg) of plate
+plate_ra = plate_coords.ra.hour
+plate_dec = plate_coords.dec.deg
+
+
+
