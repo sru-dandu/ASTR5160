@@ -107,6 +107,9 @@ def plot_func(c1, c2, sep=None):
 #SD use defined function to create plot
 plot_func(coord_array1, coord_array2)
 
+print("TASK 2:")
+print("See plot")
+
 
 
 ### TASK 3 (RED) ###
@@ -114,3 +117,6 @@ plot_func(coord_array1, coord_array2)
 #SD using defined function again
 #SD but this time specifying separation of 10 arcmin
 plot_func(coord_array1, coord_array2, sep=10*u.arcmin)
+
+print("TASK 3:")
+print("See plot")
