@@ -51,29 +51,66 @@ ra_array2 = (np.random.random(100) + 2) * u.hour
 dec_array1 = (4*np.random.random(100) - 2) * u.deg
 dec_array2 = (4*np.random.random(100) - 2) * u.deg
 
-#SD plotting dec vs ra for both sets
-plt.scatter(ra_array1, dec_array1, marker='o', c='steelblue', label='set 1')
-plt.scatter(ra_array2, dec_array2, marker='x', c='maroon', label='set 2')
-plt.xlabel("ra [hours]")
-plt.ylabel("dec [degrees]")
-plt.legend()
-plt.show()
+#SD save ra and dec values into SkyCoord objects
+coord_array1 = SkyCoord(ra_array1, dec_array1)
+coord_array2 = SkyCoord(ra_array2, dec_array2)
+
+#SD creating defined function for plotting
+#SD in order to specify whether or not to highlight short separations
+def plot_func(c1, c2, sep=None):
+	"""Plots two sets of coordinates in a scatterplot.
+	
+	PARAMETERS
+	----------
+	c1 : :class:`astropy.coordinates.sky_coordinate.SkyCoord`
+		SkyCoord object containing coordinates in (ra, dec)
+	c2 : :class:`astropy.coordinates.sky_coordinate.SkyCoord`
+		SkyCoord object containing coordinates in (ra, dec)
+	sep : :class:`astropy.units.quantity.Quantity`, optional, defaults to None
+		If given, also plots points that have the given separation value
+	
+	RETURNS
+	-------
+	matplotlib popup window
+	"""
+	
+	#SD extract ra and dec from given coordinates
+	ra1 = c1.ra.hour
+	dec1 = c1.dec.deg
+	ra2 = c2.ra.hour
+	dec2 = c2.dec.deg
+	
+	#SD find coordinates that have the specified separation angle or less
+	if sep is not None:
+		id1, id2, d2, d3 = c2.search_around_sky(c1, sep)
+		ra1_close = ra1[id1]
+		dec1_close = dec1[id1]
+		ra2_close = ra2[id2]
+		dec2_close = dec2[id2]
+	
+	#SD plotting dec vs ra for both sets of coordinates
+	plt.scatter(ra1, dec1, marker='o', c='steelblue', label='set 1')
+	plt.scatter(ra2, dec2, marker='x', c='maroon', label='set 2')
+
+	#SD plotting the points with specified separation angle or less
+	if sep is not None:
+		plt.scatter(ra1_close, dec1_close, marker='o', c='gold', label="set 1, with 10' separation from set 2")
+		plt.scatter(ra2_close, dec2_close, marker='x', c='gold', label="set 2, with 10' separation from set 1")
+	
+	plt.xlabel("ra [hours]")
+	plt.ylabel("dec [degrees]")
+	plt.legend()
+	plt.show()
+	
+	return
+	
+#SD use defined function to create plot
+plot_func(coord_array1, coord_array2)
 
 
 
 ### TASK 3 (RED) ###
 
-#SD save ra and dec values from Task 2 into SkyCoord objects
-coord_array1 = SkyCoord(ra_array1, dec_array1)
-coord_array2 = SkyCoord(ra_array2, dec_array2)
-
-#SD find coordinates within 10 arcmin of each other
-id1, id2, d2, d3 = coord_array2.search_around_sky(coord_array1, 10*u.arcmin)
-
-#SD extract ra and dec values of those 10-arcmin-separation coordinates
-#SD and make sure ra is in hours and dec is in deg
-ra_array1_close = coord_array1[id1].ra.hour
-dec_array1_close = coord_array1[id1].dec.deg
-ra_array2_close = coord_array2[id2].ra.hour
-dec_array2_close = coord_array2[id2].dec.deg
-
+#SD using defined function again
+#SD but this time specifying separation of 10 arcmin
+plot_func(coord_array1, coord_array2, sep=10*u.arcmin)
