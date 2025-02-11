@@ -58,7 +58,7 @@ ra_task3 = np.arange(0.5, 359.5, 1)
 dec_task3 = np.arange(-89.5, 89.5, 1)
 ra_grid, dec_grid = np.meshgrid(ra_task3, dec_task3)
 
-#SD saving grid as SkyCoord obect
+#SD saving grid as SkyCoord object
 grid = SkyCoord(ra_grid, dec_grid, unit=u.deg)
 
 #SD configure dustmaps
@@ -77,20 +77,30 @@ w.wcs.ctype = ["RA---AIT", "DEC--AIT"]
 x_grid, y_grid = w.wcs_world2pix(ra_grid, dec_grid, 1)
 
 #SD plotting both coordinate systems
-fig = plt.figure(figsize=(16,20))
+fig = plt.figure(figsize=(8,20))
 
 #SD subplot with aitoff projection
-ax1 = fig.add_subplot(121, projection='aitoff')
+ax1 = fig.add_subplot(211, projection='aitoff')
 ax1.scatter(ra_grid, dec_grid, c='gray', alpha=0.5, s=2)
 ax1.grid(color='blue', linestyle='dashed', linewidth=2)
 ax1.set_xlabel("ra [deg]", weight=800)
 ax1.set_ylabel("dec [deg]", weight=800)
 
 #SD subplot with lambert projection
-ax2 = fig.add_subplot(122, projection='aitoff')
+ax2 = fig.add_subplot(212, projection='aitoff')
 ax2.scatter(ra, dec, c='gray', alpha=0.5, s=2)
 ax2.grid(color='blue', linestyle='dashed', linewidth=2)
-ax2.set_xlabel("x", weight=800)
-ax2.set_ylabel("y", weight=800)
+ax2.set_xlabel("x [pix]", weight=800)
+ax2.set_ylabel("y [pix]", weight=800)
 
+plt.show()
+
+
+#SD plot contour in Cartesian coordinates in Aitoff projection
+fig = plt.figure(figsize=(10,8))
+ax = fig.add_subplot(111, projection='aitoff')
+cont = ax.contourf(x_grid, y_grid, grid_reddening, levels=100)
+fig.colorbar(cont)
+ax.set_xlabel('x [pix]', weight=800)
+ax.set_ylabel('y [pix]', weight=800)
 plt.show()
