@@ -94,8 +94,10 @@ def plot_func(c1, c2, sep=None):
 
 	#SD plotting the points with specified separation angle or less
 	if sep is not None:
-		plt.scatter(ra1_close, dec1_close, marker='o', c='gold', label="set 1, with 10' separation from set 2")
-		plt.scatter(ra2_close, dec2_close, marker='x', c='gold', label="set 2, with 10' separation from set 1")
+		plt.scatter(ra1_close, dec1_close, marker='o', c='gold',
+			label="set 1, with 10' separation from set 2")
+		plt.scatter(ra2_close, dec2_close, marker='x', c='gold',
+			label="set 2, with 10' separation from set 1")
 	
 	plt.xlabel("ra [hours]")
 	plt.ylabel("dec [degrees]")
