@@ -58,3 +58,22 @@ plt.xlabel("ra [hours]")
 plt.ylabel("dec [degrees]")
 plt.legend()
 plt.show()
+
+
+
+### TASK 3 (RED) ###
+
+#SD save ra and dec values from Task 2 into SkyCoord objects
+coord_array1 = SkyCoord(ra_array1, dec_array1)
+coord_array2 = SkyCoord(ra_array2, dec_array2)
+
+#SD find coordinates within 10 arcmin of each other
+id1, id2, d2, d3 = coord_array2.search_around_sky(coord_array1, 10*u.arcmin)
+
+#SD extract ra and dec values of those 10-arcmin-separation coordinates
+#SD and make sure ra is in hours and dec is in deg
+ra_array1_close = coord_array1[id1].ra.hour
+dec_array1_close = coord_array1[id1].dec.deg
+ra_array2_close = coord_array2[id2].ra.hour
+dec_array2_close = coord_array2[id2].dec.deg
+
