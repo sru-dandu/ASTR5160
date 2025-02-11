@@ -44,16 +44,16 @@ print(f"The zenith angle (found using SkyCoord's 'separation' method) is {z_angl
 ### TASK 2 (RED) ###
 
 #SD find 2 sets of 100 ra values between 2 hr and 3 hr
-ra_range1 = (np.random.random(100) + 2) * u.hour
-ra_range2 = (np.random.random(100) + 2) * u.hour
+ra_array1 = (np.random.random(100) + 2) * u.hour
+ra_array2 = (np.random.random(100) + 2) * u.hour
 
 #SD find 2 sets of 100 dec values between -2 deg and 2 deg
-dec_range1 = (4*np.random.random(100) - 2) * u.deg
-dec_range2 = (4*np.random.random(100) - 2) * u.deg
+dec_array1 = (4*np.random.random(100) - 2) * u.deg
+dec_array2 = (4*np.random.random(100) - 2) * u.deg
 
 #SD plotting dec vs ra for both sets
-plt.scatter(ra_range1, dec_range1, marker='o', c='steelblue', label='set 1')
-plt.scatter(ra_range2, dec_range2, marker='x', c='maroon', label='set 2')
+plt.scatter(ra_array1, dec_array1, marker='o', c='steelblue', label='set 1')
+plt.scatter(ra_array2, dec_array2, marker='x', c='maroon', label='set 2')
 plt.xlabel("ra [hours]")
 plt.ylabel("dec [degrees]")
 plt.legend()
