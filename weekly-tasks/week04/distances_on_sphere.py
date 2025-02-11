@@ -120,3 +120,48 @@ plot_func(coord_array1, coord_array2, sep=10*u.arcmin)
 
 print("TASK 3:")
 print("See plot")
+
+
+
+### TASK 4 (BLACK) ###
+
+#SD combining ra and dec arrays
+ra_tot = np.concatenate([ra_array1, ra_array2])
+dec_tot = np.concatenate([dec_array1, dec_array2])
+
+#SD making defined function for plotting
+#SD in order to specify whether or not to highlight certain point
+def plot_func2(ra, dec, plate_coord=None, plate_r=None):
+	"""Plots a set of coordinates in a scatterplot.
+	
+	PARAMETERS
+	----------
+	ra : :class:`astropy.units.quantity.Quantity`
+		Right ascensions of coordinates to be plotted
+	dec : :class:`astropy.units.quantity.Quantity`
+		Declination of coordinates to be plotted
+	plate_coord : :class:`astropy.coordinates.sky_coordinate.SkyCoord`, optional, defaults to None
+		If given, highlights the points that will fall
+		on a spectroscopic plate placed at the given coordinates
+	plate_r : :class:`astropy.units.quantity.Quantity`, optional, defaults to None
+		If given, highlights the points that will fall
+		on a spectroscopic plate of given radius
+	
+	RETURNS
+	-------
+	matplotlib popup window
+	"""
+	
+	#SD plotting the new arrays
+	plt.scatter(ra, dec, label='coordinates')
+	
+	plt.xlabel('ra [hours]')
+	plt.ylabel('dec [degrees]')
+	plt.legend()
+	plt.show()
+	
+	return
+	
+#SD plot DECs va RAs
+plot_func2(ra_tot, dec_tot, plate_coord=None, plate_r=None)
+
