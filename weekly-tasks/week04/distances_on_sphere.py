@@ -127,21 +127,15 @@ print("See plot")
 
 ### TASK 4 (BLACK) ###
 
-#SD combining ra and dec arrays
-ra_tot = np.concatenate([ra_array1, ra_array2])
-dec_tot = np.concatenate([dec_array1, dec_array2])
-
 #SD making defined function for plotting
 #SD in order to specify whether or not to highlight certain point
-def plot_func2(ra, dec, plate_coord=None, plate_r=None):
+def plot_func2(coord, plate_coord=None, plate_r=None):
 	"""Plots a set of coordinates in a scatterplot.
 	
 	PARAMETERS
 	----------
-	ra : :class:`astropy.units.quantity.Quantity`
-		Right ascensions of coordinates to be plotted
-	dec : :class:`astropy.units.quantity.Quantity`
-		Declination of coordinates to be plotted
+	coord : :class:`astropy.coordinates.sky_coordinate.SkyCoord`
+		(RA, DEC) coordinates to be plotted
 	plate_coord : :class:`astropy.coordinates.sky_coordinate.SkyCoord`, optional, defaults to None
 		If given, highlights the points that will fall
 		on a spectroscopic plate placed at the given coordinates
@@ -154,8 +148,26 @@ def plot_func2(ra, dec, plate_coord=None, plate_r=None):
 	matplotlib popup window
 	"""
 	
+	#SD extracting RA (in hours) and DEC (in deg) from SkyCoord coorinates
+	ra = coord.ra.hour
+	dec = coord.dec.deg
+	
 	#SD plotting the new arrays
 	plt.scatter(ra, dec, label='coordinates')
+	
+	if plate_coord and plate_r is not None:
+		
+		#SD find which points fall on plate
+		mask = plate_coord.separation(coord) < plate_r
+		coords_on_plate = coord[mask]
+		
+		#SD extract RA (in hours) and DEC (in deg) of coords on plate
+		ras_plate = coords_on_plate.ra.hour
+		decs_plate = coords_on_plate.dec.deg
+		
+		#SD plot the points on the plate in a different color
+		plt.scatter(ras_plate, decs_plate, c='gold',
+			label='coordinates falling on plate')
 	
 	plt.xlabel('ra [hours]')
 	plt.ylabel('dec [degrees]')
@@ -163,9 +175,14 @@ def plot_func2(ra, dec, plate_coord=None, plate_r=None):
 	plt.show()
 	
 	return
-	
+
+#SD combining ra and dec arrays, and saving in SkyCoord object
+ra_tot = np.concatenate([ra_array1, ra_array2])
+dec_tot = np.concatenate([dec_array1, dec_array2])
+coord_tot = SkyCoord(ra_tot, dec_tot)
+
 #SD plot DECs va RAs
-plot_func2(ra_tot, dec_tot, plate_coord=None, plate_r=None)
+plot_func2(coord_tot)
 
 print("TASK 4:")
 print("See plot")
@@ -175,12 +192,11 @@ print("See plot")
 ### TASK 5 (BLACK) ###
 
 #SD save radius and coordinates of plate
-plate_radius = 1.8 * u.radian
-plate_coords = SkyCoord('2h20m5s', '-0d6m12s')
+plate_radius = 1.8 * u.deg
+plate_coord = SkyCoord('2h20m5s', '-0d6m12s')
 
-#SD extract RA (in hours) and DEC (in deg) of plate
-plate_ra = plate_coords.ra.hour
-plate_dec = plate_coords.dec.deg
+#SD plot coordinates, and highlight ones falling on plate
+plot_func2(coord_tot, plate_coord, plate_radius)
 
-
-
+print("TASK 5:")
+print("See plot")
