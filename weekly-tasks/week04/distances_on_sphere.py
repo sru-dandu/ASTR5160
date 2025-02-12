@@ -105,7 +105,9 @@ def plot_func(c1, c2, sep=None):
 	plt.show()
 	
 	return
-	
+
+
+
 #SD use defined function to create plot
 plot_func(coord_array1, coord_array2)
 
@@ -169,12 +171,19 @@ def plot_func2(coord, plate_coord=None, plate_r=None):
 		plt.scatter(ras_plate, decs_plate, c='gold',
 			label='coordinates falling on plate')
 	
+	#SD in case only one of the plate's parameters is given
+	elif plate_coord or plate_r is not None:
+		print("WARNING: Mising an input;",
+			"resulting plot will not have highlighted points.")
+	
 	plt.xlabel('ra [hours]')
 	plt.ylabel('dec [degrees]')
 	plt.legend()
 	plt.show()
 	
 	return
+
+
 
 #SD combining ra and dec arrays, and saving in SkyCoord object
 ra_tot = np.concatenate([ra_array1, ra_array2])
