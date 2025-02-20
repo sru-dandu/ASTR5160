@@ -55,7 +55,7 @@ plt.scatter(ra[pix==8], dec[pix==8], s=1, label='pixel 8')
 
 plt.xlabel('ra [deg]')
 plt.ylabel('dec [deg]')
-plt.legend()
+plt.legend(loc='upper right')
 
 plt.show()
 
@@ -78,3 +78,4 @@ pix2_pixel5_num = np.unique(pix2_pixel5)
 
 print('TASK 5:')
 print('The pixels in Nside=2 that correspond to pixel 5 in Nside=1 are', pix2_pixel5_num)
+print('----------')
