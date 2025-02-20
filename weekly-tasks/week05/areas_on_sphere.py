@@ -61,3 +61,20 @@ plt.show()
 
 print("TASK 4:")
 print('see figure')
+print('----------')
+
+
+
+### TASK 5 (BLACK) ###
+
+#SD find where each point lies in the HEALpix hierarchy with Nside=2
+pix2 = hp.ang2pix(2, ra, dec, lonlat=True)
+
+#SD find pixels in Nside=2 that correspond to pixel 5 in Nside=1
+pix2_pixel5 = pix2[pix == 5]
+
+#SD extract the pixel values from the previous array
+pix2_pixel5_num = np.unique(pix2_pixel5)
+
+print('TASK 5:')
+print('The pixels in Nside=2 that correspond to pixel 5 in Nside=1 are', pix2_pixel5_num)
