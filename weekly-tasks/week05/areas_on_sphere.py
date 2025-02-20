@@ -1,5 +1,6 @@
 import numpy as np
 import healpy as hp
+import matplotlib.pyplot as plt
 
 
 
@@ -44,3 +45,19 @@ print('----------')
 
 
 ### TASK 4 (BLACK) ###
+
+#SD plot ra vs dec
+plt.scatter(ra, dec, s=1, c='black')
+#SD plot ra vs dec that fell in specific pixels
+plt.scatter(ra[pix==2], dec[pix==2], s=1, label='pixel 2')
+plt.scatter(ra[pix==5], dec[pix==5], s=1, label='pixel 5')
+plt.scatter(ra[pix==8], dec[pix==8], s=1, label='pixel 8')
+
+plt.xlabel('ra [deg]')
+plt.ylabel('dec [deg]')
+plt.legend()
+
+plt.show()
+
+print("TASK 4:")
+print('see figure')
