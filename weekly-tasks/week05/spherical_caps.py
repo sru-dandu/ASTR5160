@@ -41,8 +41,34 @@ def cap_ra(ra_bound):
 
 
 
+### TASK 2 (RED) ###
+
+def cap_dec(dec_bound):
+	
+	#SD make SkyCoord object with given dec bound
+	coords_bound = SkyCoord(0*u.deg ,dec_bound)
+	
+	#SD find 1-h from given dec
+	one_minus_h = 1 - np.sin(coords_bound.dec)
+	
+	#SD convert center of cap = (0 deg, 90 deg) to cartesian
+	coords = SkyCoord(0, 90, unit=u.deg).cartesian
+	
+	#SD create vector 4-array for cap
+	vector = np.array([coords.x, coords.y, coords.z, one_minus_h])
+	
+	return vector
+
+
+
 
 if __name__ == '__main__':
 	
 	#SD answer for Task 1
 	print("Task 1:", cap_ra('5h'))
+	print('----------')
+	
+	#SD answer for Task 1
+	print("Task 2:", cap_dec(36*u.deg))
+	print("(The x coordinate is very small so we can approximate it to 0. This would give us the correct answer.)")
+	print('----------')
