@@ -7,18 +7,18 @@ from astropy import units as u
 ### TASK 1 (RED) ###
 
 def cap_ra(ra_bound):
-	"""Find the (x, y, z, 1-h) vector of the spherical cap bounded by a given ra."
+	"""Find the (x, y, z, 1-h) vector of the spherical cap bounded by a given right ascension."
 	
 	INPUTS
 	------
-	ra : class: 'str' or 'astropy.units.quantity.Quantity'
+	ra_bound : class: 'str' or 'astropy.units.quantity.Quantity'
 		The right ascension that is the bound of the spherical cap.
 		Must be in format acceptable by astropy.coordinates.SkyCoord().
 	
 	RETURNS
 	-------
 	class: 'numpy.ndarray'
-		The 4-vector of the spherical cap bound by the given RA.
+		The 4-vector of the spherical cap bound by the given right ascension.
 		In format (x, y, z, 1-h).
 	"""
 	#SD make SkyCoord object with given ra bound
@@ -44,7 +44,20 @@ def cap_ra(ra_bound):
 ### TASK 2 (RED) ###
 
 def cap_dec(dec_bound):
+	"""Find the (x, y, z, 1-h) vector of the spherical cap bounded by a given declination."
 	
+	INPUTS
+	------
+	dec_bound : class: 'str' or 'astropy.units.quantity.Quantity'
+		The declination that is the bound of the spherical cap.
+		Must be in format acceptable by astropy.coordinates.SkyCoord().
+	
+	RETURNS
+	-------
+	class: 'numpy.ndarray'
+		The 4-vector of the spherical cap bound by the given declination.
+		In format (x, y, z, 1-h).
+	"""
 	#SD make SkyCoord object with given dec bound
 	coords_bound = SkyCoord(0*u.deg ,dec_bound)
 	
