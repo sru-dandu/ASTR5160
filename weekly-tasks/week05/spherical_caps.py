@@ -116,13 +116,16 @@ if __name__ == '__main__':
 	coords = SkyCoord(ra, dec)
 	radius = 1 * u.deg
 	
+	#SD force values to print as decimals instead of in scientific notation
+	#SD this only affects print statements ; actual values in code are unchanged
+	np.set_printoptions(suppress=True)
+	
 	#SD answer for Task 1
 	print("Task 1:", cap_ra(ra))
 	print('----------')
 	
 	#SD answer for Task 2
 	print("Task 2:", cap_dec(dec))
-	print("(The x coordinate is very small so we can approximate it to 0. This would give us the correct answer.)")
 	print('----------')
 	
 	#SD answer for Task 3
