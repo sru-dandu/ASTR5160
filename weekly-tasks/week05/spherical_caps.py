@@ -7,7 +7,7 @@ from astropy import units as u
 ### TASK 1 (RED) ###
 
 def cap_ra(ra_bound):
-	"""Find the (x, y, z, 1-h) vector of the spherical cap bounded by a given right ascension."
+	"""Find the (x, y, z, 1-h) vector of the spherical cap bounded by a given right ascension.
 	
 	INPUTS
 	------
@@ -44,7 +44,7 @@ def cap_ra(ra_bound):
 ### TASK 2 (RED) ###
 
 def cap_dec(dec_bound):
-	"""Find the (x, y, z, 1-h) vector of the spherical cap bounded by a given declination."
+	"""Find the (x, y, z, 1-h) vector of the spherical cap bounded by a given declination.
 	
 	INPUTS
 	------
@@ -77,7 +77,23 @@ def cap_dec(dec_bound):
 ### TASK 3 (RED) ###
 
 def cap_coords(coords, r):
+	"""Find the (x, y, z, 1-h) vector of the spherical cap of given radius centered on given coordinates.
 	
+	INPUTS
+	------
+	coords : class: 'astropy.coordinates.sky_coordinate.SkyCoord'
+		The coordinates at the center of the spherical cap.
+		Must be a astropy.coordinates.SkyCoord() object.
+	r : class: 'int', 'float', 'astropy.units.quantity.Quantity'
+		The angular radius of the spherical cap
+		If not passed as astropy Quantity object, must be in units of radians
+	
+	RETURNS
+	-------
+	class: 'numpy.ndarray'
+		The 4-vector of the spherical cap of given radius centered on given coordinates.
+		In format (x, y, z, 1-h).
+	"""
 	#SD convert coordinates to cartesian
 	coords = coords.cartesian
 	
