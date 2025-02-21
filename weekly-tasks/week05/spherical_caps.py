@@ -74,14 +74,41 @@ def cap_dec(dec_bound):
 
 
 
+### TASK 3 (RED) ###
+
+def cap_coords(coords, r):
+	
+	#SD convert coordinates to cartesian
+	coords = coords.cartesian
+	
+	#SD find 1-h from radius
+	one_minus_h = 1 - np.cos(r)
+	
+	#SD create vector 4-array for cap
+	vector = np.array([coords.x, coords.y, coords.z, one_minus_h])
+	
+	return vector
+
+
+
 
 if __name__ == '__main__':
 	
-	#SD answer for Task 1
-	print("Task 1:", cap_ra('5h'))
-	print('----------')
+	#SD define the values used for this lecture's tasks
+	ra = '5h'
+	dec = 36 * u.deg
+	coords = SkyCoord(ra, dec)
+	radius = 1 * u.deg
 	
 	#SD answer for Task 1
-	print("Task 2:", cap_dec(36*u.deg))
+	print("Task 1:", cap_ra(ra))
+	print('----------')
+	
+	#SD answer for Task 2
+	print("Task 2:", cap_dec(dec))
 	print("(The x coordinate is very small so we can approximate it to 0. This would give us the correct answer.)")
+	print('----------')
+	
+	#SD answer for Task 3
+	print("Task 3:", cap_coords(coords, radius))
 	print('----------')
