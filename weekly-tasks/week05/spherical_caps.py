@@ -107,6 +107,48 @@ def cap_coords(coords, r):
 
 
 
+### TASK 4 (BLACK) ###
+
+def caps_to_file(cap1, cap2, cap3):
+	"""Saves the given spherical cap vectors to a file.
+	
+	INPUTS
+	------
+	cap1 : class: 'np.ndarray'
+		The vector of a spherical cap.
+		Must be in format [(x, y, z, 1-h)].
+	cap2 : class: 'np.ndarray'
+		The vector of a spherical cap.
+		Must be in format [(x, y, z, 1-h)].
+	cap3 : class: 'np.ndarray'
+		The vector of a spherical cap.
+		Must be in format [(x, y, z, 1-h)].
+	
+	RETURNS
+	-------
+	file
+		A file with the given spherical cap vectors saved to it.
+	"""
+	#SD extract values from vectors
+	x1, y1, z1, one_minus_h1 = cap1
+	x2, y2, z2, one_minus_h2 = cap2
+	x3, y3, z3, one_minus_h3 = cap3
+	
+	#SD write the strings to be saved to file
+	contents = ["1 polygons\n",
+			"polygon 1 ( 3 caps, 1 weight, 0 pixel, 0 str):\n",
+			f"\t{x1} {y1} {z1} {one_minus_h1}\n",
+			f"\t{x2} {y2} {z2} {one_minus_h2}\n",
+			f"\t{x3} {y3} {z3} {one_minus_h3}"]
+	
+	#SD create file and write to it
+	with open("cap-vectors-file.txt", "w") as f:
+		f.writelines(contents)
+	
+	return
+
+
+
 
 if __name__ == '__main__':
 	
@@ -121,13 +163,21 @@ if __name__ == '__main__':
 	np.set_printoptions(suppress=True)
 	
 	#SD answer for Task 1
-	print("Task 1:", cap_ra(ra))
+	c1 = cap_ra(ra)
+	print("Task 1:", c1)
 	print('----------')
 	
 	#SD answer for Task 2
-	print("Task 2:", cap_dec(dec))
+	c2 = cap_dec(dec)
+	print("Task 2:", c2)
 	print('----------')
 	
 	#SD answer for Task 3
-	print("Task 3:", cap_coords(coords, radius))
+	c3 = cap_coords(coords, radius)
+	print("Task 3:", c3)
+	print('----------')
+	
+	#SD answer for Task 4
+	caps_to_file(c1, c2, c3)
+	print("Task 4: written to file")
 	print('----------')
