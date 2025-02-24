@@ -106,8 +106,8 @@ with open("inter_flipped1.ply", "w") as f:
 #SD read in mask file
 mflip1 = pymangle.Mangle("inter_flipped1.ply")
 
-#SD generate 10,000 random points to fill mask
-ra_flip1, dec_flip1 = mflip1.genrand(10000)
+#SD generate 2000 random points to fill mask
+ra_flip1, dec_flip1 = mflip1.genrand(2000)
 
 #SD plotting the generated points
 plt.scatter(ra_inter, dec_inter, s=1, label='original')
@@ -143,8 +143,8 @@ with open("inter_flipped2.ply", "w") as f:
 #SD read in mask file
 mflip2 = pymangle.Mangle("inter_flipped2.ply")
 
-#SD generate 10,000 random points to fill mask
-ra_flip2, dec_flip2 = mflip2.genrand(10000)
+#SD generate 2000 random points to fill mask
+ra_flip2, dec_flip2 = mflip2.genrand(2000)
 
 #SD plotting the generated points
 plt.scatter(ra_inter, dec_inter, s=1, label='original')
