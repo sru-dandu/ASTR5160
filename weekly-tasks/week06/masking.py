@@ -87,4 +87,15 @@ print('----------')
 
 ### TASK 2 (RED) ###
 
+#SD run the defined function with given ra and dec bounds
+contents2, area2 = Mangle_contents(11*u.hr, 12*u.hr, 60*u.deg, 70*u.deg)
 
+#SD append to existing file
+with open("masking-vectors.ply", "a") as f:
+	f.write('\n')
+	f.writelines(contents2)
+
+print('TASK 2:')
+print(f"The area of the lat-lon rectangle is {area2} str.")
+print("Vectors written to file.")
+print('----------')
