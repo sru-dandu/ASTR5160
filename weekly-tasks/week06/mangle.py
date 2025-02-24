@@ -160,3 +160,37 @@ plt.show()
 print("TASK 5:")
 print('See plot.')
 print('----------')
+
+
+
+### TASK 6 (BLACK) ###
+
+#SD write the string to be saved to inter_flipped12.ply
+#SD use both flipped constraints
+inter_flipped12_contents = ["1 polygons\n",
+			"polygon 1 ( 2 caps, 1 weight, 0 pixel, 0 str):\n",
+			f"\t{x1:19.16f} {y1:19.16f} {z1:19.16f} {one_minus_h1_flipped:19.16f}\n",
+			f"\t{x2:19.16f} {y2:19.16f} {z2:19.16f} {one_minus_h2_flipped:19.16f}"]
+
+#SD create file and write to it
+with open("inter_flipped12.ply", "w") as f:
+	f.writelines(inter_flipped12_contents)
+
+#SD read in mask file
+mflip12 = pymangle.Mangle("inter_flipped12.ply")
+
+#SD generate 1,000,000 random points to fill mask
+ra_flip12, dec_flip12 = mflip12.genrand(1000000)
+
+#SD plotting the generated points
+plt.scatter(ra_flip12, dec_flip12, s=1)
+
+plt.xlabel('ra [deg]')
+plt.ylabel('dec [deg]')
+
+plt.show()
+
+print("TASK 6:")
+print('See plot.')
+print("This makes sense. Since we flipped the constraints of both caps and looked for the intersection, the points populated the area outside of both caps, or in other words, the entire area of the sphere minus the two caps.")
+print('----------')
