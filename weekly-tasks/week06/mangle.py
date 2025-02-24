@@ -77,6 +77,7 @@ plt.scatter(ra_both, dec_both, s=1, label='both')
 
 plt.xlabel('ra [deg]')
 plt.ylabel('dec [deg]')
+plt.title("Task 3")
 plt.legend()
 
 plt.show()
@@ -115,6 +116,7 @@ plt.scatter(ra_flip1, dec_flip1, s=1, label='cap 1 flipped')
 
 plt.xlabel('ra [deg]')
 plt.ylabel('dec [deg]')
+plt.title("Task 4")
 plt.legend()
 
 plt.show()
@@ -153,12 +155,15 @@ plt.scatter(ra_flip2, dec_flip2, s=1, label='cap 2 flipped')
 
 plt.xlabel('ra [deg]')
 plt.ylabel('dec [deg]')
+plt.title("Task 5")
 plt.legend()
 
 plt.show()
 
 print("TASK 5:")
 print('See plot.')
+print("When the caps' constraints became negative, the points were generated in the area of the non-flipped cap that is NOT within the cap whose constraint we flipped.")
+print("Combining mflip1, mflip2, and intersection.ply's masks would result in the mask of bothcaps.ply. It is like a venn diagram: if cap1 and cap2 are the two circles, then intersection.ply's mask is the center of the venn diagram, and mflip1 and mflip2 are the areas of the circles outside of that center intersection.")
 print('----------')
 
 
@@ -187,6 +192,7 @@ plt.scatter(ra_flip12, dec_flip12, s=1)
 
 plt.xlabel('ra [deg]')
 plt.ylabel('dec [deg]')
+plt.title("Task 6")
 
 plt.show()
 
