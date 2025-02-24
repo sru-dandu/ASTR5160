@@ -1,5 +1,7 @@
 from astropy.coordinates import SkyCoord
 from astropy import units as u
+import pymangle
+import matplotlib.pyplot as plt
 import sys
 
 #SD use sys to add week05 to system path
@@ -58,3 +60,28 @@ print("Written to files.")
 print('----------')
 
 
+
+### TASK 3 (RED) ###
+
+#SD reading in the mask files
+minter = pymangle.Mangle("intersection.ply")
+mboth = pymangle.Mangle("bothcaps.ply")
+
+#SD generate 10,000 random points to fill each mask
+ra_inter, dec_inter = minter.genrand(10000)
+ra_both, dec_both = mboth.genrand(10000)
+
+#SD plot the randomly generated points
+plt.scatter(ra_inter, dec_inter, s=1, label='intersection')
+plt.scatter(ra_both, dec_both, s=1, label='both')
+
+plt.xlabel('ra [deg]')
+plt.ylabel('dec [deg]')
+plt.legend()
+
+plt.show()
+
+print("TASK 3:")
+print('See plot.')
+print("When the mask file specified two different polygons, each one being one cap vector, the points populated the areas of both caps. However, when the mask specified one polygon with two cap vectors, the points populated the intersection of the two caps. It works like a venn diagram.")
+print('----------')
