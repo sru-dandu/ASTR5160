@@ -140,9 +140,9 @@ def caps_to_file(cap1, cap2, cap3):
 		#SD total length of 19 (including spaces)
 	contents = ["1 polygons\n",
 			"polygon 1 ( 3 caps, 1 weight, 0 pixel, 0 str):\n",
-			f"\t{x1:19.16f} {y1:19.16f} {z1:19.16f} {one_minus_h1}\n",
+			f"\t{x1:19.16f} {y1:19.16f} {z1:19.16f} {one_minus_h1:19.16f}\n",
 			f"\t{x2:19.16f} {y2:19.16f} {z2:19.16f} {one_minus_h2:19.16f}\n",
-			f"\t{x3:19.16f} {y3:19.16f} {z3:19.16f} {one_minus_h3}"]
+			f"\t{x3:19.16f} {y3:19.16f} {z3:19.16f} {one_minus_h3:19.16f}"]
 	
 	#SD create file and write to it
 	with open("cap-vectors-file.txt", "w") as f:
