@@ -135,11 +135,14 @@ def caps_to_file(cap1, cap2, cap3):
 	x3, y3, z3, one_minus_h3 = cap3
 	
 	#SD write the strings to be saved to file
+	#SD :19.16f forces number to be printed as a float with
+		#SD 16 decimal places
+		#SD total length of 19 (including spaces)
 	contents = ["1 polygons\n",
 			"polygon 1 ( 3 caps, 1 weight, 0 pixel, 0 str):\n",
-			f"\t{x1} {y1} {z1} {one_minus_h1}\n",
-			f"\t{x2} {y2} {z2} {one_minus_h2}\n",
-			f"\t{x3} {y3} {z3} {one_minus_h3}"]
+			f"\t{x1:19.16f} {y1:19.16f} {z1:19.16f} {one_minus_h1}\n",
+			f"\t{x2:19.16f} {y2:19.16f} {z2:19.16f} {one_minus_h2:19.16f}\n",
+			f"\t{x3:19.16f} {y3:19.16f} {z3:19.16f} {one_minus_h3}"]
 	
 	#SD create file and write to it
 	with open("cap-vectors-file.txt", "w") as f:
