@@ -85,3 +85,40 @@ print("TASK 3:")
 print('See plot.')
 print("When the mask file specified two different polygons, each one being one cap vector, the points populated the areas of both caps. However, when the mask specified one polygon with two cap vectors, the points populated the intersection of the two caps. It works like a venn diagram.")
 print('----------')
+
+
+
+### TASK 4 (RED) ###
+
+#SD flip the constraint on cap 1
+one_minus_h1_flipped = -1 * one_minus_h1
+
+#SD write the string to be saved to inter_flipped1.ply
+inter_flipped1_contents = ["1 polygons\n",
+			"polygon 1 ( 2 caps, 1 weight, 0 pixel, 0 str):\n",
+			f"\t{x1:19.16f} {y1:19.16f} {z1:19.16f} {one_minus_h1_flipped:19.16f}\n",
+			f"\t{x2:19.16f} {y2:19.16f} {z2:19.16f} {one_minus_h2:19.16f}"]
+
+#SD create file and write to it
+with open("inter_flipped1.ply", "w") as f:
+	f.writelines(inter_flipped1_contents)
+
+#SD read in mask file
+mflip1 = pymangle.Mangle("inter_flipped1.ply")
+
+#SD generate 10,000 random points to fill mask
+ra_flip1, dec_flip1 = mflip1.genrand(10000)
+
+#SD plotting the generated points
+plt.scatter(ra_inter, dec_inter, s=1, label='original')
+plt.scatter(ra_flip1, dec_flip1, s=1, label='cap 1 flipped')
+
+plt.xlabel('ra [deg]')
+plt.ylabel('dec [deg]')
+plt.legend()
+
+plt.show()
+
+print("TASK 4:")
+print('See plot.')
+print('----------')
