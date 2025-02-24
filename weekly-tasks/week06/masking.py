@@ -1,5 +1,6 @@
 from astropy import units as u
 import numpy as np
+from numpy.random import random
 import sys
 
 #SD use sys to add week05 to system path
@@ -98,4 +99,16 @@ with open("masking-vectors.ply", "a") as f:
 print('TASK 2:')
 print(f"The area of the lat-lon rectangle is {area2} str.")
 print("Vectors written to file.")
+print('----------')
+
+
+
+### TASK 3 (BLACK) ###
+
+#SD generate 1e6 random coordinates that equally populate sphere surface
+ra_rand = 360.*(random(1*10**6))
+dec_rand = (180/np.pi) * np.arcsin(1 - 2*random(1*10**6))
+
+print('TASK 3:')
+print("1e6 random coordinates created.")
 print('----------')
