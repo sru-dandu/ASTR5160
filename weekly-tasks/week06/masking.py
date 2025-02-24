@@ -1,6 +1,8 @@
 from astropy import units as u
 import numpy as np
 from numpy.random import random
+import pymangle
+import matplotlib.pyplot as plt
 import sys
 
 #SD use sys to add week05 to system path
@@ -111,4 +113,28 @@ dec_rand = (180/np.pi) * np.arcsin(1 - 2*random(1*10**6))
 
 print('TASK 3:')
 print("1e6 random coordinates created.")
+print('----------')
+
+
+
+### TASK 4 (BLACK) ###
+
+#SD read in Mangle file
+m = pymangle.Mangle("masking-vectors.ply")
+
+#SD find which of the random coordinates fall within the lat-lon rectangle
+good = m.contains(ra_rand, dec_rand)
+
+#SD plotting the coordinates that fall within the lat-lon rectangle
+plt.scatter(ra_rand, dec_rand, c='gray', s=1)
+plt.scatter(ra_rand[good], dec_rand[good], c='green', s=1, label='lat-lon rectangle')
+
+plt.xlabel('ra [deg]')
+plt.ylabel('dec [deg]')
+plt.legend(loc='lower right')
+
+plt.show()
+
+print('TASK 4:')
+print("See plot.")
 print('----------')
