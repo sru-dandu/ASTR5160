@@ -17,10 +17,10 @@ from spherical_caps import cap_ra, cap_dec
 ### TASK 1 (RED) ###
 
 #SD defined function that takes two ra and two dec values and gives contents of Mangle file
-def Mangle_contents(ra1, ra2, dec1, dec2):
-	"""Takes 2 ra and 2 dec values, and writes the contents of a Mangle file.
+def lat_lon_contents(ra1, ra2, dec1, dec2):
+	"""Takes 2 ra and 2 dec values, and writes the contents of a Mangle file for a lat-lon rectangle.
 	File consists of the vectors of 4 caps, each one bounded by a given value.
-	Also gives the area of the resulting lat-lon rectangle.
+	Also gives the area of the lat-lon rectangle.
 	
 	INPUTS
 	------
@@ -40,11 +40,11 @@ def Mangle_contents(ra1, ra2, dec1, dec2):
 	RETURNS
 	-------
 	class: 'str'
-		The contents of a Mangle file.
+		The contents of a Mangle file for a lat-lon rectangle.
 		Has one polygon made up of 4 caps.
 		Each cap is constrained by one of the given bounds.
 	class: 'numpy.float64'
-		The area (in str) of the lat-lon rectangle resulting from the 4 caps.
+		The area (in str) of the lat-lon rectangle.
 	"""
 	
 	#SD find area of lat-lon rectangle, in units of str
@@ -74,7 +74,7 @@ def Mangle_contents(ra1, ra2, dec1, dec2):
 
 
 #SD run the defined function with given ra and dec bounds
-contents1, area1 = Mangle_contents(5*u.hr, 6*u.hr, 30*u.deg, 40*u.deg)
+contents1, area1 = lat_lon_contents(5*u.hr, 6*u.hr, 30*u.deg, 40*u.deg)
 
 #SD create files and write to them
 with open("masking-vectors.ply", "w") as f:
@@ -92,7 +92,7 @@ print('----------')
 ### TASK 2 (RED) ###
 
 #SD run the defined function with given ra and dec bounds
-contents2, area2 = Mangle_contents(11*u.hr, 12*u.hr, 60*u.deg, 70*u.deg)
+contents2, area2 = lat_lon_contents(11*u.hr, 12*u.hr, 60*u.deg, 70*u.deg)
 
 #SD rewrite existing file to have 2 polygons
 with open("masking-vectors.ply", "w") as f:
@@ -136,6 +136,7 @@ plt.scatter(ra_rand[good], dec_rand[good], c='green', s=1, label='lat-lon rectan
 
 plt.xlabel('ra [deg]')
 plt.ylabel('dec [deg]')
+plt.title('Task 4')
 plt.legend(loc='lower right')
 
 plt.show()
@@ -156,6 +157,7 @@ plt.scatter(ra_genrand, dec_genrand, s=1, label='lat-lon rectangles')
 
 plt.xlabel('ra [deg]')
 plt.ylabel('dec [deg]')
+plt.title('Task 5')
 plt.legend(loc='lower right')
 
 plt.show()
@@ -163,4 +165,5 @@ plt.show()
 print('TASK 5:')
 print("See plot.")
 print("Using mask.genrand was quicker than creating random points on the whole sphere and then using a Boolean mask to find just the points within the lat-lon rectangles.")
+print("Yes, the relative areas of the two lat-lon rectangles are consistent with their densities of random points. One cap is almost double the area of the other, and the bigger cap seems to have double the points of the smaller cap.")
 print('----------')
