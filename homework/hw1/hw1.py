@@ -24,9 +24,26 @@ dec_deg = coords.dec.deg
 
 
 
+#SD make range of dates for the months
+days28 = np.arange(1, 29)
+days30 = np.arange(1, 31)
+days31 = np.arange(1, 32)
+
+###TESTING###
+m = 3
+
+#SD save strings of date and time, in MST
+if m==2:
+	time_mst = [f"2025-{m}-{d} 23:00:00" for d in days28]
+elif m in [1,3,5,7,8,10,12]:
+	time_mst = [f"2025-{m}-{d} 23:00:00" for d in days31]
+elif m in [4,6,9,11]:
+	time_mst = [f"2025-{m}-{d} 23:00:00" for d in days30]
+
 #SD finding time of observation
 #SD MST is 7 hrs behind UTC, so add 7 to MST time to get UTC time
-time = Time("2025-2-25 23:00:00") + 7*u.hr
+time = Time(time_mst) + 7*u.hr
+
 
 #SD get coordinates of Kitt Peak
 KPNO = EarthLocation.of_site('kpno')
