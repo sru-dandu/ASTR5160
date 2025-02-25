@@ -25,16 +25,16 @@ def lat_lon_contents(ra1, ra2, dec1, dec2):
 	INPUTS
 	------
 	ra1 : class: 'astropy.units.quantity.Quantity'
-		The ra bound of the first spherical cap.
+		The lower ra bound of the lat-lon rectangle.
 		Must be in units of hours.
 	ra2 : class: 'astropy.units.quantity.Quantity'
-		The ra bound of the second spherical cap.
+		The upper ra bound of the lat-lon rectangle.
 		Must be in units of hours.
 	dec1 : class: 'astropy.units.quantity.Quantity'
-		The dec bound of the third spherical cap.
+		The lower dec bound of the lat-lon rectangle.
 		Must be in angular units.
 	dec2 : class: 'astropy.units.quantity.Quantity'
-		The dec bound of the fourth spherical cap.
+		The upper dec bound of the lat-lon rectangle.
 		Must be in angular units.
 	
 	RETURNS
