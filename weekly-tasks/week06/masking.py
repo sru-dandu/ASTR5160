@@ -66,9 +66,9 @@ def Mangle_contents(ra1, ra2, dec1, dec2):
 
 	#SD write the string to be saved to intersection.ply
 	filestring = [f"\t{x1:19.16f} {y1:19.16f} {z1:19.16f} {one_minus_h1:19.16f}\n",
-			f"\t{x2:19.16f} {y2:19.16f} {z2:19.16f} {one_minus_h2:19.16f}\n",
+			f"\t{x2:19.16f} {y2:19.16f} {z2:19.16f} {-1 * one_minus_h2:19.16f}\n",
 			f"\t{x3:19.16f} {y3:19.16f} {z3:19.16f} {one_minus_h3:19.16f}\n",
-			f"\t{x4:19.16f} {y4:19.16f} {z4:19.16f} {one_minus_h4:19.16f}"]
+			f"\t{x4:19.16f} {y4:19.16f} {z4:19.16f} {-1 * one_minus_h4:19.16f}"]
 	
 	return filestring, area.value
 
