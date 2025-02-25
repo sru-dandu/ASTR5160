@@ -143,3 +143,24 @@ plt.show()
 print('TASK 4:')
 print("See plot.")
 print('----------')
+
+
+
+### TASK 5 (BLACK) ###
+
+#SD populating lat-lon rectangles with 10,000 random points
+ra_genrand, dec_genrand = m.genrand(10000)
+
+#SD plotting the newly-created points
+plt.scatter(ra_genrand, dec_genrand, s=1, label='lat-lon rectangles')
+
+plt.xlabel('ra [deg]')
+plt.ylabel('dec [deg]')
+plt.legend(loc='lower right')
+
+plt.show()
+
+print('TASK 5:')
+print("See plot.")
+print("Using mask.genrand was quicker than creating random points on the whole sphere and then using a Boolean mask to find just the points within the lat-lon rectangles.")
+print('----------')
