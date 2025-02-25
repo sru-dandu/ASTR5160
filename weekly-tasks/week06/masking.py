@@ -19,7 +19,8 @@ from spherical_caps import cap_ra, cap_dec
 #SD defined function that takes two ra and two dec values and gives contents of Mangle file
 def Mangle_contents(ra1, ra2, dec1, dec2):
 	"""Takes 2 ra and 2 dec values, and writes the contents of a Mangle file.
-	File consists of 1 polygon made up of 4 caps, each one bounded by a given value.
+	File consists of the vectors of 4 caps, each one bounded by a given value.
+	Also gives the area of the resulting lat-lon rectangle.
 	
 	INPUTS
 	------
@@ -64,9 +65,7 @@ def Mangle_contents(ra1, ra2, dec1, dec2):
 	x4, y4, z4, one_minus_h4 = vector_dec2
 
 	#SD write the string to be saved to intersection.ply
-	filestring = ["1 polygons\n",
-			f"polygon 1 ( 4 caps, 1 weight, 0 pixel, {area.value} str):\n",
-			f"\t{x1:19.16f} {y1:19.16f} {z1:19.16f} {one_minus_h1:19.16f}\n",
+	filestring = [f"\t{x1:19.16f} {y1:19.16f} {z1:19.16f} {one_minus_h1:19.16f}\n",
 			f"\t{x2:19.16f} {y2:19.16f} {z2:19.16f} {one_minus_h2:19.16f}\n",
 			f"\t{x3:19.16f} {y3:19.16f} {z3:19.16f} {one_minus_h3:19.16f}\n",
 			f"\t{x4:19.16f} {y4:19.16f} {z4:19.16f} {one_minus_h4:19.16f}"]
@@ -79,6 +78,8 @@ contents1, area1 = Mangle_contents(5*u.hr, 6*u.hr, 30*u.deg, 40*u.deg)
 
 #SD create files and write to them
 with open("masking-vectors.ply", "w") as f:
+	f.write("1 polygons\n")
+	f.write(f"polygon 1 ( 4 caps, 1 weight, 0 pixel, {area1} str):\n")
 	f.writelines(contents1)
 
 print('TASK 1:')
@@ -93,9 +94,13 @@ print('----------')
 #SD run the defined function with given ra and dec bounds
 contents2, area2 = Mangle_contents(11*u.hr, 12*u.hr, 60*u.deg, 70*u.deg)
 
-#SD append to existing file
-with open("masking-vectors.ply", "a") as f:
+#SD rewrite existing file to have 2 polygons
+with open("masking-vectors.ply", "w") as f:
+	f.write("2 polygons\n")
+	f.write(f"polygon 1 ( 4 caps, 1 weight, 0 pixel, {area1} str):\n")
+	f.writelines(contents1)
 	f.write('\n')
+	f.write(f"polygon 2 ( 4 caps, 1 weight, 0 pixel, {area2} str):\n")
 	f.writelines(contents2)
 
 print('TASK 2:')
@@ -122,12 +127,12 @@ print('----------')
 #SD read in Mangle file
 m = pymangle.Mangle("masking-vectors.ply")
 
-#SD find which of the random coordinates fall within the lat-lon rectangle
+#SD find which of the random coordinates fall within the lat-lon rectangles
 good = m.contains(ra_rand, dec_rand)
 
-#SD plotting the coordinates that fall within the lat-lon rectangle
+#SD plotting the coordinates that fall within the lat-lon rectangles
 plt.scatter(ra_rand, dec_rand, c='gray', s=1)
-plt.scatter(ra_rand[good], dec_rand[good], c='green', s=1, label='lat-lon rectangle')
+plt.scatter(ra_rand[good], dec_rand[good], c='green', s=1, label='lat-lon rectangles')
 
 plt.xlabel('ra [deg]')
 plt.ylabel('dec [deg]')
