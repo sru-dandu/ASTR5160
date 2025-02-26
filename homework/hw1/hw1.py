@@ -8,6 +8,27 @@ import numpy as np
 
 
 def hw1_func(m):
+	"""Creates an astropy table for a given month.
+	Each entry is a day of the given month at 11pm MST,
+	and shows the quasar with the best airmass at that day/time.
+	
+	PARAMETERS
+	----------
+	m : :class:'int'
+		The value corresponding to a month of this year.
+	
+	RETURNS
+	-------
+	:class:'astropy.table.table.Table'
+		A table with the following columns:
+		Date, Quasar Coordinates (hms.ss deg'"),
+		RA (deg), DEC (deg), Airmass
+	
+	NOTES
+	-----
+	- Quasar data from '/d/scratch/ASTR5160/week4/HW1quasarfile.txt'
+	"""
+	
 	#SD read in file and extract ra and dec
 	coords_data = pandas.read_csv('/d/scratch/ASTR5160/week4/HW1quasarfile.txt', header=None)[0]
 	
