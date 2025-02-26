@@ -48,12 +48,15 @@ time = Time(time_mst) + 7*u.hr
 #SD get coordinates of Kitt Peak
 KPNO = EarthLocation.of_site('kpno')
 
-#SD transform ra,dec coordinates to AltAz
-ref_frame = AltAz(location=KPNO, obstime=time)
-coords_altaz = coords.transform_to(ref_frame)
+#SD find best airmass for each date
+best_airmasses = []
+for i in time:
+	#SD transform ra,dec coordinates to AltAz
+	ref_frame = AltAz(location=KPNO, obstime=i)
+	coords_altaz = coords.transform_to(ref_frame)
+	airmasses = coords_altaz.secz
+	best = np.min(airmasses[airmasses >= 0])
+	best_airmasses.append(best)
 
-#SD convert alt,az to airmass
-airmasses = coords_altaz.secz
-
-print(airmasses)
+print(best_airmasses)
 
