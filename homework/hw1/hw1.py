@@ -4,12 +4,13 @@ from astropy.time import Time
 from astropy import units as u
 import pandas
 import numpy as np
+import argparse
 
 
 
 def hw1_func(m):
 	"""Creates an astropy table for a given month.
-	Each entry is a day of the given month at 11pm MST,
+	Each entry in the table is a day of the given month at 11pm MST,
 	and shows the quasar with the best airmass at that day/time.
 	
 	PARAMETERS
@@ -102,12 +103,17 @@ def hw1_func(m):
 
 if __name__ == '__main__':
 	
-	#SD ask for input (will change to argparse)
-	month = input("Input a month: ")
+	#SD description when passing -h
+	parser = argparse.ArgumentParser(description="""Takes input of a given month, and
+	creates an astropy table for that month.
+	Each entry in the table is a day of the given month at 11pm MST,
+	and shows the quasar with the best airmass at that day/time.""")
 	
-	#SD need to convert input to int
-	month = int(month)
+	#SD args that have to be passed
+	parser.add_argument("month", type=int,
+			help="['int'] integer value corresponding to a month of this year")
+	args = parser.parse_args()
 	
-	#SD run function with input
-	table = hw1_func(month)
+	#SD call the function
+	table = hw1_func(args.month)
 	print(table)
