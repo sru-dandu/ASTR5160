@@ -44,19 +44,33 @@ elif m in [4,6,9,11]:
 #SD MST is 7 hrs behind UTC, so add 7 to MST time to get UTC time
 time = Time(time_mst) + 7*u.hr
 
-
 #SD get coordinates of Kitt Peak
 KPNO = EarthLocation.of_site('kpno')
 
 #SD find best airmass for each date
-best_airmasses = []
+airmass_best = []
+airmass_idx = []
 for i in time:
 	#SD transform ra,dec coordinates to AltAz
 	ref_frame = AltAz(location=KPNO, obstime=i)
 	coords_altaz = coords.transform_to(ref_frame)
-	airmasses = coords_altaz.secz
-	best = np.min(airmasses[airmasses >= 0])
-	best_airmasses.append(best)
+	
+	#SD find best airmass for each day
+	airmass = coords_altaz.secz
+	best = np.min(airmass[airmass >= 0])
+	airmass_best.append(best)
+	
+	#SD save the indexes of these airmasses
+	idx = np.where(airmass == best)[0][0]
+	airmass_idx.append(idx)
 
-print(best_airmasses)
+#SD find corresponding obj coordinates, ra, and dec for each airmass
+coords_data_best = [coords_data[idx] for idx in airmass_idx]
+ra_best = [ra_deg[idx] for idx in airmass_idx]
+dec_best = [dec_deg[idx] for idx in airmass_idx]
 
+#SD create astropy table
+#SD \u00B0 is unicode for degree symbol
+table = Table([time_mst, coords_data_best, ra_best, dec_best, airmass_best],
+	names=("Date", "Quasar Coordinates (hms.ss \u00B0'\")", "RA (\u00B0)", "DEC (\u00B0)", "Airmass"))
+print(table)
