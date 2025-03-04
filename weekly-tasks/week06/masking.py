@@ -44,10 +44,10 @@ def lat_lon_contents(ra1, ra2, dec1, dec2):
 		Has one polygon made up of 4 caps.
 		Each cap is constrained by one of the given bounds.
 	class: 'numpy.float64'
-		The area (in str) of the lat-lon rectangle.
+		The area (in steradians) of the lat-lon rectangle.
 	"""
 	
-	#SD find area of lat-lon rectangle, in units of str
+	#SD find area of lat-lon rectangle, in units of steradians
 	ra1_rad = ra1 * (2*np.pi*u.rad) / (24*u.hr)
 	ra2_rad = ra2 * (2*np.pi*u.rad) / (24*u.hr)
 	area = (ra2_rad - ra1_rad) * (np.sin(dec2) - np.sin(dec1))
