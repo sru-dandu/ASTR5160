@@ -1,6 +1,6 @@
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 
@@ -37,3 +37,43 @@ plt.show()
 print('TASK 2:')
 print('See plot.')
 print('----------')
+
+
+
+### TASK 3 (RED) ###
+
+#SD finding integer values of each mag_g
+#SD int(num) effectively truncates decimal values from num
+#SD this effectively bins mag_g values by integer ranges (11-12, 12-13, etc)
+g_int = np.array([int(g) for g in mag_g])
+
+#SD creating sizes for each integer range of mag_g values
+#SD range is from 1 to len(np.unique(g_int))
+sizes_flipped = g_int - np.min(g_int) + 1
+
+#SD need to have larger sizes correspond to smaller mag_g values (brighter objs)
+#SD subtract original values by max value + 1
+#SD this makes small int values become large int values, and vice versa
+#SD but now all values are negative, so take absolute value
+sizes = np.abs(sizes_flipped - (np.max(sizes_flipped)+1))
+
+#SD size input in matplotlib is for area of marker
+#SD therefore, squaring the sizes so that each bin size is an increase in radius
+sizes = sizes**2
+
+#SD plot ra vs dec, with new size values
+plt.scatter(ra, dec, s=sizes)
+
+#SD labeling the plot
+plt.xlabel('ra [deg]')
+plt.ylabel('dec [deg]')
+plt.title('Task 3: ra vs dec')
+
+plt.show()
+
+print('TASK 3:')
+print('See plot.')
+print('----------')
+
+
+
