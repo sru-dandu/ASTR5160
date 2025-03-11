@@ -96,7 +96,24 @@ print('----------')
 
 #SD function that takes array of RA,DEC coords and find relevant sweep files
 def sweep_func(ra_input, dec_input, directory='/d/scratch/ASTR5160/data/legacysurvey/dr9/north/sweep/9.0'):
+	'''Returns all sweep files in a given directory that are needed to find objects corresponding to the given coordinates.
 	
+	INPUTS
+	------
+	ra_input : :class:'list' or 'numpy.ndarray' or 'astropy.table.column.Column'
+		Right ascensions of objects to be found using sweep files.
+	
+	dec_input : :class:'list' or 'numpy.ndarray' or 'astropy.table.column.Column'
+		Declinations of objects to be found using sweep files.
+	
+	directory : :class:'str', optional, defaults to "/d/scratch/ASTR5160/data/legacysurvey/dr9/north/sweep/9.0"
+		Directory that sweep files are in.
+	
+	RETURNS
+	-------
+	:class:'list'
+		List of sweep files needed for finding the objects with given coordinates.
+	'''
 	#SD getting list of fits files within specified directory
 	files = [f for f in os.listdir(directory) if f.endswith('.fits')]
 
@@ -148,6 +165,7 @@ files_matched = sweep_func(ra_small, dec_small)
 
 print('Task 6:')
 print('Here are the sweep files that need to be read:')
+#SD list comprehension for printing out filenames one at a time
 [print(f'{files_matched.index(fi) + 1}. {fi}') for fi in files_matched]
 print('----------')
 
