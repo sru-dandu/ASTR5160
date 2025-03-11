@@ -17,7 +17,7 @@ mag_g = data['g']
 print('TASK 1:')
 print('Saved csv file to current directory.')
 #SD check number of objs in csv file
-print(f'There are {len(ra)} objects in the table, which is about the expected number (350).')
+print(f'There are {len(ra)} objects in the table, which is about the expected number (~350).')
 print('----------')
 
 
@@ -67,7 +67,7 @@ plt.scatter(ra, dec, s=sizes, edgecolor='black')
 #SD labeling the plot
 plt.xlabel('ra [deg]')
 plt.ylabel('dec [deg]')
-plt.title('Task 3: ra vs dec')
+plt.title('Task 3: ra vs dec with varying marker sizes')
 
 plt.show()
 
@@ -77,3 +77,22 @@ print('----------')
 
 
 
+### TASK 4 (BLACK) ###
+
+#SD editing plot from Task 3 to match output from SDSS Navigate Tool
+
+#SD removing square from marker sizes in order to see objs clearly
+plt.scatter(ra, dec, s=np.sqrt(sizes), edgecolor='black')
+#SD flipping x axis around
+plt.xlim(np.max(ra), np.min(ra))
+
+#SD labeling the plot
+plt.xlabel('ra [deg]')
+plt.ylabel('dec [deg]')
+plt.title('Task 4: matching up with SDSS Navigator Tool image')
+
+plt.show()
+
+print('TASK 4:')
+print('My plot reasonably looks like the SDSS Navigator Tool image.')
+print('----------')
