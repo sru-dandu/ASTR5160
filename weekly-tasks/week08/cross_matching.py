@@ -54,3 +54,22 @@ for i in range(len(ra_small)):
 
 print('Created the query results file.')
 print('----------')
+
+
+
+### TASK 4 (BLACK) ###
+
+objs2 = Table.read('/d/scratch/ASTR5160/data/legacysurvey/dr9/north/sweep/9.0/sweep-000m005-010p000.fits')
+objs3 = Table.read('/d/scratch/ASTR5160/data/legacysurvey/dr9/north/sweep/9.0/sweep-000p000-010p005.fits')
+
+#SD printing the astropy tables to examine them
+#print(objs2)
+#print(objs3)
+
+print('Task 4:')
+print('I examined two of the fits files in the specified directory.')
+print('----------')
+
+
+
+### TASK 5 (BLACK) ###
