@@ -46,19 +46,21 @@ ra_small = ra[:100]
 dec_small = dec[:100]
 
 print('Task 3:')
-print('Creating file...')
+#print('Creating file...')
 
 #SD query the coords and append results to file
-for i in range(len(ra_small)):
-	os.system(f"python sdssDR9query.py {ra_small[i]} {dec_small[i]} >> query-results.txt")
+#for i in range(len(ra_small)):
+#	os.system(f"python sdssDR9query.py {ra_small[i]} {dec_small[i]} >> query-results.txt")
 
-print('Created the query results file.')
+#print('Created the query results file.')
+print('I commented out the code that creates the file since I have already created and saved it.')
 print('----------')
 
 
 
 ### TASK 4 (BLACK) ###
 
+#SD read in two fits files
 objs2 = Table.read('/d/scratch/ASTR5160/data/legacysurvey/dr9/north/sweep/9.0/sweep-000m005-010p000.fits')
 objs3 = Table.read('/d/scratch/ASTR5160/data/legacysurvey/dr9/north/sweep/9.0/sweep-000p000-010p005.fits')
 
@@ -73,3 +75,20 @@ print('----------')
 
 
 ### TASK 5 (BLACK) ###
+
+#SD save the directory that the sweep files are in
+directory = '/d/scratch/ASTR5160/data/legacysurvey/dr9/north/sweep/9.0'
+
+#SD get all fits files in directory
+files = [f for f in os.listdir(directory) if f.endswith('.fits')]
+
+#SD read in all files as astropy tables
+#for f in files:
+#	f_objs = Table.read(directory + '/' + f)
+
+print('Task 5:')
+print('This takes forever. I commented it out.')
+print('----------')
+
+
+
