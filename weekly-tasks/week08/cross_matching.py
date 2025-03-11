@@ -92,3 +92,63 @@ print('----------')
 
 
 
+### TASK 6 (RED) ###
+
+#SD function that takes array of RA,DEC coords and find relevant sweep files
+def sweep_func(ra_input, dec_input, directory='/d/scratch/ASTR5160/data/legacysurvey/dr9/north/sweep/9.0'):
+	
+	#SD getting list of fits files within specified directory
+	files = [f for f in os.listdir(directory) if f.endswith('.fits')]
+
+	#SD extracting range intervals from filenames
+	ramin = []
+	decmin = []
+	ramax = []
+	decmax = []
+	for f in files:
+		#SD extract lower ra range
+		ra = float(f[6:9])
+		ramin.append(ra)
+		#SD ra ranges are intervals of 10 deg
+		ramax.append(ra + 10)
+		
+		#SD extract lower ra range
+		dec = float(f[10:13])
+		#SD check if dec should be negative
+		if f[9] == 'm':
+			dec *= -1
+		decmin.append(dec)
+		#SD dec ranges are intervals of 5 deg
+		decmax.append(dec + 5)
+
+
+	#SD find which coordinates from input correspond to sweep file ranges
+	files_matched = []
+	#SD iterate over each file
+	for i in range(len(files)):
+		
+		#SD iterate over each obj coord
+		for ii in range(len(ra_input)):
+		
+			#SD extract each ra and dec
+			ra = ra_input[ii]
+			dec = dec_input[ii]
+			
+			#SD check if coords are within bounds
+			if ramin[i] < ra < ramax[i] and decmin[i] < dec < decmax[i]:
+				files_matched.append(files[i])
+				break
+	
+	
+	return files_matched
+
+
+#SD run the above function with the first 100 objs from data file
+files_matched = sweep_func(ra_small, dec_small)
+
+print('Task 6:')
+print('Here are the sweep files that need to be read:')
+[print(f'{files_matched.index(fi) + 1}. {fi}') for fi in files_matched]
+print('----------')
+
+
