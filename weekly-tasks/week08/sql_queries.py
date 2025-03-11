@@ -62,7 +62,7 @@ sizes = np.abs(sizes_flipped - (np.max(sizes_flipped)+1))
 sizes = sizes**2
 
 #SD plot ra vs dec, with new size values
-plt.scatter(ra, dec, s=sizes)
+plt.scatter(ra, dec, s=sizes, edgecolor='black')
 
 #SD labeling the plot
 plt.xlabel('ra [deg]')
