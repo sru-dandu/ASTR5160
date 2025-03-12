@@ -1,6 +1,8 @@
 from astropy.table import Table
 import matplotlib.pyplot as plt
 import os
+from astropy.coordinates import SkyCoord
+from astropy import units as u
 #importing python file in directory
 import sdssDR9query
 
@@ -83,8 +85,7 @@ directory = '/d/scratch/ASTR5160/data/legacysurvey/dr9/north/sweep/9.0'
 files = [f for f in os.listdir(directory) if f.endswith('.fits')]
 
 #SD read in all files as astropy tables
-#for f in files:
-#	f_objs = Table.read(directory + '/' + f)
+#objs_all = [Table.read(directory + '/' + f) for f in files]
 
 print('Task 5:')
 print('This takes forever. I commented it out.')
@@ -170,3 +171,44 @@ print('Here are the sweep files that need to be read:')
 print('----------')
 
 
+
+### TASK 7 (BLACK) ###
+
+#SD save ra and dec as SkyCoord object
+coords = SkyCoord(ra_small, dec_small, unit=u.deg)
+
+#SD add directory path to list of filenames
+files_matched_long = [directory + '/' + f for f in files_matched]
+
+print('Task 7:')
+
+#SD find indices of objects from data file that match objects from sweep files
+match_indices1 = []
+match_indices2 = []
+for dirpath in files_matched_long:
+
+	#SD counter to keep track of how far along the code is when running
+	print('Currently reading sweep file', files_matched_long.index(dirpath)+1)
+	
+	#SD save fits files as astropy tables
+	sweep = Table.read(dirpath, format='fits')
+	
+	#SD extract coords from tables and save as SkyCoord object
+	sweep_coords = SkyCoord(sweep['RA'], sweep['DEC'], unit=u.deg)
+	
+	#SD find indicies where dataset and sweep files match
+	idx1, idx2, d2, d3 = sweep_coords.search_around_sky(coords, 1*u.arcsec)
+
+	match_indices1.append(idx1)
+	match_indices2.append(idx2)
+
+
+print('These are the indices of the first 100 objects in the dataset that match each sweep file:')
+
+#SD printing the indices corresponding to each sweep file separately
+for i in range(len(match_indices1)):
+	print(f'File {i+1}:')
+	print(f'indices of dataset: {match_indices1[i]}')
+	print(f'indices of sweep file: {match_indices2[i]}')
+	
+print('----------')
