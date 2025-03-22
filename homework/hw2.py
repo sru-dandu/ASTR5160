@@ -22,6 +22,17 @@ def latlon_area(ra_min, ra_max, dec_min, dec_max):
 
 
 
+def latlon_sides_plotter(ra_min, ra_max, dec_min, dec_max, color, label):
+	
+	plt.plot([ra_min, ra_min], [dec_min, dec_max], c=color, label=label)
+	plt.plot([ra_max, ra_max], [dec_min, dec_max], c=color)
+	plt.plot([ra_min, ra_max], [dec_min, dec_min], c=color)
+	plt.plot([ra_min, ra_max], [dec_max, dec_max], c=color)
+	
+	return
+	
+
+
 #SD make 4 lat-lon rectangles using given ra bounds
 def latlon_plotter(ra_min, ra_max):
 	
@@ -58,10 +69,8 @@ def latlon_plotter(ra_min, ra_max):
 	ax = fig.add_subplot(111, projection="aitoff")
 	
 	#SD plot one side of the rectangle at a time for each (dec_min, dec_max) pair
-	[ax.plot([ra_min, ra_min], [dec_mins[i], dec_maxes[i]], c=colors[i], label=labels[i]) for i in range(4)]
-	[ax.plot([ra_max, ra_max], [dec_mins[i], dec_maxes[i]], c=colors[i]) for i in range(4)]
-	[ax.plot([ra_min, ra_max], [dec_mins[i], dec_mins[i]], c=colors[i]) for i in range(4)]
-	[ax.plot([ra_min, ra_max], [dec_maxes[i], dec_maxes[i]], c=colors[i]) for i in range(4)]
+	#Sd using defined function that plots each line of a lat-lon rectangle
+	[latlon_sides_plotter(ra_min, ra_max, dec_mins[i], dec_maxes[i], colors[i], labels[i]) for i in range(4)]
 	
 	ax.grid(color='gray', linestyle='dashed')
 	plt.xlabel('ra [deg]')
