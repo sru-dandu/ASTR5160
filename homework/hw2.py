@@ -30,7 +30,7 @@ def latlon_sides_plotter(ra_min, ra_max, dec_min, dec_max, color, label):
 	plt.plot([ra_min, ra_max], [dec_max, dec_max], c=color)
 	
 	return
-	
+
 
 
 #SD make 4 lat-lon rectangles using given ra bounds
@@ -44,16 +44,15 @@ def latlon_plotter(ra_min, ra_max):
 	#SD save 4 pairs of dec_mins and dec_maxes to make 4 lat-lon rectangles
 	dec_mins = [-90, -55, 0, 50] * u.deg
 	dec_maxes = [-70, -35, 20, 70] * u.deg
-	
 	#SD convert decs to radians in order to plot in Aitoff
 	dec_mins = dec_mins.to(u.rad)
 	dec_maxes = dec_maxes.to(u.rad)
 	
 	#SD find area of each rectangle
 	areas = [latlon_area(ra_min, ra_max, dec_mins[i], dec_maxes[i]) for i in range(4)]
+		
+	#SD create lists for labels and colors for plotting
 	labels = [f"Area = {a:.3f} deg$^2$" for a in areas]
-	
-	#SD create lists for colors for plotting
 	colors = ['blue', 'darkorange', 'green', 'red']
 	
 	#SD strip units from quantities in order to plot
@@ -69,7 +68,7 @@ def latlon_plotter(ra_min, ra_max):
 	ax = fig.add_subplot(111, projection="aitoff")
 	
 	#SD plot one side of the rectangle at a time for each (dec_min, dec_max) pair
-	#Sd using defined function that plots each line of a lat-lon rectangle
+	#SD using defined function that plots each line of a lat-lon rectangle
 	[latlon_sides_plotter(ra_min, ra_max, dec_mins[i], dec_maxes[i], colors[i], labels[i]) for i in range(4)]
 	
 	ax.grid(color='gray', linestyle='dashed')
