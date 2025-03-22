@@ -173,16 +173,16 @@ def latlon_populator(ra_min, ra_max, dec_min, dec_max):
 	------
 	ra_min : :class:'astropy.units.quantity.Quantity'
 		The lower right ascension bound of the lat-lon rectangle.
-		Must be in degrees or radians.
+		Must be in degrees or radians; must be in range -180 to 180 degrees.
 	ra_max: :class:'astropy.units.quantity.Quantity'
 		The upper right ascension bound of the lat-lon rectangle.
-		Must be in degrees or radians.
+		Must be in degrees or radians; must be in range -180 to 180 degrees.
 	dec_min : :class:'astropy.units.quantity.Quantity'
 		The lower declination bound of the lat-lon rectangle.
-		Must be in degrees or radians.
+		Must be in degrees or radians; must be in range -90 to 90 degrees.
 	dec_max: :class:'astropy.units.quantity.Quantity'
 		The upper declination bound of the lat-lon rectangle.
-		Must be in degrees or radians.
+		Must be in degrees or radians; must be in range -90 to 90 degrees.
 	
 	RETURNS
 	-------
@@ -195,7 +195,9 @@ def latlon_populator(ra_min, ra_max, dec_min, dec_max):
 	
 	NOTES
 	-----
-	- All inputted bounds must be astropy quantities in units of either degrees or radians.
+	- The inputted bounds must be astropy quantities in units of either degrees or radians.
+	- The inputted ra bounds must be within the range -180 to 180 deg, or -pi to pi rad.
+	  The inputted dec bounds must be within the range -90 to 90 deg, or -pi/2 to pi/2 rad.
 	- Both outputs are in units of radians. Together, they give (ra,dec) coordinates
 	  of the randomly generated points that fall within the rectangle.
 	"""
