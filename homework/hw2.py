@@ -50,6 +50,46 @@ def latlon_area(ra_min, ra_max, dec_min, dec_max):
 
 
 
+#SD function to make sure inputs are in correct format when plotting in aitoff projections
+def aitoff_input_formatter(x):
+	"""Matplotlib throws an error if the given inputs are astropy quantities.
+	Therefore, this function correctly formats inputs to work for plotting in Aitoff projections
+	by converting to radians and stripping the unit off, if either is needed.
+	
+	INPUTS
+	------
+	x : :class:'int', 'float', or 'astropy.units.quantity.Quantity'
+		Value for which formatting needs to be checked/changed.
+	
+	RETURNS
+	-------
+	:class:'int', 'float', or 'numpy.float64'
+		Value returned after being formatted correctly.
+	
+	NOTES
+	-----
+	- If input class is 'int' or 'float', output will be identical to input.
+	- If input class is 'astropy.units.quantity.Quantity', output class will be 'numpy.float64'.
+	  Output will also be converted to radians if input was not in radians.
+	"""
+	
+	#SD check if input is an astropy quantity or not
+	try:
+		#SD if input is in degrees, convert to radians
+		if x.unit=='deg':
+			x = x.to(u.rad)
+			
+		#SD strip unit from quantity to get value
+		x = x.value
+	
+	except AttributeError:
+		pass
+	
+	return x
+
+
+
+#SD function to write the main part of the code that plots a lat-lon rectangle
 def latlon_sides_plotter(ra_min, ra_max, dec_min, dec_max, color='blue', label=None):
 	"""Plots every side of a lat-lon rectangle.
 	Enables you to write only a single line, instead of four lines, to plot a lat-lon rectangle.
@@ -86,6 +126,14 @@ def latlon_sides_plotter(ra_min, ra_max, dec_min, dec_max, color='blue', label=N
 	  If a legend if printed along with said plot, it will have no entry for the rectangle.
 	"""
 	
+	#SD if needed, get inputs in correct format (matplotlib does not take astropy quantities)
+	#SD format each input separately in case not all inputs are in same format
+	bounds = [ra_min, ra_max, dec_min, dec_max]
+	ra_min, ra_max, dec_min, dec_max = [aitoff_input_formatter(b) for b in bounds]
+	
+	
+	#SD plot each side of the lat-lon rectangle
+	#SD first line also labels the rectangle
 	plt.plot([ra_min, ra_min], [dec_min, dec_max], c=color, label=label)
 	plt.plot([ra_max, ra_max], [dec_min, dec_max], c=color)
 	plt.plot([ra_min, ra_max], [dec_min, dec_min], c=color)
