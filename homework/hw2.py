@@ -8,6 +8,34 @@ import argparse
 
 #SD defined function for finding area of lat-lon rectangle
 def latlon_area(ra_min, ra_max, dec_min, dec_max):
+	"""Finds the area of a lat-lon rectangle.
+	
+	INPUTS
+	------
+	ra_min : :class:'astropy.units.quantity.Quantity'
+		The lower right ascension bound of the lat-lon rectangle.
+		Must be in degrees or radians.
+	ra_max: :class:'astropy.units.quantity.Quantity'
+		The upper right ascension bound of the lat-lon rectangle.
+		Must be in degrees or radians.
+	dec_min : :class:'astropy.units.quantity.Quantity'
+		The lower declination bound of the lat-lon rectangle.
+		Must be in degrees or radians.
+	dec_max: :class:'astropy.units.quantity.Quantity'
+		The upper declination bound of the lat-lon rectangle.
+		Must be in degrees or radians.
+	
+	RETURNS
+	-------
+	:class:'numpy.float64'
+		The area of the lat-lon rectangle, in units of deg^2.
+	
+	NOTES
+	-----
+	- All inputted bounds must be astropy quantities in units of either degrees or radians.
+	- The output will have no astropy unit attached to it.
+	  However, the value itself will be in units of deg^2.
+	"""
 	
 	#SD make sure inputs are in radians
 	#SD convert each separately in case there is a mix of deg and rad in inputs
@@ -22,7 +50,41 @@ def latlon_area(ra_min, ra_max, dec_min, dec_max):
 
 
 
-def latlon_sides_plotter(ra_min, ra_max, dec_min, dec_max, color, label):
+def latlon_sides_plotter(ra_min, ra_max, dec_min, dec_max, color='blue', label=None):
+	"""Plots every side of a lat-lon rectangle.
+	Enables you to write only a single line, instead of four lines, to plot a lat-lon rectangle.
+	
+	INPUTS
+	------
+	ra_min : :class:'float'
+		The lower right ascension bound of the lat-lon rectangle.
+		Must be in radians.
+	ra_max: :class:'float'
+		The upper right ascension bound of the lat-lon rectangle.
+		Must be in radians.
+	dec_min : :class:'float'
+		The lower declination bound of the lat-lon rectangle.
+		Must be in radians.
+	dec_max: :class:'float'
+		The upper declination bound of the lat-lon rectangle.
+		Must be in radians.
+	color : :class:'str' , Optional, default is 'blue'
+		The color that the lat-lon rectangle will be plotted as.
+	label : :class:'str' , Optional, default is None
+		The label of the lat-lon rectangle to go in the legend.
+	
+	RETURNS
+	-------
+	None
+	
+	NOTES
+	-----
+	- All inputted bounds must be in radians, otherwise output will be inaccurate.
+	- If input for 'color' is manually given as None, matplotlib's default colors will be used,
+	  and each line of the rectangle will have a different color.
+	- If input for 'label' is not given, the resulting plot will have no label.
+	  If a legend if printed along with said plot, it will have no entry for the rectangle.
+	"""
 	
 	plt.plot([ra_min, ra_min], [dec_min, dec_max], c=color, label=label)
 	plt.plot([ra_max, ra_max], [dec_min, dec_max], c=color)
@@ -35,6 +97,28 @@ def latlon_sides_plotter(ra_min, ra_max, dec_min, dec_max, color, label):
 
 #SD make 4 lat-lon rectangles using given ra bounds
 def latlon_plotter(ra_min, ra_max):
+	"""Outputs a plot of 4 lat-lon rectangles in an Aitoff projection map.
+	Each rectangle will have the same bounds in ra, but differing bounds in dec.
+	
+	INPUTS
+	------
+	ra_min : :class:'astropy.units.quantity.Quantity'
+		The lower right ascension bound of the lat-lon rectangles.
+		Must be in degrees or radians; must be in range -180 to 180 degrees.
+	ra_max: :class:'astropy.units.quantity.Quantity'
+		The upper right ascension bound of the lat-lon rectangles.
+		Must be in degrees or radians; must be in range -180 to 180 degrees.
+	
+	RETURNS
+	-------
+	None
+	
+	NOTES
+	-----
+	- The inputted bounds must be astropy quantities in units of either degrees or radians.
+	- The inputted bounds must be within the range -180 to 180 deg, or -pi to pi rad.
+	- The resulting plot will show up in a pop-up window.
+	"""
 	
 	#SD make sure inputs are in radians
 	#SD need values in radians for plotting in Aitoff
@@ -83,6 +167,38 @@ def latlon_plotter(ra_min, ra_max):
 
 #SD defined function for populating the area inside a lat-lon rectangle with points
 def latlon_populator(ra_min, ra_max, dec_min, dec_max):
+	"""Populates the area of a lat-lon rectangle with randomly generated points.
+	
+	INPUTS
+	------
+	ra_min : :class:'astropy.units.quantity.Quantity'
+		The lower right ascension bound of the lat-lon rectangle.
+		Must be in degrees or radians.
+	ra_max: :class:'astropy.units.quantity.Quantity'
+		The upper right ascension bound of the lat-lon rectangle.
+		Must be in degrees or radians.
+	dec_min : :class:'astropy.units.quantity.Quantity'
+		The lower declination bound of the lat-lon rectangle.
+		Must be in degrees or radians.
+	dec_max: :class:'astropy.units.quantity.Quantity'
+		The upper declination bound of the lat-lon rectangle.
+		Must be in degrees or radians.
+	
+	RETURNS
+	-------
+	:class:'numpy.ndarray'
+		The right ascensions of the generated points that fall within the lat-lon rectangle.
+		In units of radians.
+	:class:'numpy.ndarray'
+		The declinations of the generated points that fall within the lat-lon rectangle.
+		In units of radians.
+	
+	NOTES
+	-----
+	- All inputted bounds must be astropy quantities in units of either degrees or radians.
+	- Both outputs are in units of radians. Together, they give (ra,dec) coordinates
+	  of the randomly generated points that fall within the rectangle.
+	"""
 	
 	#SD create 10,000 random values of ra and dec:
 	ra = (2*random(10000) - 1) * np.pi * u.rad   #SD ranges from -pi to pi
