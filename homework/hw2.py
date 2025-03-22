@@ -1,4 +1,5 @@
 import numpy as np
+from numpy.random import random
 import matplotlib.pyplot as plt
 from astropy import units as u
 import argparse
@@ -72,6 +73,27 @@ def latlon_plotter(ra_min, ra_max):
 
 
 
+#SD defined function for populating the area inside a lat-lon rectangle with points
+def latlon_populator(ra_min, ra_max, dec_min, dec_max):
+	
+	#SD create 10,000 random values of ra and dec:
+	ra = (2*random(10000) - 1) * np.pi * u.rad   #SD ranges from -pi to pi
+	dec = (2*random(10000) - 1) * np.pi/2 * u.rad   #SD ranges from -pi/2 to pi/2
+	
+	#SD find the (ra,dec) coords that fall within given lat-lon rectangle bounds
+	mask = (ra >= ra_min) & (ra <= ra_max) & (dec >= dec_min) & (dec <= dec_max)
+	ra_inside = ra[mask]
+	dec_inside = dec[mask]
+	
+	fig = plt.figure(figsize=(12,10))
+	ax = fig.add_subplot(111, projection="aitoff")
+	plt.scatter(ra_inside, dec_inside, s=5)
+	plt.show()
+	
+	return ra_inside, dec_inside
+
+
+
 if __name__ == "__main__":
 	
 	#SD description when passing -h
@@ -114,6 +136,8 @@ if __name__ == "__main__":
 		raise argparse.ArgumentTypeError(f"ra_max={args.dec_max} {args.unit} outside range of -90 to 90 degrees.")
 	
 	
-	#SD run defined function to find lat-lon rectangle
+	#SD run defined function to find lat-lon rectangles
 	latlon_plotter(ra_min, ra_max)
 	
+	#SD run function to randomly populate points inside lat-lon rectangle with given bounds
+	latlon_populator(ra_min, ra_max, dec_min, dec_max)
