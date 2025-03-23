@@ -336,5 +336,11 @@ if __name__ == "__main__":
 	n_points = len(ra_in)
 	n_points_percent = 100 * (n_points / n_tot)
 	
-	print(f"{n_points} out of the {n_tot} generated points ({n_points_percent}%) fall within the given lat-lon rectangle.")
+	#SD find area of the lat-lon rectangle
+	area = latlon_area(ra_min, ra_max, dec_min, dec_max)
+	area_sphere = (180/np.pi)*(180/np.pi) * 4*np.pi   #SD area of sphere is 4pi steradians
+	area_percent = 100 * (area / area_sphere) 
+	
+	print(f"Points falling within rectangle: {n_points}/{n_tot}, or {n_points_percent:.3f}% of the points.")
+	print(f"Area of rectangle: {area:.3f} deg^2, or {area_percent:.3f}% of the sphere's total area.")
 
