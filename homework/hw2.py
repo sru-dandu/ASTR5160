@@ -29,12 +29,14 @@ def latlon_area(ra_min, ra_max, dec_min, dec_max):
 	-------
 	:class:'numpy.float64'
 		The area of the lat-lon rectangle, in units of deg^2.
+	:class: 'numpy.float64'
+		The area of the lat-lon rectangle as a percent of the total area of the sphere.
 	
 	NOTES
 	-----
 	- All inputted bounds must be astropy quantities in angular units (deg, rad, etc).
-	- The output will have no astropy unit attached to it;
-	  however, the value itself will be in units of deg^2.
+	- The outputs will have no astropy units attached to them;
+	  however, the returned value for the area will be in units of deg^2.
 	"""
 	
 	#SD make sure inputs are in radians
@@ -44,9 +46,14 @@ def latlon_area(ra_min, ra_max, dec_min, dec_max):
 	
 	#SD area of lat-lon rectangle, in deg^2
 	area = (180/np.pi)*(180/np.pi) * (ra_max - ra_min) * (np.sin(dec_max) - np.sin(dec_min))
-	
 	#SD attached astropy unit is wrong; return only value, without the unit
-	return area.value
+	area = area.value
+	
+	#SD find percent of sphere's area that is within rectangle
+	area_sphere = (180/np.pi)*(180/np.pi) * 4*np.pi   #SD area of sphere is 4pi steradians
+	area_percent = 100 * (area / area_sphere)
+	
+	return area, area_percent
 
 
 
@@ -177,11 +184,9 @@ def latlon_plotter(ra_min, ra_max):
 	dec_maxes = [-70, -35, 20, 70] * u.deg
 	
 	#SD find area of each rectangle
-	areas = [latlon_area(ra_min, ra_max, dec_mins[i], dec_maxes[i]) for i in range(4)]
-	
+	areas = [latlon_area(ra_min, ra_max, dec_mins[i], dec_maxes[i])[0] for i in range(4)]
 	#SD find fraction of the sphere's area that is within the rectangles
-	area_sphere = (180/np.pi)*(180/np.pi) * 4*np.pi   #SD area of sphere is 4pi steradians
-	area_percents = [100*(a/area_sphere) for a in areas]
+	area_percents = [latlon_area(ra_min, ra_max, dec_mins[i], dec_maxes[i])[1] for i in range(4)]
 	
 	#SD create lists for labels and colors for plotting
 	labels = [f"Area = {areas[i]:.3f} deg$^2$, or {area_percents[i]:.3f}% of sphere"
@@ -258,11 +263,7 @@ def latlon_populator(ra_min, ra_max, dec_min, dec_max, n=10000):
 	dec_inside = dec[mask]
 	
 	#SD find area of rectangle
-	area = latlon_area(ra_min, ra_max, dec_min, dec_max)
-	
-	#SD find fraction of the sphere's area that is within the rectangle
-	area_sphere = (180/np.pi)*(180/np.pi) * 4*np.pi   #SD area of sphere is 4pi steradians
-	area_percent = 100 * (area / area_sphere)
+	area, area_percent = latlon_area(ra_min, ra_max, dec_min, dec_max)
 	
 	#SD label for rectangle in figure
 	lab = f"Area = {area:.3f} deg$^2$, or {area_percent:.3f}% of sphere"
@@ -337,9 +338,7 @@ if __name__ == "__main__":
 	n_points_percent = 100 * (n_points / n_tot)
 	
 	#SD find area of the lat-lon rectangle
-	area = latlon_area(ra_min, ra_max, dec_min, dec_max)
-	area_sphere = (180/np.pi)*(180/np.pi) * 4*np.pi   #SD area of sphere is 4pi steradians
-	area_percent = 100 * (area / area_sphere) 
+	area, area_percent = latlon_area(ra_min, ra_max, dec_min, dec_max)
 	
 	print(f"Points falling within rectangle: {n_points}/{n_tot}, or {n_points_percent:.3f}% of the points.")
 	print(f"Area of rectangle: {area:.3f} deg^2, or {area_percent:.3f}% of the sphere's total area.")
