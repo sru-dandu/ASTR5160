@@ -179,12 +179,12 @@ def latlon_plotter(ra_min, ra_max):
 	#SD find area of each rectangle
 	areas = [latlon_area(ra_min, ra_max, dec_mins[i], dec_maxes[i]) for i in range(4)]
 	
-	#SD find fraction of the circle's area that is within the rectangles
-	area_circle = (180/np.pi)*(180/np.pi) * 4*np.pi   #SD area of circle is 4pi steradians
-	area_percents = [100*(a/area_circle) for a in areas]
+	#SD find fraction of the sphere's area that is within the rectangles
+	area_sphere = (180/np.pi)*(180/np.pi) * 4*np.pi   #SD area of sphere is 4pi steradians
+	area_percents = [100*(a/area_sphere) for a in areas]
 	
 	#SD create lists for labels and colors for plotting
-	labels = [f"Area = {areas[i]:.3f} deg$^2$, or {area_percents[i]:.3f}% of circle"
+	labels = [f"Area = {areas[i]:.3f} deg$^2$, or {area_percents[i]:.3f}% of sphere"
 		for i in range(len(areas))]
 	colors = ['blue', 'darkorange', 'green', 'red']
 	
@@ -208,8 +208,9 @@ def latlon_plotter(ra_min, ra_max):
 
 
 #SD defined function for populating the area inside a lat-lon rectangle with points
-def latlon_populator(ra_min, ra_max, dec_min, dec_max):
-	"""Populates the area of a lat-lon rectangle with randomly generated points.
+def latlon_populator(ra_min, ra_max, dec_min, dec_max, n=10000):
+	"""Populates a sphere with n randomly generated points,
+	and finds which ones fall within the area of a lat-lon rectangle.
 	
 	INPUTS
 	------
@@ -225,6 +226,8 @@ def latlon_populator(ra_min, ra_max, dec_min, dec_max):
 	dec_max: :class:'astropy.units.quantity.Quantity'
 		The upper declination bound of the lat-lon rectangle.
 		See NOTES for acceptable units and range of values.
+	n : :class:'int' , Optional, default is 10000
+		The number of points to be randomly generated on the sphere
 	
 	RETURNS
 	-------
@@ -245,9 +248,9 @@ def latlon_populator(ra_min, ra_max, dec_min, dec_max):
 	- The resulting plot will show up in a pop-up window.
 	"""
 	
-	#SD create 10,000 random values of ra and dec:
-	ra = (2*random(10000) - 1) * np.pi * u.rad   #SD ranges from -pi to pi
-	dec = (2*random(10000) - 1) * np.pi/2 * u.rad   #SD ranges from -pi/2 to pi/2
+	#SD create n random values of ra and dec:
+	ra = (2*random(n) - 1) * np.pi * u.rad   #SD ranges from -pi to pi
+	dec = (2*random(n) - 1) * np.pi/2 * u.rad   #SD ranges from -pi/2 to pi/2
 	
 	#SD find the (ra,dec) coords that fall within given lat-lon rectangle bounds
 	mask = (ra >= ra_min) & (ra <= ra_max) & (dec >= dec_min) & (dec <= dec_max)
@@ -257,12 +260,12 @@ def latlon_populator(ra_min, ra_max, dec_min, dec_max):
 	#SD find area of rectangle
 	area = latlon_area(ra_min, ra_max, dec_min, dec_max)
 	
-	#SD find fraction of the circle's area that is within the rectangle
-	area_circle = (180/np.pi)*(180/np.pi) * 4*np.pi   #SD area of circle is 4pi steradians
-	area_percent = 100 * (area / area_circle)
+	#SD find fraction of the sphere's area that is within the rectangle
+	area_sphere = (180/np.pi)*(180/np.pi) * 4*np.pi   #SD area of sphere is 4pi steradians
+	area_percent = 100 * (area / area_sphere)
 	
 	#SD label for rectangle in figure
-	lab = f"Area = {area:.3f} deg$^2$, or {area_percent:.3f}% of circle"
+	lab = f"Area = {area:.3f} deg$^2$, or {area_percent:.3f}% of sphere"
 	
 	#SD plotting the points and the rectangle
 	fig = plt.figure(figsize=(12,10))
@@ -326,6 +329,12 @@ if __name__ == "__main__":
 	latlon_plotter(-45*u.deg, 45*u.deg)
 	
 	#SD run function to randomly populate points inside lat-lon rectangle with given bounds
-	ra_in, dec_in = latlon_populator(ra_min, ra_max, dec_min, dec_max)
-	print(f"{len(ra_in)} out of the 10,000 generated points fall within the given lat-lon rectangle.")
+	n_tot = 10000
+	ra_in, dec_in = latlon_populator(ra_min, ra_max, dec_min, dec_max, n=n_tot)
+	
+	#SD find number of points that fell in the rectangle
+	n_points = len(ra_in)
+	n_points_percent = 100 * (n_points / n_tot)
+	
+	print(f"{n_points} out of the {n_tot} generated points ({n_points_percent}%) fall within the given lat-lon rectangle.")
 
