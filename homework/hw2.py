@@ -52,7 +52,7 @@ def latlon_area(ra_min, ra_max, dec_min, dec_max):
 
 #SD function to make sure inputs are in correct format when plotting in aitoff projections
 def aitoff_input_formatter(x):
-	"""Matplotlib throws an error if the given inputs are astropy quantities.
+	"""Matplotlib throws an error if the given inputs are singular astropy quantities.
 	Therefore, this function correctly formats inputs to work for plotting in Aitoff projections
 	by converting to radians and stripping the unit off, if either is needed.
 	
@@ -96,18 +96,22 @@ def latlon_sides_plotter(ra_min, ra_max, dec_min, dec_max, color='blue', label=N
 	
 	INPUTS
 	------
-	ra_min : :class:'float'
+	ra_min : :class:'int', 'float', or 'astropy.units.quantity.Quantity'
 		The lower right ascension bound of the lat-lon rectangle.
-		Must be in radians.
-	ra_max: :class:'float'
+		If 'astropy.units.quantity.Quantity', then must be in either degrees or radians.
+		If not 'astropy.units.quantity.Quantity', then must be in radians.
+	ra_max: :class:'int', 'float', or 'astropy.units.quantity.Quantity'
 		The upper right ascension bound of the lat-lon rectangle.
-		Must be in radians.
-	dec_min : :class:'float'
+		If 'astropy.units.quantity.Quantity', then must be in either degrees or radians.
+		If not 'astropy.units.quantity.Quantity', then must be in radians.
+	dec_min : :class:'int', 'float', or 'astropy.units.quantity.Quantity'
 		The lower declination bound of the lat-lon rectangle.
-		Must be in radians.
-	dec_max: :class:'float'
+		If 'astropy.units.quantity.Quantity', then must be in either degrees or radians.
+		If not 'astropy.units.quantity.Quantity', then must be in radians.
+	dec_max: :class:'int', 'float', or 'astropy.units.quantity.Quantity'
 		The upper declination bound of the lat-lon rectangle.
-		Must be in radians.
+		If 'astropy.units.quantity.Quantity', then must be in either degrees or radians.
+		If not 'astropy.units.quantity.Quantity', then must be in radians.
 	color : :class:'str' , Optional, default is 'blue'
 		The color that the lat-lon rectangle will be plotted as.
 	label : :class:'str' , Optional, default is None
@@ -119,7 +123,8 @@ def latlon_sides_plotter(ra_min, ra_max, dec_min, dec_max, color='blue', label=N
 	
 	NOTES
 	-----
-	- All inputted bounds must be in radians, otherwise output will be inaccurate.
+	- If the inputted bounds are of class 'astropy.units.quantity.Quantity',
+	  then must be in units of either degrees or radians. Otherwise, the value must be in radians.
 	- If input for 'color' is manually given as None, matplotlib's default colors will be used,
 	  and each line of the rectangle will have a different color.
 	- If input for 'label' is not given, the resulting plot will have no label.
@@ -152,10 +157,10 @@ def latlon_plotter(ra_min, ra_max):
 	------
 	ra_min : :class:'astropy.units.quantity.Quantity'
 		The lower right ascension bound of the lat-lon rectangles.
-		Must be in degrees or radians; must be in range -180 to 180 degrees.
+		Must be in degrees or radians; must be in range -180 to 180  deg, or -pi to pi rad.
 	ra_max: :class:'astropy.units.quantity.Quantity'
 		The upper right ascension bound of the lat-lon rectangles.
-		Must be in degrees or radians; must be in range -180 to 180 degrees.
+		Must be in degrees or radians; must be in range -180 to 180  deg, or -pi to pi rad.
 	
 	RETURNS
 	-------
@@ -168,17 +173,9 @@ def latlon_plotter(ra_min, ra_max):
 	- The resulting plot will show up in a pop-up window.
 	"""
 	
-	#SD make sure inputs are in radians
-	#SD need values in radians for plotting in Aitoff
-	ra_min = ra_min.to(u.rad)
-	ra_max = ra_max.to(u.rad)
-	
 	#SD save 4 pairs of dec_mins and dec_maxes to make 4 lat-lon rectangles
 	dec_mins = [-90, -55, 0, 50] * u.deg
 	dec_maxes = [-70, -35, 20, 70] * u.deg
-	#SD convert decs to radians in order to plot in Aitoff
-	dec_mins = dec_mins.to(u.rad)
-	dec_maxes = dec_maxes.to(u.rad)
 	
 	#SD find area of each rectangle
 	areas = [latlon_area(ra_min, ra_max, dec_mins[i], dec_maxes[i]) for i in range(4)]
@@ -187,19 +184,12 @@ def latlon_plotter(ra_min, ra_max):
 	labels = [f"Area = {a:.3f} deg$^2$" for a in areas]
 	colors = ['blue', 'darkorange', 'green', 'red']
 	
-	#SD strip units from quantities in order to plot
-	#SD because code is throwing error when plotting as quantities
-	ra_min = ra_min.value
-	ra_max = ra_max.value
-	dec_mins = dec_mins.value
-	dec_maxes = dec_maxes.value
-	
 	
 	#SD create plot of lat-lon rectangle
 	fig = plt.figure(figsize=(12,10))
 	ax = fig.add_subplot(111, projection="aitoff")
 	
-	#SD plot one side of the rectangle at a time for each (dec_min, dec_max) pair
+	#SD plot one rectangle at a time for each (dec_min, dec_max) pair
 	#SD using defined function that plots each line of a lat-lon rectangle
 	[latlon_sides_plotter(ra_min, ra_max, dec_mins[i], dec_maxes[i], colors[i], labels[i]) for i in range(4)]
 	
@@ -261,7 +251,13 @@ def latlon_populator(ra_min, ra_max, dec_min, dec_max):
 	
 	fig = plt.figure(figsize=(12,10))
 	ax = fig.add_subplot(111, projection="aitoff")
-	plt.scatter(ra_inside, dec_inside, s=5)
+	plt.scatter(ra_inside, dec_inside, s=5, label='randomly generated points')
+	latlon_sides_plotter(ra_min, ra_max, dec_min, dec_max, label='lat-lon rectangle')
+
+	ax.grid(color='gray', linestyle='dashed')
+	plt.xlabel('ra [deg]')
+	plt.ylabel('dec [deg]')
+	plt.legend(loc='upper right')
 	plt.show()
 	
 	return ra_inside, dec_inside
