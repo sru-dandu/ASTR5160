@@ -42,10 +42,10 @@ def latlon_area(ra_min, ra_max, dec_min, dec_max):
 	bounds = [ra_min, ra_max, dec_min, dec_max]
 	ra_min, ra_max, dec_min, dec_max = [b.to(u.rad) for b in bounds]
 	
-	#SD area of lat-lon rectangle, in square degrees
+	#SD area of lat-lon rectangle, in deg^2
 	area = (180/np.pi)*(180/np.pi) * (ra_max - ra_min) * (np.sin(dec_max) - np.sin(dec_min))
 	
-	#SD return only value, without the unit
+	#SD attached astropy unit is wrong; return only value, without the unit
 	return area.value
 
 
@@ -178,9 +178,14 @@ def latlon_plotter(ra_min, ra_max):
 	
 	#SD find area of each rectangle
 	areas = [latlon_area(ra_min, ra_max, dec_mins[i], dec_maxes[i]) for i in range(4)]
-		
+	
+	#SD find fraction of the circle's area that is within the rectangles
+	area_circle = (180/np.pi)*(180/np.pi) * 4*np.pi   #SD area of circle is 4pi steradians
+	area_percents = [100*(a/area_circle) for a in areas]
+	
 	#SD create lists for labels and colors for plotting
-	labels = [f"Area = {a:.3f} deg$^2$" for a in areas]
+	labels = [f"Area = {areas[i]:.3f} deg$^2$, or {area_percents[i]:.3f}% of circle"
+		for i in range(len(areas))]
 	colors = ['blue', 'darkorange', 'green', 'red']
 	
 	
@@ -249,10 +254,21 @@ def latlon_populator(ra_min, ra_max, dec_min, dec_max):
 	ra_inside = ra[mask]
 	dec_inside = dec[mask]
 	
+	#SD find area of rectangle
+	area = latlon_area(ra_min, ra_max, dec_min, dec_max)
+	
+	#SD find fraction of the circle's area that is within the rectangle
+	area_circle = (180/np.pi)*(180/np.pi) * 4*np.pi   #SD area of circle is 4pi steradians
+	area_percent = 100 * (area / area_circle)
+	
+	#SD label for rectangle in figure
+	lab = f"Area = {area:.3f} deg$^2$, or {area_percent:.3f}% of circle"
+	
+	#SD plotting the points and the rectangle
 	fig = plt.figure(figsize=(12,10))
 	ax = fig.add_subplot(111, projection="aitoff")
 	plt.scatter(ra_inside, dec_inside, s=5, label='randomly generated points')
-	latlon_sides_plotter(ra_min, ra_max, dec_min, dec_max, label='lat-lon rectangle')
+	latlon_sides_plotter(ra_min, ra_max, dec_min, dec_max, label=lab)
 
 	ax.grid(color='gray', linestyle='dashed')
 	plt.xlabel('ra [deg]')
