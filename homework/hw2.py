@@ -340,6 +340,7 @@ if __name__ == "__main__":
 	#SD find area of the lat-lon rectangle
 	area, area_percent = latlon_area(ra_min, ra_max, dec_min, dec_max)
 	
-	print(f"Points falling within rectangle: {n_points}/{n_tot}, or {n_points_percent:.3f}% of the points.")
 	print(f"Area of rectangle: {area:.3f} deg^2, or {area_percent:.3f}% of the sphere's total area.")
+	print(f"Points falling within rectangle: {n_points}/{n_tot}, or {n_points_percent:.3f}% of the points.")
+
 
