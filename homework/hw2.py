@@ -14,16 +14,16 @@ def latlon_area(ra_min, ra_max, dec_min, dec_max):
 	------
 	ra_min : :class:'astropy.units.quantity.Quantity'
 		The lower right ascension bound of the lat-lon rectangle.
-		Must be in degrees or radians.
+		Must be in angular units (deg, rad, etc).
 	ra_max: :class:'astropy.units.quantity.Quantity'
 		The upper right ascension bound of the lat-lon rectangle.
-		Must be in degrees or radians.
+		Must be in angular units (deg, rad, etc).
 	dec_min : :class:'astropy.units.quantity.Quantity'
 		The lower declination bound of the lat-lon rectangle.
-		Must be in degrees or radians.
+		Must be in angular units (deg, rad, etc).
 	dec_max: :class:'astropy.units.quantity.Quantity'
 		The upper declination bound of the lat-lon rectangle.
-		Must be in degrees or radians.
+		Must be in angular units (deg, rad, etc).
 	
 	RETURNS
 	-------
@@ -32,7 +32,7 @@ def latlon_area(ra_min, ra_max, dec_min, dec_max):
 	
 	NOTES
 	-----
-	- All inputted bounds must be astropy quantities in units of either degrees or radians.
+	- All inputted bounds must be astropy quantities in angular units (deg, rad, etc).
 	- The output will have no astropy unit attached to it;
 	  however, the value itself will be in units of deg^2.
 	"""
@@ -77,8 +77,8 @@ def aitoff_input_formatter(x):
 	
 	#SD check if input is an astropy quantity or not
 	try:
-		#SD if input is in degrees, convert to radians
-		if x.unit=='deg':
+		#SD if input is not in radians, convert to radians
+		if x.unit != 'rad':
 			x = x.to(u.rad)
 			
 		#SD strip unit from quantity to get value
@@ -122,8 +122,8 @@ def latlon_sides_plotter(ra_min, ra_max, dec_min, dec_max, color='blue', label=N
 	NOTES
 	-----
 	- Each of the inputted bounds can be of different classes and in different units.
-	- If an inputted bounds is of class 'astropy.units.quantity.Quantity',
-	  then can be in units of either degrees or radians. Otherwise, value must be in radians.
+	- If an inputted bound is of class 'astropy.units.quantity.Quantity',
+	  then can be in any angular units (deg, rad, etc). Otherwise, value must be in radians.
 	- If input for 'color' is manually given as None, matplotlib's default colors will be used,
 	  and each line of the rectangle will have a different color.
 	- If input for 'label' is not given, the resulting plot will have no label.
@@ -167,8 +167,8 @@ def latlon_plotter(ra_min, ra_max):
 	
 	NOTES
 	-----
-	- The inputted bounds must be astropy quantities in units of either degrees or radians.
-	- The inputted bounds must be within the range -180 to 180 deg, or -pi to pi rad.
+	- The inputted bounds must be astropy quantities in angular units (deg, rad, etc).
+	- The inputted bounds must be within the range -pi to pi rad (or equivalent for unit of choice).
 	- The resulting plot will show up in a pop-up window.
 	"""
 	
@@ -233,10 +233,11 @@ def latlon_populator(ra_min, ra_max, dec_min, dec_max):
 	NOTES
 	-----
 	- The inputted bounds must be astropy quantities in units of either degrees or radians.
-	- The inputted ra bounds must be within the range -180 to 180 deg, or -pi to pi rad.
-	- The inputted dec bounds must be within the range -90 to 90 deg, or -pi/2 to pi/2 rad.
+	- The inputted ra bounds must be within the range -pi to pi rad (or equivalent for unit of choice).
+	- The inputted dec bounds must be within the range -pi/2 to pi/2 rad (or equivalent for unit of choice).
 	- Both outputs are in units of radians. Together, they give (ra,dec) coordinates
 	  of the randomly generated points that fall within the rectangle.
+	- The resulting plot will show up in a pop-up window.
 	"""
 	
 	#SD create 10,000 random values of ra and dec:
