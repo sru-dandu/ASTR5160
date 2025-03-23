@@ -306,8 +306,10 @@ if __name__ == "__main__":
 		raise argparse.ArgumentTypeError(f"ra_max={args.dec_max} {args.unit} outside range of -90 to 90 degrees.")
 	
 	
-	#SD run defined function to find lat-lon rectangles
-	latlon_plotter(ra_min, ra_max)
+	#SD run defined function to find 4 lat-lon rectangles
+	latlon_plotter(-45*u.deg, 45*u.deg)
 	
 	#SD run function to randomly populate points inside lat-lon rectangle with given bounds
-	latlon_populator(ra_min, ra_max, dec_min, dec_max)
+	ra_in, dec_in = latlon_populator(ra_min, ra_max, dec_min, dec_max)
+	print(f"{len(ra_in)} out of the 10,000 generated points fall within the given lat-lon rectangle.")
+
