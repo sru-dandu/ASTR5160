@@ -379,8 +379,8 @@ if __name__ == "__main__":
 		n_points_percent = 100 * n_points/n_tot
 		
 		#SD plotting histogram
-		plt.hist(n_points_percent)
-		plt.plot([area_percent, area_percent], [0, 200], label='area of lat-lon rectangle')
+		plt.hist(n_points_percent, label='percent of points within lat-lon rectangle')
+		plt.plot([area_percent, area_percent], [0, 200], label='percent area of lat-lon rectangle')
 		plt.legend()
 		plt.show()
 		
