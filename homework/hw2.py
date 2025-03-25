@@ -213,7 +213,7 @@ def latlon_plotter(ra_min, ra_max):
 
 
 #SD defined function for populating the area inside a lat-lon rectangle with points
-def latlon_populator(ra_min, ra_max, dec_min, dec_max, n=10000):
+def latlon_populator(ra_min, ra_max, dec_min, dec_max, n=10000, test=False):
 	"""Populates a sphere with n randomly generated points,
 	and finds which ones fall within the area of a lat-lon rectangle.
 	
@@ -233,6 +233,8 @@ def latlon_populator(ra_min, ra_max, dec_min, dec_max, n=10000):
 		See NOTES for acceptable units and range of values.
 	n : :class:'int' , Optional, default is 10000
 		The number of points to be randomly generated on the sphere
+	test : :class:'bool' , Optional, default is False
+		If True, no plot gets printed (for testing purposes).
 	
 	RETURNS
 	-------
@@ -251,6 +253,7 @@ def latlon_populator(ra_min, ra_max, dec_min, dec_max, n=10000):
 	- Both outputs are in units of radians. Together, they give (ra,dec) coordinates
 	  of the randomly generated points that fall within the rectangle.
 	- The resulting plot will show up in a pop-up window.
+	- To suppress plot output for testing purposes, set test=True.
 	"""
 	
 	#SD create n random values of ra and dec:
@@ -265,20 +268,25 @@ def latlon_populator(ra_min, ra_max, dec_min, dec_max, n=10000):
 	#SD find area of rectangle
 	area, area_percent = latlon_area(ra_min, ra_max, dec_min, dec_max)
 	
-	#SD label for rectangle in figure
-	lab = f"Area = {area:.3f} deg$^2$, or {area_percent:.3f}% of sphere"
+	#SD check if 'test' is set to True or False
+	#SD aitoff plot with generated points only printed if test=False (default)
+	if test is False:
 	
-	#SD plotting the points and the rectangle
-	fig = plt.figure(figsize=(12,10))
-	ax = fig.add_subplot(111, projection="aitoff")
-	plt.scatter(ra_inside, dec_inside, s=5, label='randomly generated points')
-	latlon_sides_plotter(ra_min, ra_max, dec_min, dec_max, label=lab)
-
-	ax.grid(color='gray', linestyle='dashed')
-	plt.xlabel('ra [deg]')
-	plt.ylabel('dec [deg]')
-	plt.legend(loc='upper right')
-	plt.show()
+		#SD label for rectangle in figure
+		labs = f"Area = {area:.3f} deg$^2$, or {area_percent:.3f}% of sphere"
+		
+		#SD plotting the points and the rectangle
+		fig = plt.figure(figsize=(12,10))
+		ax = fig.add_subplot(111, projection="aitoff")
+		plt.scatter(ra_inside, dec_inside, s=5, label='randomly generated points')
+		latlon_sides_plotter(ra_min, ra_max, dec_min, dec_max, label=labs)
+		
+		ax.grid(color='gray', linestyle='dashed')
+		plt.xlabel('ra [deg]')
+		plt.ylabel('dec [deg]')
+		plt.legend(loc='upper right')
+		plt.show()
+		
 	
 	return ra_inside, dec_inside
 
@@ -287,9 +295,13 @@ def latlon_populator(ra_min, ra_max, dec_min, dec_max, n=10000):
 if __name__ == "__main__":
 	
 	#SD description when passing -h
-	parser = argparse.ArgumentParser(description="""Takes bounds of a lat-lon rectangle, and returns its area.
+	parser = argparse.ArgumentParser(description="""Takes bounds of a lat-lon rectangle.
+	Retuns two plots: one sphere with fixed lat-lon rectangles plotted on it,
+	and another sphere with the lat-lon rectangle specified with the given bounds.
+	Also returns the given rectangle's area both in deg^2 and as a percent of the total area of the sphere.
 	Bounds are: (ra_min, ra_max, dec_min, dec_max).
-	Inputs must be in either degrees or radians; must be specified.""")
+	Inputs must be in either degrees or radians; must be specified.
+	See --test parameter for information on test mode.""")
 	
 	#SD inputs for bounds of lat-lon rectangle
 	parser.add_argument("ra_min", type=float,
@@ -304,6 +316,9 @@ if __name__ == "__main__":
 	parser.add_argument("unit", type=str,
 			choices=['radians', 'rad', 'r', 'degrees', 'deg', 'd'],
 			help="['str'] Units of inputted values. All inputs must be in same units.")
+	parser.add_argument("-t", "--test", action='store_true',
+			help="""Passing this flag runs the code in test mode:
+			Will print a histogram of 1000 runs of populating the sphere with points and finding the percentage of the points that fall within the given lat-lon rectangle bounds.""")
 	args = parser.parse_args()
 	
 	
@@ -329,18 +344,45 @@ if __name__ == "__main__":
 	#SD run defined function to find 4 lat-lon rectangles
 	latlon_plotter(-45*u.deg, 45*u.deg)
 	
-	#SD run function to randomly populate points inside lat-lon rectangle with given bounds
-	n_tot = 10000
-	ra_in, dec_in = latlon_populator(ra_min, ra_max, dec_min, dec_max, n=n_tot)
-	
-	#SD find number of points that fell in the rectangle
-	n_points = len(ra_in)
-	n_points_percent = 100 * (n_points / n_tot)
 	
 	#SD find area of the lat-lon rectangle
 	area, area_percent = latlon_area(ra_min, ra_max, dec_min, dec_max)
 	
-	print(f"Area of rectangle: {area:.3f} deg^2, or {area_percent:.3f}% of the sphere's total area.")
-	print(f"Points falling within rectangle: {n_points}/{n_tot}, or {n_points_percent:.3f}% of the points.")
-
+	#SD set number of points to be generated on sphere
+	n_tot = 10000
+	
+	#SD check whether test flag is set to True
+	if args.test is False:
+		
+		#SD run function to randomly populate points inside lat-lon rectangle with given bounds
+		ra_in, dec_in = latlon_populator(ra_min, ra_max, dec_min, dec_max, n=n_tot)
+		
+		#SD find number of points within rectangle
+		n_points = len(ra_in)
+		n_points_percent = 100 * n_points/n_tot
+		
+		print(f"Area of rectangle: {area:.3f} deg^2, or {area_percent:.3f}% of the sphere's total area.")
+		print(f"Points falling within rectangle: {n_points}/{n_tot}, or {n_points_percent:.3f}% of the points.")
+		print("The following are the right ascensions and declinations, in radians, of those points:")
+		print("Right ascensions:", ra_in)
+		print("Declinations:", dec_in)
+	
+	elif args.test is True:
+		
+		print("Running in test mode.")
+		
+		#SD populate the sphere with points 1000 times
+		#SD and find how many points fall within the rectangle each time
+		n_points = [len(latlon_populator(ra_min, ra_max, dec_min, dec_max, n=n_tot, test=True)[0])
+				for i in range(1000)]
+		n_points = np.array(n_points)
+		n_points_percent = 100 * n_points/n_tot
+		
+		#SD plotting histogram
+		plt.hist(n_points_percent)
+		plt.plot([area_percent, area_percent], [0, 200], label='area of lat-lon rectangle')
+		plt.legend()
+		plt.show()
+		
+		print("Histogram created successfully.")
 
