@@ -22,7 +22,7 @@ z = r - r_minus_z
 print("TASK 1:")
 print(f"g mag: from conversion = {g} ; from SDSS Navigate Tool = 15.70")
 print(f"z mag: from conversion = {z} ; from SDSS Navigate Tool = 14.55")
-print("The values for g and z obtained by converting from UBVRI generally match the same values from the SDSS Navigate Tool.")
+print("The magnitudes for g and z bands obtained by converting from UBVRI colors generally match the same values from the SDSS Navigate Tool.")
 print('----------')
 
 
@@ -53,7 +53,7 @@ print("TASK 2:")
 print(f"g mag: from conversion = {sweep_g} ; from SDSS Navigate Tool = 15.70")
 print(f"r mag: from conversion = {sweep_r} ; from SDSS Navigate Tool = 15.19")
 print(f"z mag: from conversion = {sweep_z} ; from SDSS Navigate Tool = 14.55")
-print("The values for g, r, and z obtained from the fluxes in the sweep file generally match the same values from the SDSS Navigate Tool.")
+print("The magnitudes in g, r, and z bands obtained from the fluxes in the sweep file generally match the same values from the SDSS Navigate Tool.")
 
 #SD extract WISE fluxes for the object
 sweep_flux_W1 = obj['FLUX_W1'][0]
@@ -69,4 +69,5 @@ sweep_W3 = 22.5 - 2.5*np.log10(sweep_flux_W3)
 #W4 flux is negative, so cannot calculate magnitude for it
 
 print(f"The WISE magnitudes are W1={sweep_W1}, W2={sweep_W2}, and W3={sweep_W3}. It was not detected in the W4 band.")
+print('----------')
 
