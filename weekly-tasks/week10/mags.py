@@ -7,12 +7,6 @@ import numpy as np
 #SD copying in the given mags and colors for PG1633+A
 V, BminusV, UminusB, VminusR, RminusI = 15.256, 0.873, 0.320, 0.505, 0.511
 
-#SD finding the mags from the given information
-B = BminusV + V
-U = UminusB + B
-R = V - VminusR
-I = R - RminusI
-
 #SD copying conversion equations from Jester et al. 2005
 #SD https://classic.sdss.org/dr7/algorithms/sdssUBVRITransform.php
 g = V + 0.74*(BminusV) - 0.07
@@ -26,7 +20,7 @@ z = r - r_minus_z
 print("TASK 1:")
 print(f"g mag: from conversion = {g} ; from SDSS Navigate Tool = 15.70")
 print(f"z mag: from conversion = {z} ; from SDSS Navigate Tool = 14.55")
-print("The values for g and z obtained by converting from UBVRI match the same values from the SDSS Navigate Tool."
+print("The values for g and z obtained by converting from UBVRI match the same values from the SDSS Navigate Tool.")
 print('----------')
 
 
