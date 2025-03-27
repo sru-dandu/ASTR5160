@@ -2,6 +2,11 @@ import numpy as np
 import os
 from astropy.table import Table
 
+#SD suppress UnitsWarning when reading fits files as astropy tables
+import warnings
+from astropy.utils.exceptions import AstropyWarning
+warnings.simplefilter('ignore', AstropyWarning)
+
 
 
 ### TASK 1 (RED) ###
@@ -68,6 +73,9 @@ sweep_W2 = 22.5 - 2.5*np.log10(sweep_flux_W2)
 sweep_W3 = 22.5 - 2.5*np.log10(sweep_flux_W3)
 #W4 flux is negative, so cannot calculate magnitude for it
 
-print(f"The WISE magnitudes are W1={sweep_W1}, W2={sweep_W2}, and W3={sweep_W3}. It was not detected in the W4 band.")
+print("W1 mag:", sweep_W1)
+print("W2 mag:", sweep_W2)
+print("W3 mag:", sweep_W3)
+print("W4 mag: object not detected")
 print('----------')
 
