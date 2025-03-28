@@ -73,16 +73,48 @@ c_match_sweep = [c1_match_sweep1, c1_match_sweep2,
 
 #SD get relevant fluxes from sweep files
 g_lists = [t['FLUX_G'] for t in sweep_match_c]
-g = np.concatenate(g_lists)
+g_uncorrected = np.concatenate(g_lists)
 r_lists = [t['FLUX_R'] for t in sweep_match_c]
-r = np.concatenate(r_lists)
+r_uncorrected = np.concatenate(r_lists)
 z_lists = [t['FLUX_Z'] for t in sweep_match_c]
-z = np.concatenate(z_lists)
-W1_lists  = [t['FLUX_W1'] for t in sweep_match_c]
-W1 = np.concatenate(W1_lists)
-W2_lists  = [t['FLUX_W2'] for t in sweep_match_c]
-W2 = np.concatenate(W2_lists)
+z_uncorrected = np.concatenate(z_lists)
+W1_lists = [t['FLUX_W1'] for t in sweep_match_c]
+W1_uncorrected = np.concatenate(W1_lists)
+W2_lists = [t['FLUX_W2'] for t in sweep_match_c]
+W2_uncorrected = np.concatenate(W2_lists)
 
 print("TASK 1:")
 print(f"Extracted g, r, z, W1, and W2 fluxes of the {len(g)} objects.")
 print('----------')
+
+
+
+### TASK 2 (RED) ###
+
+#SD extract Galactic dust corrections
+g_dustcorr = np.concatenate([t['MW_TRANSMISSION_G'] for t in sweep_match_c])
+r_dustcorr = np.concatenate([t['MW_TRANSMISSION_R'] for t in sweep_match_c])
+z_dustcorr = np.concatenate([t['MW_TRANSMISSION_Z'] for t in sweep_match_c])
+W1_dustcorr = np.concatenate([t['MW_TRANSMISSION_W1'] for t in sweep_match_c])
+W2_dustcorr = np.concatenate([t['MW_TRANSMISSION_W2'] for t in sweep_match_c])
+
+#SD correct fluxes for Galactic dust
+g = g_uncorrected / g_dustcorr
+r = r_uncorrected / r_dustcorr
+z = z_uncorrected / z_dustcorr
+W1 = W1_uncorrected / W1_dustcorr
+W2 = W2_uncorrected / W2_dustcorr
+
+#SD convert fluxes to mags
+mag_g = 22.5 - 2.5*np.log10(g)
+mag_r = 22.5 - 2.5*np.log10(r)
+mag_z = 22.5 - 2.5*np.log10(z)
+mag_W1 = 22.5 - 2.5*np.log10(W1)
+mag_W2 = 22.5 - 2.5*np.log10(W2)
+
+print("TASK 2:")
+print("Fluxes for g, r, z, W1, and W2 bands were corrected for Galactic dust and converted to magnitudes.")
+
+
+
+### TASK 3 (RED) ###
