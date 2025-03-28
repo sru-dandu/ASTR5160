@@ -137,6 +137,25 @@ f = np.poly1d(params)
 
 #SD categorize between stars and quasars
 def classify_func(g_given, z_given, r_given, W1_given):
+	"""Classifies whether an object is a star or a quasar using given magnitudes and predefined color cut.
+	
+	INPUTS
+	------
+	g_given : :class:'float' or 'numpy.float64'
+		The magnitude of the object in g-band.
+	z_given : :class:'float' or 'numpy.float64'
+		The magnitude of the object in z-band.
+	r_given : :class:'float' or 'numpy.float64'
+		The magnitude of the object in r-band.
+	W1_given : :class:'float' or 'numpy.float64'
+		The magnitude of the object in W1-band.
+	
+	RETURNS
+	-------
+	:class:'str'
+		Classification of the object.
+		Either 'star' or 'quasar'.
+	"""
 	
 	#SD get g-z and r-W1 colors from given inputs
 	g_minus_z_given = g _given- z_given
@@ -151,5 +170,8 @@ def classify_func(g_given, z_given, r_given, W1_given):
 	elif r_minus_W1_given > r_minus_W1_cutoff:
 		return 'quasar'
 
+
 print("TASK 3:")
 print("See plot.")
+print('----------')
+
