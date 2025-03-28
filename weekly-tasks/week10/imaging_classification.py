@@ -2,6 +2,7 @@ import numpy as np
 from astropy.table import Table
 from astropy.coordinates import SkyCoord
 from astropy import units as u
+import matplotlib.pyplot as plt
 
 
 
@@ -118,3 +119,37 @@ print("Fluxes for g, r, z, W1, and W2 bands were corrected for Galactic dust and
 
 
 ### TASK 3 (RED) ###
+
+#SD get g-z and r-W1 colors
+g_minus_z = mag_g - mag_z
+r_minus_W1 = mag_r - mag_W1
+
+#SD plotting r-W1 vs g-z mags
+plt.scatter(g_minus_z, r_minus_W1, s=5)
+plt.plot([-2, 7], [-3, 6.5], c='maroon')
+plt.xlabel('g - z')
+plt.ylabel('r - W1')
+plt.show()
+
+#SD get equation of the line separating stars from quasars
+params = np.polyfit([-2, 7], [-3, 6.5], 1)
+f = np.poly1d(params)
+
+#SD categorize between stars and quasars
+def classify_func(g_given, z_given, r_given, W1_given):
+	
+	#SD get g-z and r-W1 colors from given inputs
+	g_minus_z_given = g _given- z_given
+	r_minus_W1_given = mag_r_given - mag_W1_given
+	
+	#SD get r-W1 color the object would have if following the cutoff line
+	r_minus_W1_cutoff = f(g_minus_z_given)
+	
+	#SD return 'star' or 'quasar' depending on whether point is above or below cutoff line
+	if r_minus_W1_given < r_minus_W1_cutoff:
+		return 'star'
+	elif r_minus_W1_given > r_minus_W1_cutoff:
+		return 'quasar'
+
+print("TASK 3:")
+print("See plot.")
