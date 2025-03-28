@@ -258,7 +258,7 @@ def latlon_populator(ra_min, ra_max, dec_min, dec_max, n=10000, test=False):
 	
 	#SD create n random values of ra and dec:
 	ra = (2*random(n) - 1) * np.pi * u.rad   #SD ranges from -pi to pi
-	dec = (2*random(n) - 1) * np.pi/2 * u.rad   #SD ranges from -pi/2 to pi/2
+	dec = np.arcsin(2*random(n) - 1) * u.rad   #SD ranges from -pi/2 to pi/2
 	
 	#SD find the (ra,dec) coords that fall within given lat-lon rectangle bounds
 	mask = (ra >= ra_min) & (ra <= ra_max) & (dec >= dec_min) & (dec <= dec_max)
