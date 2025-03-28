@@ -21,20 +21,68 @@ sweepfiles_long = [sweepdir + f for f in sweepfiles]
 sweeptabs = [Table.read(f) for f in sweepfiles_long]
 
 #SD extract coords from given files
-ra = np.append(tab1['RA'], tab2['RA'])
-dec = np.append(tab1['DEC'], tab2['DEC'])
-coords = SkyCoord(ra, dec, unit=u.deg)
+coords1 = SkyCoord(tab1['RA'], tab1['DEC'], unit=u.deg)
+coords2 = SkyCoord(tab2['RA'], tab2['DEC'], unit=u.deg)
+coords_all = [coords1, coords2]
 
-#SD extract ra and dec from sweep files
-ra_sweep = np.concatenate((sweepfiles[0]['RA'],
-			sweepfiles[1]['RA'],
-			sweepfiles[2]['RA'],
-			sweepfiles[3]['RA']))
-dec_sweep = np.concatenate((sweepfiles[0]['DEC'],
-			sweepfiles[1]['DEC'],
-			sweepfiles[2]['DEC'],
-			sweepfiles[3]['DEC']))
-coords_sweep = SkyCoord(ra_sweep, dec_sweep)
+#SD extract coords from sweep files
+coords_sweep1 = SkyCoord(sweeptabs[0]['RA'], sweeptabs[0]['DEC'], unit=u.deg)
+coords_sweep2 = SkyCoord(sweeptabs[1]['RA'], sweeptabs[1]['DEC'], unit=u.deg)
+coords_sweep3 = SkyCoord(sweeptabs[2]['RA'], sweeptabs[2]['DEC'], unit=u.deg)
+coords_sweep4 = SkyCoord(sweeptabs[3]['RA'], sweeptabs[3]['DEC'], unit=u.deg)
+coords_sweep_all = [coords_sweep1, coords_sweep2, coords_sweep3, coords_sweep4]
 
+#SD find objects in given files that match those in sweeps
+id1_all = []
+id2_all = []
+for c in coords_all:
+	for sweep in coords_sweep_all:
+		#SD get matching indices
+		id1, id2, d2, d3 = sweep.search_around_sky(c, 0.5*u.arcsec)
+		id1_all.append(id1)
+		id2_all.append(id2)
 
-	
+#SD mask the sweep files to get only the matched objects
+#SD 'sweeptabs' is list of [sweep1, sweep2, sweep3, sweep4] astropy tables
+sweep1_match_c1 = sweeptabs[0][id2_all[0]]
+sweep2_match_c1 = sweeptabs[1][id2_all[1]]
+sweep3_match_c1 = sweeptabs[2][id2_all[2]]
+sweep4_match_c1 = sweeptabs[3][id2_all[3]]
+sweep1_match_c2 = sweeptabs[0][id2_all[4]]
+sweep2_match_c2 = sweeptabs[1][id2_all[5]]
+sweep3_match_c2 = sweeptabs[2][id2_all[6]]
+sweep4_match_c2 = sweeptabs[3][id2_all[7]]
+sweep_match_c = [sweep1_match_c1, sweep2_match_c1,
+		sweep3_match_c1, sweep4_match_c1,
+		sweep1_match_c2, sweep2_match_c2,
+		sweep3_match_c2, sweep4_match_c2]
+
+#SD mask the object files to get only the matched objects
+c1_match_sweep1 = tab1[id1_all[0]]
+c1_match_sweep2 = tab1[id1_all[1]]
+c1_match_sweep3 = tab1[id1_all[2]]
+c1_match_sweep4 = tab1[id1_all[3]]
+c2_match_sweep1 = tab2[id1_all[4]]
+c2_match_sweep2 = tab2[id1_all[5]]
+c2_match_sweep3 = tab2[id1_all[6]]
+c2_match_sweep4 = tab2[id1_all[7]]
+c_match_sweep = [c1_match_sweep1, c1_match_sweep2,
+		c1_match_sweep3, c1_match_sweep4,
+		c2_match_sweep1, c2_match_sweep2,
+		c2_match_sweep3, c2_match_sweep4,]
+
+#SD get relevant fluxes from sweep files
+g_lists = [t['FLUX_G'] for t in sweep_match_c]
+g = np.concatenate(g_lists)
+r_lists = [t['FLUX_R'] for t in sweep_match_c]
+r = np.concatenate(r_lists)
+z_lists = [t['FLUX_Z'] for t in sweep_match_c]
+z = np.concatenate(z_lists)
+W1_lists  = [t['FLUX_W1'] for t in sweep_match_c]
+W1 = np.concatenate(W1_lists)
+W2_lists  = [t['FLUX_W2'] for t in sweep_match_c]
+W2 = np.concatenate(W2_lists)
+
+print("TASK 1:")
+print(f"Extracted g, r, z, W1, and W2 fluxes of the {len(g)} objects.")
+print('----------')
