@@ -25,18 +25,22 @@ def cross_match(file, coords_center, radius, sweepdir, match_radius=1*u.arcsec):
     #SD read in sweep files as astropy tables
     sweepfiles_long = [sweepdir + '/' + sf for sf in sweepfiles]
     table_sweeps = [Table.read(sfl) for sfl in sweepfiles_long]
-    #SD extract coords from chosen sweep files
-    coords_sweeps = [SkyCoord(ts['RA'], ts['DEC'], unit=u.deg) for ts in table_sweeps]
+    table_sweeps_all = vstack(table_sweeps)
     
+    #SD extract coords from chosen sweep files
+    coords_sweeps = SkyCoord(table_sweeps_all['RA'], table_sweeps_all['DEC'], unit=u.deg)
     #SD find indices of dataset and sweeps that correspond with each other
-    id1 = [sweep.search_around_sky(coords_selected, match_radius)[0] for sweep in coords_sweeps]
-    id2 = [sweep.search_around_sky(coords_selected, match_radius)[1] for sweep in coords_sweeps]
+    id1, id2, d2, d3 = coords_sweeps.search_around_sky(coords_selected, match_radius)
     
     #SD cross-match betwen objects in datafile and the sweep files, using given matching radius
-    table_selected_matched = [table_selected[id1[i]] for i in range(len(id1))]
-    table_sweeps_matched = [table_sweeps[i][id2[i]] for i in range(len(id2))]
+    table_selected_matched = table_selected[id1]
+    table_sweeps_matched = table_sweeps_all[id2]
     
-    return [len(c) for c in table_selected_matched]
+    return table_selected_matched, table_sweeps_matched
+    
+    
+    
+    #def 
 
 
 
