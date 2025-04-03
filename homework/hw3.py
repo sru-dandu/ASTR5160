@@ -1,6 +1,7 @@
 from astropy.table import Table, vstack
 from astropy.coordinates import SkyCoord
 from astropy import units as u
+import numpy as np
 #SD import a function I previously wrote
 from weekly_tasks.week08.cross_matching import sweep_func
 
@@ -40,7 +41,39 @@ def cross_match(file, coords_center, radius, sweepdir, match_radius=1*u.arcsec):
     
     
     
-    #def 
+def r_W1minusW2_bounds(table_data, table_sweep, r_low, r_high, W1minusW2_low, W1minusW2_high):
+    #SD if you do not want a specific bound, set it to an unobtainable value like -100 or 100
+    
+    #SD extract fluxes from sweep files
+    r_flux = table_sweep['FLUX_R']
+    W1_flux = table_sweep['FLUX_W1']
+    W2_flux = table_sweep['FLUX_W2']
+    
+    #SD create mask to only get objects for which all fluxes > 0
+    #SD flux <= 0 means it wasn't detected in that band
+    flux_mask = (r_flux > 0) & (W1_flux > 0) & (W2_flux > 0)
+    
+    #SD mask the tables and fluxes to remove values <= 0
+    table_data = table_data[flux_mask]
+    table_sweep = table_sweep[flux_mask]
+    r_flux = r_flux[flux_mask]
+    W1_flux = W1_flux[flux_mask]
+    W2_flux = W2_flux[flux_mask]
+    
+    #SD get magnitudes from fluxes
+    #SD fluxes are in units of nanomaggies
+    r_mag = 22.5 - 2.5*np.log10(r_flux)
+    W1_mag = 22.5 - 2.5*np.log10(W1_flux)
+    W2_mag = 22.5 - 2.5*np.log10(W2_flux)
+    #SD get W1-W2 color
+    W1minusW2 = W1_mag - W2_mag
+    
+    #SD find objects that fall within given bounds for r mag and W1-W2 color
+    obj_mask = (r_mag > r_low) & (r_mag < r_high) & (W1minusW2 > W1minusW2_low) & (W1minusW2 < W1minusW2_high)
+    table_data_bounded = table_data[obj_mask]
+    table_sweep_bounded = table_sweep[obj_mask]
+    
+    return table_data_bounded, table_sweep_bounded
 
 
 
@@ -52,6 +85,14 @@ if __name__=='__main__':
     c_center = SkyCoord(163, 50, unit=u.deg)
     
     #SD run the function to get objects within 3 deg of (163 deg, 50 deg)
-    print(cross_match(filename, c_center, 3*u.deg, sweepdir))
+    table_survey, table_sweeps = cross_match(filename, c_center, 3*u.deg, sweepdir)
+    
+    #SD run the function to get objects with r mag < 22 and W1-W2 color > 0.5
+    table_survey, table_sweeps = r_W1minusW2_bounds(table_survey, table_sweeps,
+                                                    r_low=-100, r_high=22,
+                                                    W1minusW2_low=0.5, W1minusW2_high=100)
+    
+    
+    
     
     
