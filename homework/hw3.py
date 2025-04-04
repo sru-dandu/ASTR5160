@@ -2,8 +2,11 @@ from astropy.table import Table, vstack
 from astropy.coordinates import SkyCoord
 from astropy import units as u
 import numpy as np
+from time import sleep
 #SD import a function I previously wrote
 from weekly_tasks.week08.cross_matching import sweep_func
+#SD import Dr. Adam Myer's querying module (saved within my ASTR5160/weekly_tasks/week08 directory)
+from weekly_tasks.week08.sdssDR9query import sdssQuery
 
 
 
@@ -144,6 +147,105 @@ def r_W1minusW2_bounds(table_data, table_sweep, r_low, r_high, W1minusW2_low, W1
 
 
 
+def sdss_query_mags_single(ra, dec):
+    """Sends an SQL command to the SDSS database and returns ugriz mags for the single specified object.
+       Adapted from Dr. Adam Myers' sdssDR9query.py module.
+    
+    INPUTS
+    ------
+    ra : :class:'int' or 'float'
+        The right ascension, in degrees, of the object for which the query is being run.
+    dec : :class:'int' or 'float'
+        The declination, in degrees, of the object for which the query is being run.
+    
+    RETURNS
+    -------
+    :class:'list'
+        A list of values obtained from the query.
+        Contains the following data: [ra (deg), dec (deg), u, g, r, i, z]
+    
+    NOTES
+    -----
+    - Most of the code was copied from Dr. Adam Myers' code,
+      but I commented wherever I made my own changes/additions.
+    - If the object is not found in the SDSS database, then the list is populated with -100 for each magnitude.
+    """
+    
+    # ADM initialize the query.
+    qry = sdssQuery()
+    
+    # ADM the query to be executed. You can substitute any query, here!
+    #SD removed distance from query
+    #SD need to convert inputs to str
+    query = """SELECT top 1 ra,dec,u,g,r,i,z FROM PhotoObj as PT
+    JOIN dbo.fGetNearbyObjEq(""" + str(ra) + """,""" + str(dec) + """,0.02) as GNOE
+    on PT.objID = GNOE.objID ORDER BY GNOE.distance"""
+    
+    # ADM execute the query.
+    qry.query = query
+    for line in qry.executeQuery():
+        result = line.strip()
+    
+    # ADM NEVER remove this line! It won't speed up your code, it will
+    # ADM merely overwhelm the SDSS server (a denial-of-service attack)!
+    sleep(1)
+
+    # ADM the server returns a byte-type string. Convert it to a string.
+    #SD used to be a print statement. now saving to varable
+    output_str = result.decode()
+    
+    #SD convert str to a list
+    #SD then convert each str in the list to a float
+    #SD if output is 'No objects have been found', return list with unobtainably low values
+    output_list = output_str.split(',')
+    try:
+        output_list_nums = [float(n) for n in output_list]
+    except ValueError:
+        output_list_nums = [ra, dec, -100, -100, -100, -100, -100]
+    
+    return output_list_nums
+
+
+
+def sdss_query_mags_multiple(ras, decs):
+    """Queries the SDSS database for an array of coordinates
+       by running the function sdss_query_mags_single() for each set of coordinates passed.
+    
+    INPUTS
+    ------
+    ras : :class:'list' or 'numpy.ndarray' or 'astropy.table.column.Column'
+        Right ascensions of objects to be queried.
+    decs : :class:'list' or 'numpy.ndarray' or 'astropy.table.column.Column'
+        Declinations of objects to be queried.
+    
+    OUTPUTS
+    -------
+    :class:'astropy.table.table.Table
+        Astropy table containing the results of the query.
+        Contains the following data: [ra (deg), dec (deg), u, g, r, i, z]
+    
+    NOTES
+    -----
+    - If an object is not found in the SDSS database, then that object's row in the table
+      is populated with -100 for each magnitude.
+    """
+    
+    #SD run sdss_query_single for each ra,dec that was passed
+    #SD creates list of lists; each list is for an object
+    output = [sdss_query_mags_single(ras[i], decs[i]) for i in range(len(ras))]
+    
+    #SD combine into a single array of arrays
+    #SD this also makes the array the correct shape to turn into a table
+    output_formatted = np.vstack(output)
+    
+    #SD convert list of lists to astropy table
+    table = Table(output_formatted,
+	                names=('RA', 'DEC', 'MAG_U', 'MAG_G', 'MAG_R', 'MAG_I', 'MAG_Z'))
+    
+    return table
+
+
+
 if __name__=='__main__':
     
     #SD define variables
@@ -152,12 +254,32 @@ if __name__=='__main__':
     c_center = SkyCoord(163, 50, unit=u.deg)
     
     #SD run the function to get objects within 3 deg of (163 deg, 50 deg)
-    table_survey, table_sweeps = cross_match(filename, c_center, 3*u.deg, sweepdir)
+    survey_table, sweeps_table = cross_match(filename, c_center, 3*u.deg, sweepdir)
     
     #SD run the function to get objects with r mag < 22 and W1-W2 color > 0.5
-    table_survey, table_sweeps = r_W1minusW2_bounds(table_survey, table_sweeps,
+    survey_table, sweeps_table = r_W1minusW2_bounds(survey_table, sweeps_table,
                                                     r_low=-100, r_high=22,
                                                     W1minusW2_low=0.5, W1minusW2_high=100)
+    
+    #SD print the number of objects (Problem 3)
+    print(f"There are {len(survey_table)} objects in the survey with r < 22 and W1-W2 > 0.5.")
+    
+    #SD run the function to SQL query the SDSS database for u and i mags of the objects
+    ugriz_table = sdss_query_mags_multiple(survey_table['RA'], survey_table['DEC'])
+    
+    #SD extract u and i mags from ugriz table
+    u_mag = ugriz_table['MAG_U']
+    i_mag = ugriz_table['MAG_I']
+    
+    #SD print number of objects that had a match in the SDSS database (Problem 5)
+    num_matched = len(u_mag[u_mag > -100])
+    percent_num_matched = 100 * num_matched/len(u_mag)
+    print(f"{num_matched} of the {len(u_mag)} objects ({percent_num_matched:5.2f}%)",
+            "had a match in the SDSS database")
+    
+    #TESTING: this object could not be found by SDSS
+    #print(survey_table['RA'][3], survey_table['DEC'][3])
+    
     
     
     
