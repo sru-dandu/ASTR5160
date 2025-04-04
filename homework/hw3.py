@@ -8,6 +8,39 @@ from weekly_tasks.week08.cross_matching import sweep_func
 
 
 def cross_match(file, coords_center, radius, sweepdir, match_radius=1*u.arcsec):
+    """Finds objects in a data file within some circular area, and
+    cross-matches them with objects from sweep files.
+    
+    INPUTS
+    ------
+    file : :class:'str'
+        The data file containing the objects being cross-matched.
+    coords_center : :class:'astropy.coordinates.sky_coordinate.SkyCoord'
+        The coordinates of the center of the area of the sky being cross-matched.
+    radius : :class:'astropy.units.quantity.Quantity'
+        The radius of the area of the sky being cross-matched.
+    sweepdir : :class:'str'
+        The directory in which the sweep files are saved.
+    match_radius : :class:'astropy.units.quantity.Quantity' ; Optional, default is 1 arcsecond
+        The radius to be used when cross-matching.
+    
+    RETURNS
+    -------
+    :class:'astropy.table.table.Table'
+        An astropy table containing the objects from the data file that matched with objects in the sweep files.
+    :class:'astropy.table.table.Table'
+        An astropy table containing all objects from the sweep files that matched with objects in the data file.
+    
+    NOTES
+    -----
+    - Each index in the two outputted tables correspond to the same object.
+        - Ex: table1[0] and table2[0] correspond to one object,
+          table1[1] and table2[1] correspond another object, etc.
+    - The second outputted table, which contains objects from the sweep files, combines
+      cros-matched objects from all relevant sweep files in the directory.
+    - The function used here for finding relevant sweep files comes from
+      a function in ASTR5160/weekly_tasks/week08/cross_matching.
+    """
     
     #SD read in FIRST file and extract coords
     table = Table.read(file)
@@ -38,11 +71,45 @@ def cross_match(file, coords_center, radius, sweepdir, match_radius=1*u.arcsec):
     table_sweeps_matched = table_sweeps_all[id2]
     
     return table_selected_matched, table_sweeps_matched
-    
-    
-    
+
+
+
 def r_W1minusW2_bounds(table_data, table_sweep, r_low, r_high, W1minusW2_low, W1minusW2_high):
-    #SD if you do not want a specific bound, set it to an unobtainable value like -100 or 100
+    """Find objects that have r-band magnitudes and W1-W2 colors that are within the specified bounds.
+    
+    INPUTS
+    ------
+    table_data : :class:'astropy.table.table.Table'
+        An astropy table of objects from which the relevant objects will be extracted.
+    table_sweep : :class:'astropy.table.table.Table'
+        An astropy table of objects from which the relevant objects will be extracted.
+        This table corresponds to the first one, but has data from sweep files.
+        This table should have the r, W1, and W2 fluxes of the objects.
+    r_low : :class:'int' or 'float'
+        The lower bound of the desired range of r-band magnitudes.
+    r_high : :class:'int' or 'float'
+        The upper bound of the desired range of r-band magnitudes.
+    W1minusW2_low : :class:'int' or 'float'
+        The lower bound of the desired range of W1-W2 colors.
+    W1minusW2_high : :class:'int' or 'float'
+        The upper bound of the desired range of W1-W2 colors.
+    
+    RETURNS
+    -------
+    :class:'astropy.table.table.Table'
+        Same as the first inputted table, but with only
+        the objects whose r-band magnitudes and W1-W2 colors fall within the specified bounds.
+    :class:'astropy.table.table.Table'
+        Same as the second inputted table, but with only
+        the objects whose r-band magnitudes and W1-W2 colors fall within the specified bounds.
+    
+    NOTES
+    -----
+    - The two inputted tables should have the same objects in them.
+        - Ex: table1[0] and table2[0] correspond to one object,
+          table1[1] and table2[1] correspond another object, etc.
+    - If a specific bound is not required, set it to an unobtainable value like -100 or 100.
+    """
     
     #SD extract fluxes from sweep files
     r_flux = table_sweep['FLUX_R']
