@@ -10,7 +10,9 @@ from weekly_tasks.week08.sdssDR9query import sdssQuery
 
 
 
-def cross_match(file, coords_center, radius, sweepdir, match_radius=1*u.arcsec):
+#SD I made a more specific version of this function for use in hw 3, but I already wrote this version
+#SD and I wanted to leave this function as a general use case as well
+def cross_match(datafile, coords_center, radius, sweepdir, match_radius=1*u.arcsec):
     """Finds objects in a data file within some circular area, and
     cross-matches them with objects from sweep files.
     
@@ -39,14 +41,14 @@ def cross_match(file, coords_center, radius, sweepdir, match_radius=1*u.arcsec):
     - Each index in the two outputted tables correspond to the same object.
         - Ex: table1[0] and table2[0] correspond to one object,
           table1[1] and table2[1] correspond another object, etc.
-    - The second outputted table, which contains objects from the sweep files, combines
-      cros-matched objects from all relevant sweep files in the directory.
+    - The second outputted table, which contains data from the sweep files, combines
+      cross-matched objects from all relevant sweep files in the directory.
     - The function used here for finding relevant sweep files comes from
       a function in ASTR5160/weekly_tasks/week08/cross_matching.
     """
     
     #SD read in FIRST file and extract coords
-    table = Table.read(file)
+    table = Table.read(datafile)
     coords = SkyCoord(table['RA'], table['DEC'], unit=u.deg)
     
     #SD find objects within circle centered at given center coords and with given radius
@@ -77,17 +79,79 @@ def cross_match(file, coords_center, radius, sweepdir, match_radius=1*u.arcsec):
 
 
 
-def r_W1minusW2_bounds(table_data, table_sweep, r_low, r_high, W1minusW2_low, W1minusW2_high):
+#SD this is the more specific version of the function above
+#SD for use in hw 3
+def cross_match_mags(datafile, coords_center, radius, sweepdir, match_radius=1*u.arcsec):
+    """Finds objects in a data file within some circular area, and
+    cross-matches them with objects from sweep files.
+    
+    INPUTS
+    ------
+    file : :class:'str'
+        The data file containing the objects being cross-matched.
+    coords_center : :class:'astropy.coordinates.sky_coordinate.SkyCoord'
+        The coordinates of the center of the area of the sky being cross-matched.
+    radius : :class:'astropy.units.quantity.Quantity'
+        The radius of the area of the sky being cross-matched.
+    sweepdir : :class:'str'
+        The directory in which the sweep files are saved.
+    match_radius : :class:'astropy.units.quantity.Quantity' ; Optional, default is 1 arcsecond
+        The radius to be used when cross-matching.
+    
+    RETURNS
+    -------
+    :class:'astropy.table.table.Table'
+        An astropy table containing all objects from the sweep files that matched with objects in the data file.
+    
+    NOTES
+    -----
+    - The outputted table, which contains data from the sweep files, combines
+      cross-matched objects from all relevant sweep files in the directory.
+    - The function used here for finding relevant sweep files comes from
+      a function in ASTR5160/weekly_tasks/week08/cross_matching.
+    """
+    
+    #SD read in FIRST file and extract coords
+    table = Table.read(datafile)
+    coords = SkyCoord(table['RA'], table['DEC'], unit=u.deg)
+    
+    #SD find coords of objects within circle centered at given center coords and with given radius
+    mask = coords.separation(coords_center) < radius
+    coords_selected = coords[mask]
+    
+    #SD find which sweep files are necessary for cross-matching
+    #SD running function from weekly_tasks/week08/cross_matching.py
+    sweepfiles = sweep_func(coords_selected.ra.value, coords_selected.dec.value, directory=sweepdir)
+    
+    #SD read in sweep files as astropy tables
+    sweepfiles_long = [sweepdir + '/' + sf for sf in sweepfiles]
+    table_sweeps = [Table.read(sfl) for sfl in sweepfiles_long]
+    #SD only extract the necessary columns
+    colnames = ['RA', 'DEC', 'FLUX_G', 'FLUX_R', 'FLUX_Z',
+                'FLUX_W1', 'FLUX_W2', 'FLUX_W3', 'FLUX_W4']
+    table_sweeps_shortened = [ts[colnames] for ts in table_sweeps]
+    table_sweeps_all = vstack(table_sweeps_shortened)
+    
+    #SD extract coords from chosen sweep files
+    coords_sweeps = SkyCoord(table_sweeps_all['RA'], table_sweeps_all['DEC'], unit=u.deg)
+    #SD find indices of dataset and sweeps that correspond with each other
+    id1, id2, d2, d3 = coords_sweeps.search_around_sky(coords_selected, match_radius)
+    
+    #SD cross-match betwen objects in datafile and the sweep files, using given matching radius
+    table_sweeps_matched = table_sweeps_all[id2]
+    
+    return table_sweeps_matched
+
+
+
+def r_W1minusW2_bounds(table_sweep, r_low, r_high, W1minusW2_low, W1minusW2_high):
     """Find objects that have r-band magnitudes and W1-W2 colors that are within the specified bounds.
     
     INPUTS
     ------
-    table_data : :class:'astropy.table.table.Table'
-        An astropy table of objects from which the relevant objects will be extracted.
     table_sweep : :class:'astropy.table.table.Table'
         An astropy table of objects from which the relevant objects will be extracted.
-        This table corresponds to the first one, but has data from sweep files.
-        This table should have the r, W1, and W2 fluxes of the objects.
+        This table should contain r, W1, and W2 fluxes of the objects.
     r_low : :class:'int' or 'float'
         The lower bound of the desired range of r-band magnitudes.
     r_high : :class:'int' or 'float'
@@ -100,17 +164,11 @@ def r_W1minusW2_bounds(table_data, table_sweep, r_low, r_high, W1minusW2_low, W1
     RETURNS
     -------
     :class:'astropy.table.table.Table'
-        Same as the first inputted table, but with only
-        the objects whose r-band magnitudes and W1-W2 colors fall within the specified bounds.
-    :class:'astropy.table.table.Table'
-        Same as the second inputted table, but with only
+        Same as the inputted table, but with only
         the objects whose r-band magnitudes and W1-W2 colors fall within the specified bounds.
     
     NOTES
     -----
-    - The two inputted tables should have the same objects in them.
-        - Ex: table1[0] and table2[0] correspond to one object,
-          table1[1] and table2[1] correspond another object, etc.
     - If a specific bound is not required, set it to an unobtainable value like -100 or 100.
     """
     
@@ -123,8 +181,7 @@ def r_W1minusW2_bounds(table_data, table_sweep, r_low, r_high, W1minusW2_low, W1
     #SD flux <= 0 means it wasn't detected in that band
     flux_mask = (r_flux > 0) & (W1_flux > 0) & (W2_flux > 0)
     
-    #SD mask the tables and fluxes to remove values <= 0
-    table_data = table_data[flux_mask]
+    #SD mask the table and fluxes to remove values <= 0
     table_sweep = table_sweep[flux_mask]
     r_flux = r_flux[flux_mask]
     W1_flux = W1_flux[flux_mask]
@@ -140,10 +197,9 @@ def r_W1minusW2_bounds(table_data, table_sweep, r_low, r_high, W1minusW2_low, W1
     
     #SD find objects that fall within given bounds for r mag and W1-W2 color
     obj_mask = (r_mag > r_low) & (r_mag < r_high) & (W1minusW2 > W1minusW2_low) & (W1minusW2 < W1minusW2_high)
-    table_data_bounded = table_data[obj_mask]
     table_sweep_bounded = table_sweep[obj_mask]
     
-    return table_data_bounded, table_sweep_bounded
+    return table_sweep_bounded
 
 
 
@@ -254,18 +310,17 @@ if __name__=='__main__':
     c_center = SkyCoord(163, 50, unit=u.deg)
     
     #SD run the function to get objects within 3 deg of (163 deg, 50 deg)
-    survey_table, sweeps_table = cross_match(filename, c_center, 3*u.deg, sweepdir)
+    sweeps_table = cross_match_mags(filename, c_center, 3*u.deg, sweepdir)
     
     #SD run the function to get objects with r mag < 22 and W1-W2 color > 0.5
-    survey_table, sweeps_table = r_W1minusW2_bounds(survey_table, sweeps_table,
-                                                    r_low=-100, r_high=22,
-                                                    W1minusW2_low=0.5, W1minusW2_high=100)
+    sweeps_table = r_W1minusW2_bounds(sweeps_table, r_low=-100, r_high=22,
+                                        W1minusW2_low=0.5, W1minusW2_high=100)
     
     #SD print the number of objects (Problem 3)
-    print(f"There are {len(survey_table)} objects in the survey with r < 22 and W1-W2 > 0.5.")
+    print(f"There are {len(sweeps_table)} objects in the survey with r < 22 and W1-W2 > 0.5.")
     
     #SD run the function to SQL query the SDSS database for u and i mags of the objects
-    ugriz_table = sdss_query_mags_multiple(survey_table['RA'], survey_table['DEC'])
+    ugriz_table = sdss_query_mags_multiple(sweeps_table['RA'], sweeps_table['DEC'])
     
     #SD extract u and i mags from ugriz table
     u_mag = ugriz_table['MAG_U']
@@ -278,8 +333,7 @@ if __name__=='__main__':
             "had a match in the SDSS database")
     
     #TESTING: this object could not be found by SDSS
-    #print(survey_table['RA'][3], survey_table['DEC'][3])
-    
+    #print(sweeps_table['RA'][3], sweeps_table['DEC'][3])
     
     
     
