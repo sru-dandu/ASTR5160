@@ -71,9 +71,16 @@ def cross_match(datafile, coords_center, radius, sweepdir, match_radius=1*u.arcs
     #SD find indices of dataset and sweeps that correspond with each other
     id1, id2, d2, d3 = coords_sweeps.search_around_sky(coords_selected, match_radius)
     
+    #SD remove duplicates in case cross-matching returns multiple objects that are within the matching radius
+    id1_sorted, unique_idx = np.unique(id1, return_index=True)
+    id2_sorted = id2[unique_idx]
+    #SD again, but other way around
+    id2_sorted, unique_idx = np.unique(id2_sorted, return_index=True)
+    id1_sorted = id1_sorted[unique_idx]
+    
     #SD cross-match betwen objects in datafile and the sweep files, using given matching radius
-    table_selected_matched = table_selected[id1]
-    table_sweeps_matched = table_sweeps_all[id2]
+    table_selected_matched = table_selected[id1_sorted]
+    table_sweeps_matched = table_sweeps_all[id2_sorted]
     
     return table_selected_matched, table_sweeps_matched
 
@@ -137,8 +144,15 @@ def cross_match_mags(datafile, coords_center, radius, sweepdir, match_radius=1*u
     #SD find indices of dataset and sweeps that correspond with each other
     id1, id2, d2, d3 = coords_sweeps.search_around_sky(coords_selected, match_radius)
     
+    #SD remove duplicates in case cross-matching returns multiple objects that are within the matching radius
+    id1_sorted, unique_idx = np.unique(id1, return_index=True)
+    id2_sorted = id2[unique_id]
+    #SD again, but other way around
+    id2_sorted, unique_idx = np.unique(id2_sorted, return_index=True)
+    id1_sorted = id1_sorted[unique_id]
+    
     #SD cross-match betwen objects in datafile and the sweep files, using given matching radius
-    table_sweeps_matched = table_sweeps_all[id2]
+    table_sweeps_matched = table_sweeps_all[id2_sorted]
     
     return table_sweeps_matched
 
@@ -332,8 +346,6 @@ if __name__=='__main__':
     print(f"{num_matched} of the {len(u_mag)} objects ({percent_num_matched:5.2f}%)",
             "had a match in the SDSS database")
     
-    #TESTING: this object could not be found by SDSS
-    #print(sweeps_table['RA'][3], sweeps_table['DEC'][3])
     
     
     
