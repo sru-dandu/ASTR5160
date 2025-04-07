@@ -324,7 +324,7 @@ def sdss_query_mags_multiple(ras, decs):
     
     #SD convert list of lists to astropy table
     table = Table(output_formatted,
-	                names=('RA', 'DEC', 'MAG_U', 'MAG_G', 'MAG_R', 'MAG_I', 'MAG_Z'))
+                    names=('RA', 'DEC', 'MAG_U', 'MAG_G', 'MAG_R', 'MAG_I', 'MAG_Z'))
     
     return table
 
@@ -350,15 +350,37 @@ if __name__=='__main__':
     #SD run the function to SQL query the SDSS database for u and i mags of the objects
     ugriz_table = sdss_query_mags_multiple(sweeps_table['RA'], sweeps_table['DEC'])
     
+    #SD print number of objects that had a match in the SDSS database (Problem 5)
+    num_matched = len(ugriz_table[ugriz_table['MAG_U'] > -100])
+    percent_num_matched = 100 * num_matched/len(ugriz_table)
+    print(f"{num_matched} of the {len(ugriz_table)} objects ({percent_num_matched:5.2f}%)",
+            "had a match in the SDSS database")
+    
+    #SD mask all tables to remove object not found in the SDSS database
+    sdss_mask = ugriz_table['MAG_U'] > -100
+    survey_table = survey_table[sdss_mask]
+    sweeps_table = sweeps_table[sdss_mask]
+    ugriz_table = ugriz_table[sdss_mask]
+    
     #SD extract u and i mags from ugriz table
     u_mag = ugriz_table['MAG_U']
     i_mag = ugriz_table['MAG_I']
     
-    #SD print number of objects that had a match in the SDSS database (Problem 5)
-    num_matched = len(u_mag[u_mag > -100])
-    percent_num_matched = 100 * num_matched/len(u_mag)
-    print(f"{num_matched} of the {len(u_mag)} objects ({percent_num_matched:5.2f}%)",
-            "had a match in the SDSS database")
+    #SD find brightest object in u-band (Problem 6)
+    ubrite1_mask = u_mag == np.min(u_mag)
+    
+    #SD find SDSS u and i mags of ubrite1
+    u_mag_ubrite1 = u_mag[ubrite1_mask][0]
+    i_mag_ubrite1 = i_mag[ubrite1_mask][0]
+    
+    #SD convert ubrite1 mags to fluxes (Problem 7)
+    #SD fluxes are in units of nanomaggies
+    u_flux_ubrite1 = 10 ** ((22.5 - u_mag_ubrite1) / 2.5)
+    i_flux_ubrite1 = 10 ** ((22.5 - i_mag_ubrite1) / 2.5)
+    
+    print(u_flux_ubrite1)
+    print(i_flux_ubrite1)
+    
     
     
     
