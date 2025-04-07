@@ -3,6 +3,7 @@ from astropy.coordinates import SkyCoord
 from astropy import units as u
 import numpy as np
 from time import sleep
+import matplotlib.pyplot as plt
 #SD import a function I previously wrote
 from weekly_tasks.week08.cross_matching import sweep_func
 #SD import Dr. Adam Myer's querying module (saved within my ASTR5160/weekly_tasks/week08 directory)
@@ -362,24 +363,23 @@ if __name__=='__main__':
     sweeps_table = sweeps_table[sdss_mask]
     ugriz_table = ugriz_table[sdss_mask]
     
-    #SD extract u and i mags from ugriz table
-    u_mag = ugriz_table['MAG_U']
-    i_mag = ugriz_table['MAG_I']
-    
     #SD find brightest object in u-band (Problem 6)
+    u_mag = ugriz_table['MAG_U']
     ubrite1_mask = u_mag == np.min(u_mag)
+    ubrite_survey_table = survey_table[ubrite1_mask]
+    ubrite_sweeps_table = sweeps_table[ubrite1_mask]
+    ubrite_ugriz_table = ugriz_table[ubrite1_mask]
     
     #SD find SDSS u and i mags of ubrite1
-    u_mag_ubrite1 = u_mag[ubrite1_mask][0]
-    i_mag_ubrite1 = i_mag[ubrite1_mask][0]
+    u_mag_ubrite1 = ubrite_ugriz_table['MAG_U'][0]
+    i_mag_ubrite1 = ubrite_ugriz_table['MAG_I'][0]
     
     #SD convert ubrite1 mags to fluxes (Problem 7)
     #SD fluxes are in units of nanomaggies
     u_flux_ubrite1 = 10 ** ((22.5 - u_mag_ubrite1) / 2.5)
     i_flux_ubrite1 = 10 ** ((22.5 - i_mag_ubrite1) / 2.5)
     
-    print(u_flux_ubrite1)
-    print(i_flux_ubrite1)
+    #SD plot fluxes as a function of wavelength
     
     
     
