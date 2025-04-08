@@ -371,19 +371,34 @@ if __name__=='__main__':
     ubrite_ugriz_table = ugriz_table[ubrite1_mask]
     
     #SD find SDSS u and i mags of ubrite1
-    u_mag_ubrite1 = ubrite_ugriz_table['MAG_U'][0]
-    i_mag_ubrite1 = ubrite_ugriz_table['MAG_I'][0]
+    u_mag_ubrite1 = ubrite_ugriz_table['MAG_U']
+    i_mag_ubrite1 = ubrite_ugriz_table['MAG_I']
     
     #SD convert ubrite1 mags to fluxes (Problem 7)
     #SD fluxes are in units of nanomaggies
     u_flux_ubrite1 = 10 ** ((22.5 - u_mag_ubrite1) / 2.5)
     i_flux_ubrite1 = 10 ** ((22.5 - i_mag_ubrite1) / 2.5)
     
+    
+    #SD wavelengths of ugriz and W1-W4 bands, in angstroms
+    wavelengths = [3543, 4770, 6231, 7625, 9134, 3.4*10000, 4.6*10000, 12*10000, 22*10000]
+    #SD fluxes of ugriz and W1-W4 bands, in nanomaggies
+    fluxes = [u_flux_ubrite1, ubrite_sweeps_table['FLUX_G'], ubrite_sweeps_table['FLUX_R'],
+                i_flux_ubrite1, ubrite_sweeps_table['FLUX_Z'], ubrite_sweeps_table['FLUX_W1'],
+                ubrite_sweeps_table['FLUX_W2'], ubrite_sweeps_table['FLUX_W3'], ubrite_sweeps_table['FLUX_W4']]
+    #SD labels and colors of points in scatterplot
+    names = ['u', 'g', 'r', 'i', 'z', 'W1', 'W2', 'W3', 'W4']
+    colors = ['blue', 'green', 'red', 'orange', 'purple', 'brown', 'pink', 'yellow', 'maroon']
+    
     #SD plot fluxes as a function of wavelength
-    
-    
-    
-    
+    #plt.scatter(wavelengths, fluxes, c=colors, label=names)
+    [plt.scatter(wavelengths[i], fluxes[i], c=colors[i], edgecolor='black', label=names[i])
+        for i in range(len(names))]
+    plt.xlabel('wavelength [$\AA$]')
+    plt.ylabel('flux [nanomaggies]')
+    plt.legend(loc='upper left')
+    #plt.savefig('plot.png')
+    plt.show()
     
     
     
