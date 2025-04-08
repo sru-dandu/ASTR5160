@@ -386,18 +386,16 @@ if __name__=='__main__':
     fluxes = [u_flux_ubrite1, ubrite_sweeps_table['FLUX_G'], ubrite_sweeps_table['FLUX_R'],
                 i_flux_ubrite1, ubrite_sweeps_table['FLUX_Z'], ubrite_sweeps_table['FLUX_W1'],
                 ubrite_sweeps_table['FLUX_W2'], ubrite_sweeps_table['FLUX_W3'], ubrite_sweeps_table['FLUX_W4']]
-    #SD labels and colors of points in scatterplot
+    #SD labels of points in scatterplot
     names = ['u', 'g', 'r', 'i', 'z', 'W1', 'W2', 'W3', 'W4']
-    colors = ['blue', 'green', 'red', 'orange', 'purple', 'brown', 'pink', 'yellow', 'maroon']
     
     #SD plot fluxes as a function of wavelength
     #plt.scatter(wavelengths, fluxes, c=colors, label=names)
-    [plt.scatter(wavelengths[i], fluxes[i], c=colors[i], edgecolor='black', label=names[i])
-        for i in range(len(names))]
+    plt.scatter(wavelengths, fluxes)
+    [plt.annotate(names[i], (wavelengths[i], fluxes[i])) for i in range(len(names))]
     plt.xlabel('wavelength [$\AA$]')
     plt.ylabel('flux [nanomaggies]')
-    plt.legend(loc='upper left')
-    #plt.savefig('plot.png')
+    #plt.savefig('plot.png')   #SD for testing purposes
     plt.show()
     
     
