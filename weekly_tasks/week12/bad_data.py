@@ -24,4 +24,23 @@ while n > 1:
     n = len(sweepobj)
     match_rad -= 0.05*u.arcsec
 
-print(sweepobj)
+print('TASK 1:')
+print(f"The object type is given as {sweepobj['TYPE'][0]}, aka an exponential galaxy.")
+print('----------')
+
+
+
+### TASK 2 (RED) ###
+
+print('TASK 2:')
+
+#SD print out the allmask bit values
+print(f"ALLMASK_G = {sweepobj['ALLMASK_G']}")
+print(f"ALLMASK_R = {sweepobj['ALLMASK_R']}")
+print(f"ALLMASK_Z = {sweepobj['ALLMASK_Z']}")
+
+print("None of the g,r,z bands are saturated in all exposures for this object.")
+
+print("Looking at the Legacy Surveys Sky Viewer, the object seems saturated.")
+
+
