@@ -366,13 +366,14 @@ if __name__=='__main__':
     #SD find brightest object in u-band (Problem 6)
     u_mag = ugriz_table['MAG_U']
     ubrite1_mask = u_mag == np.min(u_mag)
-    ubrite_survey_table = survey_table[ubrite1_mask]
-    ubrite_sweeps_table = sweeps_table[ubrite1_mask]
-    ubrite_ugriz_table = ugriz_table[ubrite1_mask]
+    ubrite1_survey_table = survey_table[ubrite1_mask]
+    ubrite1_sweeps_table = sweeps_table[ubrite1_mask]
+    ubrite1_ugriz_table = ugriz_table[ubrite1_mask]
+    print(f"ubrite1 has coordinates ({ubrite1_survey_table['RA'][0]}, {ubrite1_survey_table['DEC'][0]}) deg.")
     
     #SD find SDSS u and i mags of ubrite1
-    u_mag_ubrite1 = ubrite_ugriz_table['MAG_U']
-    i_mag_ubrite1 = ubrite_ugriz_table['MAG_I']
+    u_mag_ubrite1 = ubrite1_ugriz_table['MAG_U']
+    i_mag_ubrite1 = ubrite1_ugriz_table['MAG_I']
     
     #SD convert ubrite1 mags to fluxes (Problem 7)
     #SD fluxes are in units of nanomaggies
@@ -384,9 +385,9 @@ if __name__=='__main__':
     #SD given in hw3
     wavelengths = [3543, 4770, 6231, 7625, 9134, 3.4*10000, 4.6*10000, 12*10000, 22*10000]
     #SD fluxes of ugriz and W1-W4 bands, in nanomaggies
-    fluxes = [u_flux_ubrite1, ubrite_sweeps_table['FLUX_G'], ubrite_sweeps_table['FLUX_R'],
-                i_flux_ubrite1, ubrite_sweeps_table['FLUX_Z'], ubrite_sweeps_table['FLUX_W1'],
-                ubrite_sweeps_table['FLUX_W2'], ubrite_sweeps_table['FLUX_W3'], ubrite_sweeps_table['FLUX_W4']]
+    fluxes = [u_flux_ubrite1, ubrite1_sweeps_table['FLUX_G'], ubrite1_sweeps_table['FLUX_R'],
+                i_flux_ubrite1, ubrite1_sweeps_table['FLUX_Z'], ubrite1_sweeps_table['FLUX_W1'],
+                ubrite1_sweeps_table['FLUX_W2'], ubrite1_sweeps_table['FLUX_W3'], ubrite1_sweeps_table['FLUX_W4']]
     #SD labels of points in scatterplot
     names = ['u', 'g', 'r', 'i', 'z', 'W1', 'W2', 'W3', 'W4']
     
@@ -400,6 +401,13 @@ if __name__=='__main__':
     #plt.savefig('plot.png')   #SD for testing purposes
     plt.show()
     
+    
+    #SD checked SDSS Navigate Tool for ubrite1 (Problem 9)
+    
+    #SD print answer to Problem 10
+    print("The redshift of ubrite1 is z = 1.03514 plus/minus 0.00038.")
+    print("The astronomer' survey covered objects with IR excess. Therefore, it makes sense")
+    print("that ubrite1 is classified as a QSO and is relatively bright in the J, H, and K bands.")
     
     
     
