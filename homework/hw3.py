@@ -381,6 +381,7 @@ if __name__=='__main__':
     
     
     #SD wavelengths of ugriz and W1-W4 bands, in angstroms
+    #SD given in hw3
     wavelengths = [3543, 4770, 6231, 7625, 9134, 3.4*10000, 4.6*10000, 12*10000, 22*10000]
     #SD fluxes of ugriz and W1-W4 bands, in nanomaggies
     fluxes = [u_flux_ubrite1, ubrite_sweeps_table['FLUX_G'], ubrite_sweeps_table['FLUX_R'],
@@ -390,13 +391,26 @@ if __name__=='__main__':
     names = ['u', 'g', 'r', 'i', 'z', 'W1', 'W2', 'W3', 'W4']
     
     #SD plot fluxes as a function of wavelength
-    #plt.scatter(wavelengths, fluxes, c=colors, label=names)
     plt.scatter(wavelengths, fluxes)
     [plt.annotate(names[i], (wavelengths[i], fluxes[i])) for i in range(len(names))]
-    plt.xlabel('wavelength [$\AA$]')
-    plt.ylabel('flux [nanomaggies]')
+    plt.xlabel('log wavelength [$\AA$]')
+    plt.ylabel('log flux [nanomaggies]')
+    plt.xscale('log')
+    plt.yscale('log')
     #plt.savefig('plot.png')   #SD for testing purposes
     plt.show()
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
