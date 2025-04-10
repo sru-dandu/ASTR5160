@@ -8,38 +8,43 @@ import matplotlib.pyplot as plt
 
 #SD function to categorize between stars and quasars
 def classify_func(g_given, z_given, r_given, W1_given):
-	"""Classifies whether an object is a star or a quasar using given magnitudes and predefined color cut.
-	
-	INPUTS
-	------
-	g_given : :class:'float' or 'numpy.float64'
-		The magnitude of the object in g-band.
-	z_given : :class:'float' or 'numpy.float64'
-		The magnitude of the object in z-band.
-	r_given : :class:'float' or 'numpy.float64'
-		The magnitude of the object in r-band.
-	W1_given : :class:'float' or 'numpy.float64'
-		The magnitude of the object in W1-band.
-	
-	RETURNS
-	-------
-	:class:'str'
-		Classification of the object.
-		Either 'star' or 'quasar'.
-	"""
-	
-	#SD get g-z and r-W1 colors from given inputs
-	g_minus_z_given = g_given - z_given
-	r_minus_W1_given = r_given - mag_W1_given
-	
-	#SD get r-W1 color the object would have if following the cutoff line
-	r_minus_W1_cutoff = f(g_minus_z_given)
-	
-	#SD return 'star' or 'quasar' depending on whether point is above or below cutoff line
-	if r_minus_W1_given < r_minus_W1_cutoff:
-		return 'star'
-	elif r_minus_W1_given > r_minus_W1_cutoff:
-		return 'quasar'
+    """Classifies whether an object is a star or a quasar using given magnitudes and predefined color cut.
+    
+    INPUTS
+    ------
+    g_given : :class:'float' or 'numpy.float64'
+        The magnitude of the object in g-band.
+    z_given : :class:'float' or 'numpy.float64'
+        The magnitude of the object in z-band.
+    r_given : :class:'float' or 'numpy.float64'
+        The magnitude of the object in r-band.
+    W1_given : :class:'float' or 'numpy.float64'
+        The magnitude of the object in W1-band.
+    
+    RETURNS
+    -------
+    :class:'str'
+        Classification of the object.
+        Either 'star' or 'quasar'.
+    """
+    
+    #SD get equation of the line separating stars from quasars
+    #SD these numbers were obtained from Task 3 below
+    params = np.polyfit([-2, 7], [-3, 6.5], 1)
+    f = np.poly1d(params)
+    
+    #SD get g-z and r-W1 colors from given inputs
+    g_minus_z_given = g_given - z_given
+    r_minus_W1_given = r_given - W1_given
+    
+    #SD get r-W1 color the object would have if following the cutoff line
+    r_minus_W1_cutoff = f(g_minus_z_given)
+    
+    #SD return 'star' or 'quasar' depending on whether point is above or below cutoff line
+    if r_minus_W1_given < r_minus_W1_cutoff:
+        return 'star'
+    elif r_minus_W1_given > r_minus_W1_cutoff:
+        return 'quasar'
 
 
 
@@ -56,9 +61,9 @@ if __name__ == '__main__':
     #SD read in sweep files that contain points within 3 deg of (180 deg, 30 deg)
     sweepdir = '/d/scratch/ASTR5160/data/legacysurvey/dr9/south/sweep/9.0/'
     sweepfiles = ['sweep-170p025-180p030.fits',
-		    'sweep-170p030-180p035.fits',
-		    'sweep-180p025-190p030.fits',
-		    'sweep-180p030-190p035.fits']
+            'sweep-170p030-180p035.fits',
+            'sweep-180p025-190p030.fits',
+            'sweep-180p030-190p035.fits']
     sweepfiles_long = [sweepdir + f for f in sweepfiles]
     sweeptabs = [Table.read(f) for f in sweepfiles_long]
 
@@ -78,11 +83,11 @@ if __name__ == '__main__':
     id1_all = []
     id2_all = []
     for c in coords_all:
-	    for sweep in coords_sweep_all:
-		    #SD get matching indices
-		    id1, id2, d2, d3 = sweep.search_around_sky(c, 0.5*u.arcsec)
-		    id1_all.append(id1)
-		    id2_all.append(id2)
+        for sweep in coords_sweep_all:
+            #SD get matching indices
+            id1, id2, d2, d3 = sweep.search_around_sky(c, 0.5*u.arcsec)
+            id1_all.append(id1)
+            id2_all.append(id2)
 
     #SD mask the sweep files to get only the matched objects
     #SD 'sweeptabs' is list of [sweep1, sweep2, sweep3, sweep4] astropy tables
@@ -95,9 +100,9 @@ if __name__ == '__main__':
     sweep3_match_c2 = sweeptabs[2][id2_all[6]]
     sweep4_match_c2 = sweeptabs[3][id2_all[7]]
     sweep_match_c = [sweep1_match_c1, sweep2_match_c1,
-		    sweep3_match_c1, sweep4_match_c1,
-		    sweep1_match_c2, sweep2_match_c2,
-		    sweep3_match_c2, sweep4_match_c2]
+            sweep3_match_c1, sweep4_match_c1,
+            sweep1_match_c2, sweep2_match_c2,
+            sweep3_match_c2, sweep4_match_c2]
 
     #SD mask the object files to get only the matched objects
     c1_match_sweep1 = tab1[id1_all[0]]
@@ -109,9 +114,9 @@ if __name__ == '__main__':
     c2_match_sweep3 = tab2[id1_all[6]]
     c2_match_sweep4 = tab2[id1_all[7]]
     c_match_sweep = [c1_match_sweep1, c1_match_sweep2,
-		    c1_match_sweep3, c1_match_sweep4,
-		    c2_match_sweep1, c2_match_sweep2,
-		    c2_match_sweep3, c2_match_sweep4,]
+            c1_match_sweep3, c1_match_sweep4,
+            c2_match_sweep1, c2_match_sweep2,
+            c2_match_sweep3, c2_match_sweep4,]
 
     #SD get relevant fluxes from sweep files
     g_lists = [t['FLUX_G'] for t in sweep_match_c]
@@ -171,10 +176,6 @@ if __name__ == '__main__':
     plt.xlabel('g - z')
     plt.ylabel('r - W1')
     plt.show()
-
-    #SD get equation of the line separating stars from quasars
-    params = np.polyfit([-2, 7], [-3, 6.5], 1)
-    f = np.poly1d(params)
     
     print("TASK 3:")
     print("See plot.")
