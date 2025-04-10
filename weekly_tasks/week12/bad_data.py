@@ -37,9 +37,9 @@ print('----------')
 print('TASK 2:')
 
 #SD print out the allmask bit values
-print(f"ALLMASK_G = {sweepobj['ALLMASK_G']}")
-print(f"ALLMASK_R = {sweepobj['ALLMASK_R']}")
-print(f"ALLMASK_Z = {sweepobj['ALLMASK_Z']}")
+print(f"ALLMASK_G = {sweepobj['ALLMASK_G'][0]}")
+print(f"ALLMASK_R = {sweepobj['ALLMASK_R'][0]}")
+print(f"ALLMASK_Z = {sweepobj['ALLMASK_Z'][0]}")
 
 print("None of the g,r,z bands are saturated in all exposures for this object.")
 
