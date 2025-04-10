@@ -30,7 +30,7 @@ def classify_func(g_given, z_given, r_given, W1_given):
 	
 	#SD get g-z and r-W1 colors from given inputs
 	g_minus_z_given = g_given - z_given
-	r_minus_W1_given = mag_r_given - mag_W1_given
+	r_minus_W1_given = r_given - mag_W1_given
 	
 	#SD get r-W1 color the object would have if following the cutoff line
 	r_minus_W1_cutoff = f(g_minus_z_given)
