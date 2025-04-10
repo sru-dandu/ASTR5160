@@ -1,6 +1,7 @@
 from astropy.coordinates import SkyCoord
 from astropy import units as u
-from astropy.table import Table
+from astropy.table import Table, vstack
+import numpy as np
 
 
 
@@ -10,8 +11,9 @@ from astropy.table import Table
 coords = SkyCoord(188.53667, 21.04572, unit=u.deg)
 
 #SD read in relevant sweep file as astropy table
-sweepfile = '/d/scratch/ASTR5160/data/legacysurvey/dr9/south/sweep/9.0/sweep-180p020-190p025.fits'
-sweeptable = Table.read(sweepfile)
+sweepdir = '/d/scratch/ASTR5160/data/legacysurvey/dr9/south/sweep/9.0/'
+sweepfile = 'sweep-180p020-190p025.fits'
+sweeptable = Table.read(sweepdir + sweepfile)
 #SD extract coords of objs in sweep file
 sweepcoords = SkyCoord(sweeptable['RA'], sweeptable['DEC'], unit=u.deg)
 
@@ -41,6 +43,53 @@ print(f"ALLMASK_Z = {sweepobj['ALLMASK_Z']}")
 
 print("None of the g,r,z bands are saturated in all exposures for this object.")
 
-print("Looking at the Legacy Surveys Sky Viewer, the object seems saturated.")
+#SD check obj in Legacy Surveys Sky Viewer
+#SD https://www.legacysurvey.org/viewer?ra=188.5367&dec=21.0458&layer=ls-dr9&zoom=16
+print("Looking at the Legacy Surveys Sky Viewer, the object seems saturated. It also seems to be a blazar candidate.")
+print('----------')
+
+
+
+### TASK 3 (RED) ###
+
+#SD obtain tables of relevant sweep files
+sweepfiles_list = ['sweep-170p025-180p030.fits', 'sweep-170p030-180p035.fits',
+                    'sweep-180p025-190p030.fits', 'sweep-180p030-190p035.fits']
+sweeptables_list = [Table.read(sweepdir + f) for f in sweepfiles_list]
+sweeptables_all = vstack([t for t in sweeptables_list])
+
+
+#SD create a mask for objs that are point sources
+psf_mask = (sweeptables_all['TYPE'] == 'PSF')
+
+#SD create mask for objs within 3 deg of (180 deg, 30 deg)
+center_coords = SkyCoord(180, 30, unit=u.deg)
+sweeptables_all_coords = SkyCoord(sweeptables_all['RA'], sweeptables_all['DEC'], unit=u.deg)
+separation_mask = (sweeptables_all_coords.separation(center_coords) < 3*u.deg)
+
+#SD mask the sweepfile objects
+psfobjs = sweeptables_all[psf_mask & separation_mask]
+
+
+#SD create mask to only get objects for which r flux > 0
+#SD flux <= 0 means it wasn't detected in that band
+flux_mask = psfobjs['FLUX_R'] > 0
+psfobjs = psfobjs[flux_mask]
+
+#SD get magnitude from flux
+#SD flux is in units of nanomaggies
+r_flux = psfobjs['FLUX_R']
+r_mag = 22.5 - 2.5*np.log10(r_flux)
+
+#SD mask for sources with r < 20
+psfobjs = psfobjs[r_mag < 20]
+
+
+
+
+
+
+
+
 
 
