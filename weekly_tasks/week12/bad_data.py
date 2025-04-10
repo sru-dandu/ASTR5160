@@ -85,10 +85,17 @@ r_mag = 22.5 - 2.5*np.log10(r_flux)
 psfobjs = psfobjs[r_mag < 20]
 
 
+#SD read in qsos file
+qsos_file = '/d/scratch/ASTR5160/week10/qsos-ra180-dec30-rad3.fits'
+qsos_table = Table.read(qsos_file)
 
+#SD extract coords from psfobjs and qsos
+psfobjs_coords = SkyCoord(psfobjs['RA'], psfobjs['DEC'], unit=u.deg)
+qsos_coords = SkyCoord(qsos_table['RA'], qsos_table['DEC'], unit=u.deg)
 
-
-
+#SD cross-match objects
+id1, id2, d2, d3 = qsos_coords.search_around_sky(psfobjs_coords, 1*u.arcsec)
+qsos = psfobjs[id1]
 
 
 
