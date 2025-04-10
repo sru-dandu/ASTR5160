@@ -2,6 +2,7 @@ from astropy.coordinates import SkyCoord
 from astropy import units as u
 from astropy.table import Table, vstack
 import numpy as np
+from weekly_tasks.week10.imaging_classification import classify_func
 
 
 
@@ -105,13 +106,27 @@ print('----------')
 
 
 
-### TASk 4 (BLACK) ###
+### TASK 4 (BLACK) ###
+
+#SD extract fluxes of psfobjs
+flux_mask = (psfobjs['FLUX_G'] > 0) & (psfobjs['FLUX_Z'] > 0) & (psfobjs['FLUX_R'] > 0) & (psfobjs['FLUX_W1'] > 0)
+psfobjs_flux_detected = psfobjs[flux_mask]
+
+#SD find magnitudes of psfobjs
+g_mag = 22.5 - 2.5*np.log10(psfobjs_flux_detected['FLUX_G'])
+z_mag = 22.5 - 2.5*np.log10(psfobjs_flux_detected['FLUX_Z'])
+r_mag = 22.5 - 2.5*np.log10(psfobjs_flux_detected['FLUX_R'])
+W1_mag = 22.5 - 2.5*np.log10(psfobjs_flux_detected['FLUX_W1'])
+
+#SD run function from Week 10 tasks to classify psfobjs objs as stars or quasars using color cuts
+class_list = [classify_func(g_mag[i], z_mag[i], r_mag[i], W1_mag[i]) for i in range(len(psfobjs_flux_detected))]
 
 
-
-
-
-
+#SD print numbers of quasars and stars
+num_quasars = len(class_list[class_list=='quasar'])
+num_stars = len(class_list) - num_quasars
+print(f"quasars: {num_quasars}")
+print(f"stars: {num_stars}")
 
 
 
