@@ -161,6 +161,7 @@ if __name__ == '__main__':
 
     print("TASK 2:")
     print("Fluxes for g, r, z, W1, and W2 bands were corrected for Galactic dust and converted to magnitudes.")
+    print('----------')
 
 
 
