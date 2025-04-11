@@ -131,7 +131,7 @@ if __name__ == '__main__':
     W2_uncorrected = np.concatenate(W2_lists)
 
     print("TASK 1:")
-    print(f"Extracted g, r, z, W1, and W2 fluxes of the {len(g)} objects.")
+    print(f"Extracted g, r, z, W1, and W2 fluxes of the {len(g_uncorrected)} objects.")
     print('----------')
 
 
