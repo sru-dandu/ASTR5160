@@ -143,6 +143,12 @@ def knn_quasar_classify(g_minus_z_given, r_minus_W1_given, returnplot=False):
     
     NOTES
     -----
+    - The training set is made up of objects from the Legacy Survey sweep files
+      within 3 degrees of (180 deg, 30 deg) and with an r mag < 20.
+        - The subset of the dataset that are quasars were obtained by cross-matching the objects
+          with a list of known quasars
+        - The subset of the dataset that are stars were obtained by
+          randomly pulling 500 objects from the overall dataset
     - The function will throw an error if individual ints or floats are given.
       If there is only one object's parameters to be inputted,
       put each parameter within a list or numpy.ndarray of length 1.
