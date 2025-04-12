@@ -63,9 +63,6 @@ def task3():
     #SD mask for sources with r < 20
     psfobjs = psfobjs[r_mag < 20]
 
-    print('TASK 3:')
-    print(f"There are {len(psfobjs)} point-source objects within 3 degrees of (180 deg, 30 deg) with an r-band magnitude < 20")
-
 
     #SD read in qsos file
     qsos_file = '/d/scratch/ASTR5160/week10/qsos-ra180-dec30-rad3.fits'
@@ -79,9 +76,7 @@ def task3():
     id1, id2, d2, d3 = qsos_coords.search_around_sky(psfobjs_coords, 1*u.arcsec)
     qsos = psfobjs[id1]
 
-    print(f"There are {len(qsos)} objects within 3 degrees of (180 deg, 30 deg) with an r-band magnitude < 20 that we know for sure are quasars.")
-    print('----------')
-    
+
     return psfobjs, qsos, id1
 
 
@@ -137,6 +132,11 @@ if __name__ == '__main__':
 
     #SD call function to run task 3 code
     psfobjs, qsos = task3()
+    
+    print('TASK 3:')
+    print(f"There are {len(psfobjs)} point-source objects within 3 degrees of (180 deg, 30 deg) with an r-band magnitude < 20")
+    print(f"There are {len(qsos)} objects within 3 degrees of (180 deg, 30 deg) with an r-band magnitude < 20 that we know for sure are quasars.")
+    print('----------')
 
 
 
