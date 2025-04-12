@@ -120,30 +120,37 @@ def iris_problem(weeklytask=False):
 
 
 
-if __name__ == '__main__':
-
-    ### TASK 1 (RED) ###
+def knn_quasar_classify(g_minus_z_given, r_minus_W1_given, returnplot=False):
+    """Classifies objects as either quasars or stars using k-NN with g-z and r-W1 colors.
     
-    print('TASK 1:')
+    INPUTS
+    ------
+    g_minus_z_given : :class:'list' or 'numpy.ndarray'
+        The g-z colors for each object to be classified.
+    r_minus_W1_given : :class:'list' or 'numpy.ndarray'
+        The r-W1 colors for each object to be classified.
+    returnplot : class:'bool' ; Optional, default is False
+        If True, prints a scatterplot to screen with the training and test datasets.
     
-    #SD call function to run iris problem example code
-    classified_percent = iris_problem(weeklytask=True)
-
-    print('Copied code for the iris problem into the function iris_problem().')
-    print(f"{classified_percent}% of the test irises were classified as 'virginica' by the k-NN algorithm.")
-    print('----------')
+    RETURNS
+    -------
+    :class:'numpy.ndarray'
+        The inputted data, reformatted to be like a table.
+        Each index is one object. Column 1 is is the g-z color, and column 2 is the r-W1 color.
+    :class:'numpy.ndarray'
+        The labels of each object in the first outputted numpy array.
+        Quasars are labeled 'quasar', while stars are labeled 'star'.
     
-    
-    
-    ### TASK 2 (BLACK) ###
+    NOTES
+    -----
+    - The function will throw an error if individual ints or floats are given.
+      If there is only one object's parameters to be inputted,
+      put each parameter within a list or numpy.ndarray of length 1.
+    """
     
     #SD call function from previous lecture's tasks
     psfobjs, qsos, idx = task3()
-
-
-
-    ### TASK 3 (RED) ###
-
+    
     #SD extract fluxes of psfobjs
     flux_mask = (psfobjs['FLUX_G'] > 0) & (psfobjs['FLUX_Z'] > 0) & (psfobjs['FLUX_R'] > 0) & (psfobjs['FLUX_W1'] > 0)
     psfobjs_flux_detected = psfobjs[flux_mask]
@@ -179,7 +186,62 @@ if __name__ == '__main__':
     knn = neighbors.KNeighborsClassifier(n_neighbors=1)
     knn.fit(color_data_combined, label_combined)
     
+    #SD transform given dataset into correct format
+    g_minus_z_given = np.array(g_minus_z_given)
+    r_minus_W1_given = np.array(r_minus_W1_given)
+    data_given = np.array((g_minus_z_given, r_minus_W1_given)).T
+    #SD fit given data to training data using k-NN
+    data_given_class = knn.predict(data_given)
     
+    #SD return a plot if 'returnplot' is set to True
+    if returnplot==True:
+        plt.figure()
+        plt.scatter(color_data_qsos[:,0], color_data_qsos[:,1], marker='o', c='blue', s=10, label='quasar')
+        plt.scatter(color_data_subset[:,0], color_data_subset[:,1], marker='o', c='red', s=10, label='star')
+        plt.scatter(data_given[data_given_class=='quasar', 0], data_given[data_given_class=='quasar', 1],
+                    marker='D', c='blue', edgecolor='black', s=10, label='predicted quasar')
+        plt.scatter(data_given[data_given_class=='star', 0], data_given[data_given_class=='star', 1],
+                    marker='D', c='red', edgecolor='black', s=10, label='predicted star')
+        plt.legend()
+        plt.savefig('plot.png')
+    
+    return data_given, data_given_class
+
+
+
+if __name__ == '__main__':
+
+    ### TASK 1 (RED) ###
+    
+    print('TASK 1:')
+    
+    #SD call function to run iris problem example code
+    classified_percent = iris_problem(weeklytask=True)
+
+    print('Copied code for the iris problem into the function iris_problem().')
+    print(f"{classified_percent}% of the test irises were classified as 'virginica' by the k-NN algorithm.")
+    print('----------')
+    
+    
+    
+    ### TASK 2 (BLACK) ###
+    
+    #SD call function from previous lecture's tasks
+    psfobjs, qsos, idx = task3()
+    
+    print('TASK 2:')
+    print(f"There are {len(psfobjs)} point-source objects within 3 degrees of (180 deg, 30 deg) with an r-band magnitude < 20")
+    print(f"There are {len(qsos)} objects within 3 degrees of (180 deg, 30 deg) with an r-band magnitude < 20 that we know for sure are quasars.")
+    print('----------')
+
+
+
+    ### TASK 3 (RED) ###
+    
+    print("TASK 3:")
+    print("Wrote the function knn_quasar_classify(),")
+    print("which uses k-nn to classify quasars and stars based on their g-z and r-W1 colors.")
+    print('----------')
     
     
     
