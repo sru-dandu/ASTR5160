@@ -138,14 +138,51 @@ if __name__ == '__main__':
     ### TASK 2 (BLACK) ###
     
     #SD call function from previous lecture's tasks
-    psfobjs, qsos = task3()
+    psfobjs, qsos, idx = task3()
 
 
 
     ### TASK 3 (RED) ###
 
-
-
-
-
-
+    #SD extract fluxes of psfobjs
+    flux_mask = (psfobjs['FLUX_G'] > 0) & (psfobjs['FLUX_Z'] > 0) & (psfobjs['FLUX_R'] > 0) & (psfobjs['FLUX_W1'] > 0)
+    psfobjs_flux_detected = psfobjs[flux_mask]
+    
+    #SD find magnitudes of psfobjs
+    g_mag = 22.5 - 2.5*np.log10(psfobjs_flux_detected['FLUX_G'])
+    z_mag = 22.5 - 2.5*np.log10(psfobjs_flux_detected['FLUX_Z'])
+    r_mag = 22.5 - 2.5*np.log10(psfobjs_flux_detected['FLUX_R'])
+    W1_mag = 22.5 - 2.5*np.log10(psfobjs_flux_detected['FLUX_W1'])
+    
+    #SD find g-z and r-W1 colors
+    g_minus_z = g_mag - z_mag
+    r_minus_W1 = r_mag - W1_mag
+    #SD combine into one dataset
+    color_data_psfobjs = np.array((g_minus_z, r_minus_W1)).T
+    
+    #SD mask to get color data for qsos objects
+    color_data_qsos = color_data_psfobjs[idx]
+    
+    #SD get a random subset of psfobs objs' color data
+    subset_idx = np.random.randint(0, len(color_data_psfobjs), 500)
+    color_data_subset = color_data_psfobjs[subset_idx]
+    
+    #SD combine two datasets into overall dataset
+    color_data_combined = np.vstack((color_data_qsos, color_data_subset))
+    
+    #SD create list of labels 'quasars' and 'stars'
+    label_quasar = ['quasar'] * len(color_data_qsos)
+    label_star = ['star'] * len(color_data_subset)
+    label_combined = label_quasar + label_star
+    
+    #SD use k-NN algorithm
+    knn = neighbors.KNeighborsClassifier(n_neighbors=1)
+    knn.fit(color_data_combined, label_combined)
+    
+    
+    
+    
+    
+    
+    
+    
