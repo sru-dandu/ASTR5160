@@ -22,6 +22,8 @@ def task3():
     :class:'astropy.table.table.Table'
         Table of objects from first output that cross-matched with objects in qsos file.
         These are the objects from first output that are for sure quasars.
+    :class:'numpy.ndarray'
+        Indices of first outputted table that corresponds to objects in second outputted table.
     
     NOTES
     -----
@@ -80,7 +82,7 @@ def task3():
     print(f"There are {len(qsos)} objects within 3 degrees of (180 deg, 30 deg) with an r-band magnitude < 20 that we know for sure are quasars.")
     print('----------')
     
-    return psfobjs, qsos
+    return psfobjs, qsos, id1
 
 
 
