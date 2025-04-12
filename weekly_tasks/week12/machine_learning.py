@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.datasets import load_iris
 import matplotlib.pyplot as plt
 from sklearn import neighbors
+from weekly_tasks.week12.bad_data import task3
 
 
 
@@ -125,13 +126,23 @@ if __name__ == '__main__':
     
     print('TASK 1:')
     
-    # SD call function to run iris problem example code
+    #SD call function to run iris problem example code
     classified_percent = iris_problem(weeklytask=True)
 
     print('Copied code for the iris problem into the function iris_problem().')
     print(f"{classified_percent}% of the test irises were classified as 'virginica' by the k-NN algorithm.")
+    print('----------')
+    
+    
+    
+    ### TASK 2 (BLACK) ###
+    
+    #SD call function from previous lecture's tasks
+    psfobjs, qsos = task3()
 
 
+
+    ### TASK 3 (RED) ###
 
 
 
