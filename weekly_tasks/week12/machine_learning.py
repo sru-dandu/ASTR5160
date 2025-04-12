@@ -120,7 +120,7 @@ def iris_problem(weeklytask=False):
 
 
 
-def knn_quasar_classify(g_minus_z_given, r_minus_W1_given, returnplot=False):
+def knn_quasar_classify(g_minus_z_given, r_minus_W1_given, plot=False):
     """Classifies objects as either quasars or stars using k-NN with g-z and r-W1 colors.
     
     INPUTS
@@ -129,7 +129,7 @@ def knn_quasar_classify(g_minus_z_given, r_minus_W1_given, returnplot=False):
         The g-z colors for each object to be classified.
     r_minus_W1_given : :class:'list' or 'numpy.ndarray'
         The r-W1 colors for each object to be classified.
-    returnplot : class:'bool' ; Optional, default is False
+    plot : class:'bool' ; Optional, default is False
         If True, prints a scatterplot to screen with the training and test datasets.
     
     RETURNS
@@ -158,7 +158,8 @@ def knn_quasar_classify(g_minus_z_given, r_minus_W1_given, returnplot=False):
     psfobjs, qsos, idx = task3()
     
     #SD extract fluxes of psfobjs
-    flux_mask = (psfobjs['FLUX_G'] > 0) & (psfobjs['FLUX_Z'] > 0) & (psfobjs['FLUX_R'] > 0) & (psfobjs['FLUX_W1'] > 0)
+    flux_mask = ((psfobjs['FLUX_G'] > 0) & (psfobjs['FLUX_Z'] > 0) &
+                (psfobjs['FLUX_R'] > 0) & (psfobjs['FLUX_W1'] > 0))
     psfobjs_flux_detected = psfobjs[flux_mask]
     
     #SD find magnitudes of psfobjs
@@ -199,8 +200,8 @@ def knn_quasar_classify(g_minus_z_given, r_minus_W1_given, returnplot=False):
     #SD fit given data to training data using k-NN
     data_given_class = knn.predict(data_given)
     
-    #SD return a plot if 'returnplot' is set to True
-    if returnplot==True:
+    #SD return a plot if the flag 'plot' is set to True
+    if plot==True:
         plt.figure()
         plt.scatter(color_data_qsos[:,0], color_data_qsos[:,1], marker='o', c='blue', s=10, label='quasar')
         plt.scatter(color_data_subset[:,0], color_data_subset[:,1], marker='o', c='red', s=10, label='star')
@@ -236,13 +237,18 @@ if __name__ == '__main__':
     psfobjs, qsos, idx = task3()
     
     print('TASK 2:')
-    print(f"There are {len(psfobjs)} point-source objects within 3 degrees of (180 deg, 30 deg) with an r-band magnitude < 20")
-    print(f"There are {len(qsos)} objects within 3 degrees of (180 deg, 30 deg) with an r-band magnitude < 20 that we know for sure are quasars.")
+    print(f"There are {len(psfobjs)} point-source objects within 3 degrees " +
+            "of (180 deg, 30 deg) with an r-band magnitude < 20")
+    print(f"There are {len(qsos)} objects within 3 degrees of (180 deg, 30 deg) " +
+            "with an r-band magnitude < 20 that we know for sure are quasars.")
     print('----------')
 
 
 
     ### TASK 3 (RED) ###
+    
+    #SD test the k-NN fitting function
+    #knn_quasar_classify([4, 1, 1], [5, -1, 5], plot=True)
     
     print("TASK 3:")
     print("Wrote the function knn_quasar_classify(),")
