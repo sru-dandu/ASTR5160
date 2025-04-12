@@ -110,15 +110,12 @@ def iris_problem(weeklytask=False):
     
     #SD check if function is being run for the weekly task
     if weeklytask == False:
-    
         return
         
     elif weeklytask == True:
         #SD percentage of test irises classified as 'virginica' by k-NN
-        num_tot = len(mock_data)
         num_virginica = len(mock_data[mock_target_class==2])
-        
-        return 100 * num_virginica/num_tot
+        return 100 * num_virginica/n
 
 
 
