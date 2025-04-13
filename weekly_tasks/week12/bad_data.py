@@ -114,12 +114,13 @@ if __name__ == '__main__':
 
     print('TASK 2:')
 
-    #SD print out the allmask bit values
+    #SD print out the allmask values
+    #SD if saturated, bit = 1, therefore output should be 2^1 = 2
     print(f"ALLMASK_G = {sweepobj['ALLMASK_G'][0]}")
     print(f"ALLMASK_R = {sweepobj['ALLMASK_R'][0]}")
     print(f"ALLMASK_Z = {sweepobj['ALLMASK_Z'][0]}")
 
-    print("None of the g,r,z bands are saturated in all exposures for this object.")
+    print("Each of the g,r,z bands are saturated in all exposures for this object.")
 
     #SD check obj in Legacy Surveys Sky Viewer
     #SD https://www.legacysurvey.org/viewer?ra=188.5367&dec=21.0458&layer=ls-dr9&zoom=16
@@ -131,7 +132,7 @@ if __name__ == '__main__':
     ### TASK 3 (RED) ###
 
     #SD call function to run task 3 code
-    psfobjs, qsos = task3()
+    psfobjs, qsos, id1 = task3()
     
     print('TASK 3:')
     print(f"There are {len(psfobjs)} point-source objects within 3 degrees of (180 deg, 30 deg) with an r-band magnitude < 20")
@@ -154,20 +155,28 @@ if __name__ == '__main__':
 
     #SD run function from Week 10 tasks to classify psfobjs objs as stars or quasars using color cuts
     class_list = [classify_func(g_mag[i], z_mag[i], r_mag[i], W1_mag[i]) for i in range(len(psfobjs_flux_detected))]
-
+    class_array = np.array(class_list)
 
     #SD print numbers of quasars and stars
-    num_quasars = len(class_list[class_list=='quasar'])
-    num_stars = len(class_list) - num_quasars
-    print(f"quasars: {num_quasars}")
-    print(f"stars: {num_stars}")
+    num_quasars = len(class_array[class_array=='quasar'])
+    num_stars = len(class_array) - num_quasars
+    
+    print("TASK 4:")
+    print("Using my function from the previous week:")
+    print(f"There are {num_quasars} quasars and {num_stars} stars.")
+    
+    #SD area of a spherical cap is 2*pi*(1-cos(theta))
+    area = 2 * np.pi * (1 - np.cos(3*u.deg))
+    area_str = area.value
+    area_deg2 = area_str * 180/np.pi * 180/np.pi
+    print(f"The area of the circle we are considering is {area_str} str, or {area_deg2} square degrees.")
+    print(f"Since there are {num_quasars} potential quasars within an area of {area_deg2} square degrees, " +
+            f"we would need at least {num_quasars/area_deg2} spectra per square degree to determine " +
+            "the number of quasars per square degree.")
 
 
 
-
-
-
-
+    #SD plotting g-z vs r-W1 to figure out why I'm getting weird results
     """
     #SD get g-z and r-W1 colors from given inputs
     #g_minus_z_given = g_given - z_given
