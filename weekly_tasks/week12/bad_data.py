@@ -64,6 +64,30 @@ def task3():
     psfobjs = psfobjs[r_mag < 20]
 
 
+    #SD call function to cross-match psfobjs with known quasars
+    qsos, id1 = qsos_cross_matcher(psfobjs)
+
+
+    return psfobjs, qsos, id1
+
+
+
+def qsos_cross_matcher(psfobjs):
+    """Cross-matches given objects with known quasars.
+    
+    INPUTS
+    ------
+    psfobjs : :class:'astropy.table.table.Table'
+        The objects to be cross-matched with the known quasars.
+    
+    RETURNS
+    -------
+    :class:'astropy.table.table.Table'
+        The objects from the inputted table that are known quasars.
+    :class:'numpy.ndarray'
+        The indices of the inputted table where there are known quasars.
+    """
+
     #SD read in qsos file
     qsos_file = '/d/scratch/ASTR5160/week10/qsos-ra180-dec30-rad3.fits'
     qsos_table = Table.read(qsos_file)
@@ -75,9 +99,8 @@ def task3():
     #SD cross-match objects
     id1, id2, d2, d3 = qsos_coords.search_around_sky(psfobjs_coords, 1*u.arcsec)
     qsos = psfobjs[id1]
-
-
-    return psfobjs, qsos, id1
+    
+    return qsos, id1
 
 
 
@@ -154,7 +177,8 @@ if __name__ == '__main__':
     W1_mag = 22.5 - 2.5*np.log10(psfobjs_flux_detected['FLUX_W1'])
 
     #SD run function from Week 10 tasks to classify psfobjs objs as stars or quasars using color cuts
-    class_list = [classify_func(g_mag[i], z_mag[i], r_mag[i], W1_mag[i]) for i in range(len(psfobjs_flux_detected))]
+    class_list = [classify_func(g_mag[i], z_mag[i], r_mag[i], W1_mag[i])
+                    for i in range(len(psfobjs_flux_detected))]
     class_array = np.array(class_list)
 
     #SD print numbers of quasars and stars
@@ -172,22 +196,50 @@ if __name__ == '__main__':
     print(f"The area of the circle we are considering is {area_str} str, or {area_deg2} square degrees.")
     print(f"Since there are {num_quasars} potential quasars within an area of {area_deg2} square degrees, " +
             f"we would need at least {num_quasars/area_deg2} spectra per square degree to determine " +
-            "the number of quasars per square degree.")
+            "the true number of quasars per square degree.")
+
+
+    #SD create mask to remove some bad data
+    ugriz_flag = 2**0 + 2**1 + 2**2 + 2**4 + 2**6 + 2**8 + 2**9 + 2**11
+    wise_flag = 2**1 + 2**6
+    #flag = 2**2 + 2**3 + 2**4 + 2**5 + 2**6 + 2**7 + 2**8
+    bitmask = ((psfobjs_flux_detected['ALLMASK_G'] & ugriz_flag == 0) &
+                (psfobjs_flux_detected['ALLMASK_R'] & ugriz_flag == 0) &
+                (psfobjs_flux_detected['ALLMASK_Z'] & ugriz_flag == 0) &
+                (psfobjs_flux_detected['WISEMASK_W1'] & wise_flag == 0))
+    #bitmask = (psfobjs_flux_detected['MASKBITS'] & flag) == 0
+    
+    #SD mask the datasets to get only the good objects
+    g_mag_goodobjs = g_mag[bitmask]
+    z_mag_goodobjs = z_mag[bitmask]
+    r_mag_goodobjs = r_mag[bitmask]
+    W1_mag_goodobjs = W1_mag[bitmask]
+    
+    
+    #SD this time, run function from Week 10 tasks
+    #SD to classify the selected good psfobjs objects as stars or quasars using color cuts
+    class_list_goodobjs = [classify_func(g_mag_goodobjs[i], z_mag_goodobjs[i],
+                            r_mag_goodobjs[i], W1_mag_goodobjs[i])
+                            for i in range(len(g_mag_goodobjs))]
+    class_array_goodobjs = np.array(class_list_goodobjs)
+    num_quasars_goodobjs = len(class_array_goodobjs[class_array_goodobjs=='quasar'])
+    print(f"After masking for good data using bitmasks, there are now {num_quasars_goodobjs} " +
+            f"potential quasars within the area of the circle ({area_deg2} square degrees). " +
+            f"Therefore, we now only need {num_quasars_goodobjs/area_deg2} spectra " +
+            "per square degree to determine the true number of quasars per square degree.")
 
 
 
-    #SD plotting g-z vs r-W1 to figure out why I'm getting weird results
-    """
-    #SD get g-z and r-W1 colors from given inputs
-    #g_minus_z_given = g_given - z_given
-    #r_minus_W1_given = r_given - W1_given
-    import matplotlib.pyplot as plt
-    plt.scatter(g_mag-z_mag, r_mag-W1_mag, s=2)
-    params = np.polyfit([-2, 7], [-3, 6.5], 1)
-    f = np.poly1d(params)
-    plt.plot(g_mag-z_mag, f(g_mag-z_mag), c='red')
-    plt.savefig('plot.png')
-    """
+
+
+
+
+
+
+
+
+
+
 
 
 
