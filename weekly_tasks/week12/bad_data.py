@@ -127,6 +127,7 @@ if __name__ == '__main__':
         n = len(sweepobj)
         match_rad -= 0.05*u.arcsec
 
+    print('----------')
     print('TASK 1:')
     print(f"The object type is given as {sweepobj['TYPE'][0]}, aka an exponential galaxy.")
     print('----------')
@@ -158,7 +159,7 @@ if __name__ == '__main__':
     psfobjs, qsos, id1 = task3()
     
     print('TASK 3:')
-    print(f"There are {len(psfobjs)} point-source objects within 3 degrees of (180 deg, 30 deg) with an r-band magnitude < 20")
+    print(f"There are {len(psfobjs)} point-source objects within 3 degrees of (180 deg, 30 deg) with an r-band magnitude < 20.")
     print(f"There are {len(qsos)} objects within 3 degrees of (180 deg, 30 deg) with an r-band magnitude < 20 that we know for sure are quasars.")
     print('----------')
 
@@ -186,8 +187,8 @@ if __name__ == '__main__':
     num_stars = len(class_array) - num_quasars
     
     print("TASK 4:")
-    print("Using my function from the previous week:")
-    print(f"There are {num_quasars} quasars and {num_stars} stars.")
+    print("Using my function from the previous week: " +
+            f"There are {num_quasars} quasars and {num_stars} stars.")
     
     #SD area of a spherical cap is 2*pi*(1-cos(theta))
     area = 2 * np.pi * (1 - np.cos(3*u.deg))
@@ -195,26 +196,29 @@ if __name__ == '__main__':
     area_deg2 = area_str * 180/np.pi * 180/np.pi
     print(f"The area of the circle we are considering is {area_str} str, or {area_deg2} square degrees.")
     print(f"Since there are {num_quasars} potential quasars within an area of {area_deg2} square degrees, " +
-            f"we would need at least {num_quasars/area_deg2} spectra per square degree to determine " +
+            f"we would need at least {np.ceil(num_quasars/area_deg2)} spectra per square degree to determine " +
             "the true number of quasars per square degree.")
-
+    print('-')
+    
 
     #SD create mask to remove some bad data
-    ugriz_flag = 2**0 + 2**1 + 2**2 + 2**4 + 2**6 + 2**8 + 2**9 + 2**11
-    wise_flag = 2**1 + 2**6
-    #flag = 2**2 + 2**3 + 2**4 + 2**5 + 2**6 + 2**7 + 2**8
-    bitmask = ((psfobjs_flux_detected['ALLMASK_G'] & ugriz_flag == 0) &
-                (psfobjs_flux_detected['ALLMASK_R'] & ugriz_flag == 0) &
-                (psfobjs_flux_detected['ALLMASK_Z'] & ugriz_flag == 0) &
-                (psfobjs_flux_detected['WISEMASK_W1'] & wise_flag == 0))
-    #bitmask = (psfobjs_flux_detected['MASKBITS'] & flag) == 0
+    flag = 2**2 + 2**3 + 2**4 + 2**5 + 2**6 + 2**7 + 2**8
+    bitmask = (psfobjs_flux_detected['MASKBITS'] & flag) == 0
     
     #SD mask the datasets to get only the good objects
+    psfobjs_flux_detected_goodobjs = psfobjs_flux_detected[bitmask]
     g_mag_goodobjs = g_mag[bitmask]
     z_mag_goodobjs = z_mag[bitmask]
     r_mag_goodobjs = r_mag[bitmask]
     W1_mag_goodobjs = W1_mag[bitmask]
     
+    #SD find number of qsos objs after bitmasking
+    qsos_goodobjs, idx_goodobjs = qsos_cross_matcher(psfobjs_flux_detected_goodobjs)
+    print(f"After masking for good data using bitmasks, there are now {len(qsos_goodobjs)} objects " +
+            "within 3 degrees of (180 deg, 30 deg) with an r-band magnitude < 20 " +
+            "that we know for sure are quasars.")
+    print('(This meets the criteria of retaining at least 250 of the 275 qsos objects.)')
+    print('-')
     
     #SD this time, run function from Week 10 tasks
     #SD to classify the selected good psfobjs objects as stars or quasars using color cuts
@@ -223,11 +227,13 @@ if __name__ == '__main__':
                             for i in range(len(g_mag_goodobjs))]
     class_array_goodobjs = np.array(class_list_goodobjs)
     num_quasars_goodobjs = len(class_array_goodobjs[class_array_goodobjs=='quasar'])
-    print(f"After masking for good data using bitmasks, there are now {num_quasars_goodobjs} " +
-            f"potential quasars within the area of the circle ({area_deg2} square degrees). " +
-            f"Therefore, we now only need {num_quasars_goodobjs/area_deg2} spectra " +
+    num_stars_goodobjs = len(class_array_goodobjs) - num_quasars_goodobjs
+    
+    print("Using my function from the previous week, but masking for good data using bitmasks:")
+    print(f"There are now {num_quasars_goodobjs} quasars and {num_stars_goodobjs} stars.")
+    print(f"This means we now only need {np.ceil(num_quasars_goodobjs/area_deg2)} spectra " +
             "per square degree to determine the true number of quasars per square degree.")
-
+    print('----------')
 
 
 
