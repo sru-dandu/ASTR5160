@@ -333,6 +333,16 @@ def sdss_query_mags_multiple(ras, decs):
 
 if __name__=='__main__':
     
+    import argparse
+    
+    #SD description when passing -h
+    parser = argparse.ArgumentParser(description=
+    "Finds objects within 3 degrees of (ra, dec) = (163 deg, 50 deg) that have an r-band magnitude < 20 " +
+    "and an W1-W2 colors > 0.5. The SDSS database is then queried to get the ugriz magnitudes for " +
+    "these objects. The brightest object in the u-band is extracted from the dataset, and its fluxes " +
+    "in the ugriz and WISE bands are plotted in terms of the peak wavelengths of those bands.")
+    args = parser.parse_args()
+    
     #SD define variables
     filename = '/d/scratch/ASTR5160/data/first/first_08jul16.fits'
     sweepdir = '/d/scratch/ASTR5160/data/legacysurvey/dr9/north/sweep/9.0'
