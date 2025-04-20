@@ -88,7 +88,7 @@ print('----------')
 
 
 
-### TASK 4 ###
+### TASK 4 (BLACK) ###
 
 #SD plot chi squared for each m and each b
 [plt.plot(m, arr, label=f'b = {b[idx]:.2f}') for idx, arr in enumerate(chisquared.T)]
@@ -112,11 +112,37 @@ print('----------')
 
 
 
-### TASK 5 ###
+### TASK 5 (BLACK) ###
+
+#SD find delta chi squared
+delta_chisquared = chisquared - chi_min
+
+#SD find confidence limits
+#SD 10 bins, 2 parameters: ddof = 10-2-1 = 7
+conf_lim = chi2.sf(delta_chisquared, 7)
+conf1sigma = conf_lim > 0.32
+conf2sigma = conf_lim > 0.05
+print(conf1sigma)
+print(conf2sigma)
 
 
 
+### TASK 6 (BLACK) ###
 
+plt.figure(figsize=(10,10))
+
+#SD plot datapoints with errorbars
+plt.errorbar(x, y, yerr=np.std(y, ddof=1), elinewidth=1, barsabove=False, fmt='none')
+plt.scatter(x, y, s=20, edgecolor='black', label='data')
+
+#SD plot best fit lines and confidence levels
+plt.plot(x, 3*x+4.89, c='red', label='best fit')
+
+
+plt.xlabel('x')
+plt.ylabel('y')
+plt.legend()
+plt.show()
 
 
 
