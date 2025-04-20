@@ -59,9 +59,9 @@ print('----------')
 #SD each row corresponds to a value of m
 #SD each column corresponds to a value of b
 chisquared = []
-for mm in m:
+for bb in b:
     cs = []
-    for bb in b:
+    for mm in m:
         ypred = mm*x + bb
         chi = (np.sum((means - ypred)**2)) / np.var(means, ddof=1)
         cs.append(chi)
@@ -80,10 +80,10 @@ print('----------')
 ### TASK 4 (BLACK) ###
 
 #SD plot chi squared for each m and each b
-[plt.plot(m, arr, label=f'b = {b[idx]:.2f}') for idx, arr in enumerate(chisquared.T)]
+[plt.plot(m, arr, label=f'b = {b[idx]:.2f}') for idx, arr in enumerate(chisquared)]
 #SD plot where best m is
 chi_min = np.min(chisquared)
-best_m_idx = np.where(chisquared == chi_min)[0][0]
+best_m_idx = np.where(chisquared == chi_min)[1][0]
 plt.plot([m[0], m[best_m_idx]], [chi_min, chi_min], c='black', label=f'best m, lowest $\chi^2$')
 plt.plot([m[best_m_idx], m[best_m_idx]], [chi_min-0.5, chi_min], c='black')
 
