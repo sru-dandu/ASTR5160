@@ -11,7 +11,7 @@ data = np.loadtxt('/d/scratch/ASTR5160/week13/line.data')
 
 #SD find means and variances for each bin
 means = [np.mean(data[:,i]) for i in range(len(data[0]))]
-variances = [np.var(data[:,i]) for i in range(len(data[0]))]
+variances = [np.var(data[:,i], ddof=1) for i in range(len(data[0]))]
 
 print('----------')
 print('TASK 1:')
@@ -74,7 +74,7 @@ for mm in m:
     cs = []
     for bb in b:
         ypred = mm*x + bb
-        chi = (np.sum((y - ypred)**2)) / np.var(y)
+        chi = (np.sum((y - ypred)**2)) / np.var(y, ddof=1)
         cs.append(chi)
     chisquared.append(cs)
 
