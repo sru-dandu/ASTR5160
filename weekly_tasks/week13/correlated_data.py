@@ -30,11 +30,14 @@ print("The covariance matrix's diagonal values matches the variances of the bins
 
 ### TASK 2 (RED) ###
 
+#SD create matrix of std*std values
 std_list = [np.std(data[:,i], ddof=1) for i in range(len(data[0]))]
-std_matrix = np.array([std_list]*10) * np.array([std_list]*10).T
+stdxstd_matrix = np.array([std_list]*10) * np.array([std_list]*10).T
 
-corr_matrix = cov_matrix / std_matrix
+#SD find correlation matrix
+corr_matrix = cov_matrix / stdxstd_matrix
 
+#SD find highest correlation value that isn't a diagonal
 corr_unique, unique_idx = np.unique(corr_matrix, return_index=True)
 highest_corr_idx = np.max(unique_idx[corr_unique < 1])
 
