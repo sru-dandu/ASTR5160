@@ -24,24 +24,13 @@ print('----------')
 ### TASK 2 (RED) ###
 
 #SD create x values
-x0 = np.random.random(20)
-x1 = x0 + 1
-x2 = x0 + 2
-x3 = x0 + 3
-x4 = x0 + 4
-x5 = x0 + 5
-x6 = x0 + 6
-x7 = x0 + 7
-x8 = x0 + 8
-x9 = x0 + 9
+#SD average of each bin range (0-1, 1-2, 2-3, ... , 9-10)
+x = np.linspace(0.5, 9.5, 10)
 
 #SD plot datapoints
-x = np.array((x0,x1,x2,x3,x4,x5,x6,x7,x8,x9)).flatten()
-y = data.T.flatten()
-
-plt.scatter(x, y)
+plt.scatter(x, means)
 plt.xlabel('x')
-plt.ylabel('y')
+plt.ylabel('bin means')
 plt.show()
 
 #SD find possible m and b values for the data
@@ -74,7 +63,7 @@ for mm in m:
     cs = []
     for bb in b:
         ypred = mm*x + bb
-        chi = (np.sum((y - ypred)**2)) / np.var(y, ddof=1)
+        chi = (np.sum((means - ypred)**2)) / np.var(means, ddof=1)
         cs.append(chi)
     chisquared.append(cs)
 
@@ -96,18 +85,18 @@ print('----------')
 chi_min = np.min(chisquared)
 best_m_idx = np.where(chisquared == chi_min)[0][0]
 plt.plot([m[0], m[best_m_idx]], [chi_min, chi_min], c='black', label=f'best m, lowest $\chi^2$')
-plt.plot([m[best_m_idx], m[best_m_idx]], [0, chi_min], c='black')
+plt.plot([m[best_m_idx], m[best_m_idx]], [chi_min-0.5, chi_min], c='black')
 
 plt.xlabel('m')
-plt.ylabel(r'$\chi^2$')
+plt.ylabel(f'$\chi^2$')
 plt.xlim(m[0], m[-1])
-plt.ylim(chi_min-1, chi_min+3)   #SD zoom in on relevant region
+plt.ylim(chi_min-0.025, chi_min+0.2)   #SD zoom in on relevant region
 plt.legend()
 plt.show()
 
 print('TASK 4:')
 print('The minimum chi squared seems to correspond to')
-print('around m = 3 and b = 4.67-4.89.')
+print('around m = 3 and b = 4.67.')
 print('----------')
 
 
@@ -132,11 +121,11 @@ print(conf2sigma)
 plt.figure(figsize=(10,10))
 
 #SD plot datapoints with errorbars
-plt.errorbar(x, y, yerr=np.std(y, ddof=1), elinewidth=1, barsabove=False, fmt='none')
-plt.scatter(x, y, s=20, edgecolor='black', label='data')
+plt.errorbar(x, means, yerr=np.std(means, ddof=1), elinewidth=1, barsabove=False, fmt='none')
+plt.scatter(x, means, edgecolor='black', label='data')
 
 #SD plot best fit lines and confidence levels
-plt.plot(x, 3*x+4.89, c='red', label='best fit')
+plt.plot(x, 3*x+4.67, c='red', label='best fit')
 
 
 plt.xlabel('x')
