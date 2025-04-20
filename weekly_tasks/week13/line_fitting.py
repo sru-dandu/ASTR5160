@@ -92,10 +92,16 @@ print('----------')
 
 #SD plot chi squared for each m and each b
 [plt.plot(m, arr, label=f'b = {b[idx]:.2f}') for idx, arr in enumerate(chisquared.T)]
-#plt.plot(
+#SD plot where best m is
+chi_min = np.min(chisquared)
+best_m_idx = np.where(chisquared == chi_min)[0][0]
+plt.plot([m[0], m[best_m_idx]], [chi_min, chi_min], c='black', label=f'best m, lowest $\chi^2$')
+plt.plot([m[best_m_idx], m[best_m_idx]], [0, chi_min], c='black')
+
 plt.xlabel('m')
 plt.ylabel(r'$\chi^2$')
-plt.ylim(8,12)
+plt.xlim(m[0], m[-1])
+plt.ylim(chi_min-1, chi_min+3)   #SD zoom in on relevant region
 plt.legend()
 plt.show()
 
@@ -107,10 +113,6 @@ print('----------')
 
 
 ### TASK 5 ###
-chi_min = np.min(chisquared)
-min_m_idx = np.where(chisquared == chi_min)[0]
-print(m[min_m_idx])
-
 
 
 
