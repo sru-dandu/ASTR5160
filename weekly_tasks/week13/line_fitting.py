@@ -11,7 +11,7 @@ data = np.loadtxt('/d/scratch/ASTR5160/week13/line.data')
 
 #SD find means and variances for each bin
 means = [np.mean(data[:,i]) for i in range(len(data[0]))]
-variances = [np.var(data[:,i]) for i in range(len(data[0]))]
+variances = [np.var(data[:,i], ddof=1) for i in range(len(data[0]))]
 
 print('----------')
 print('TASK 1:')
@@ -24,36 +24,29 @@ print('----------')
 ### TASK 2 (RED) ###
 
 #SD create x values
-x0 = np.random.random(20)
-x1 = x0 + 1
-x2 = x0 + 2
-x3 = x0 + 3
-x4 = x0 + 4
-x5 = x0 + 5
-x6 = x0 + 6
-x7 = x0 + 7
-x8 = x0 + 8
-x9 = x0 + 9
+#SD average of each bin range (0-1, 1-2, 2-3, ... , 9-10)
+x = np.linspace(0.5, 9.5, 10)
 
 #SD plot datapoints
-x = np.array((x0,x1,x2,x3,x4,x5,x6,x7,x8,x9)).flatten()
-y = data.T.flatten()
-plt.scatter(x, y)
+plt.scatter(x, means)
+plt.xlabel('x')
+plt.ylabel('bin means')
+plt.show()
 
+#SD find possible b values for the data
+#b = np.linspace(4, 6, 10)
+b = np.linspace(0, 5, 100)
 
-#SD find possible m and b values for the data
-b = np.linspace(4, 6, 10)
-
-m = np.linspace(2, 4, 10)
-m = np.linspace(m[3], m[6], 10)
-m = np.linspace(m[2], m[7], 10)
+#SD find possible m values for the data
+#m = np.linspace(2, 4, 10)
+m = np.linspace(0, 5, 100)
 
 '''
 for i in range(len(m)):
     plt.plot(x, m[i]*x+b[i], label=f'm={m[i]}, b={b[i]}')
+plt.show()
 '''
 
-plt.show()
 
 print('TASK 2:')
 print('Found some possible values for m and b.')
@@ -67,20 +60,106 @@ print('----------')
 #SD each row corresponds to a value of m
 #SD each column corresponds to a value of b
 chisquared = []
-for mm in m:
+for bb in b:
     cs = []
-    for bb in b:
+    for mm in m:
         ypred = mm*x + bb
-        chi = (np.sum(y - ypred) ** 2) / np.var(y)
+        chi = (np.sum((means - ypred)**2)) / np.var(means, ddof=1)
         cs.append(chi)
     chisquared.append(cs)
 
 chisquared = np.array(chisquared)
 
-#print(chisquared)
 
 print('TASK 3:')
 print('Founds chi square values for every combination of m and b values I chose in Task 2.')
 print('----------')
+
+
+
+### TASK 4 (BLACK) ###
+
+#SD plot chi squared for each m and each b
+#[plt.plot(m, arr, label=f'b = {b[idx]:.2f}') for idx, arr in enumerate(chisquared)]
+[plt.plot(m, arr, label=f'b = {b[idx]:.3f}') for idx, arr in enumerate(chisquared) if np.min(chisquared) in arr]
+
+plt.xlabel('m')
+plt.ylabel(f'$\chi^2$')
+plt.legend()
+plt.show()
+
+
+print('TASK 4:')
+print('The minimum chi squared seems to correspond to')
+print('around m = 3 and b = 4.646.')
+print('----------')
+
+
+
+### TASK 5 (BLACK) ###
+
+#SD find delta chi squared
+delta_chisquared = chisquared - np.min(chisquared)
+
+#SD find confidence limits
+#SD 10 bins, 2 parameters: ddof = 10-2-1 = 7
+conf_lvl = chi2.sf(delta_chisquared, 7)
+conf_lvl_flat = conf_lvl.flatten()
+
+#SD find indices where alpha=0.32 and alpha=0.05
+conf_1sigma_idx = np.argmin(np.abs(conf_lvl_flat - 0.32))
+conf_2sigma_idx = np.argmin(np.abs(conf_lvl_flat - 0.05))
+
+#SD extract the chi squared values and alpha values at those indices
+chi_1sigma = chisquared.flatten()[conf_1sigma_idx]
+chi_2sigma = chisquared.flatten()[conf_2sigma_idx]
+conf_1sigma = conf_lvl_flat[conf_1sigma_idx]
+conf_2sigma = conf_lvl_flat[conf_2sigma_idx]
+
+#SD extract corresponding m and b values
+M, B = np.meshgrid(m, b)
+m_1sigma = M.flatten()[conf_1sigma_idx]
+b_1sigma = B.flatten()[conf_1sigma_idx]
+m_2sigma = M.flatten()[conf_2sigma_idx]
+b_2sigma = B.flatten()[conf_2sigma_idx]
+
+
+print('TASK 5:')
+
+print("The closest we get to a 1 sigma confidence interval in this dataset is " +
+        f"at chisquared={chi_1sigma:.5f}, alpha={conf_1sigma:.5f}.")
+print(f"This corresponds to m={m_1sigma:.3f} and b={b_1sigma:.3f}.")
+
+print("The closest we get to a 2 sigma confidence interval in this dataset is " +
+        f"at chisquared={chi_2sigma:.5f}, alpha={conf_2sigma:.5f}.")
+print(f"This corresponds to m={m_2sigma:.3f} and b={b_2sigma:.3f}.")
+print('----------')
+
+
+
+### TASK 6 (BLACK) ###
+
+#SD find standard deviations of each bin
+bin_std = [np.std(data[:,i], ddof=1) for i in range(len(data[0]))]
+
+#SD plot datapoints with errorbars
+plt.errorbar(x, means, yerr=bin_std, fmt='o')
+
+#SD find best fit y, y for 68% confidence, and y for 95% confidence
+ybest = 3*x + 4.646
+y_1sigma = m_1sigma*x + b_1sigma
+y_2sigma = m_2sigma*x + b_2sigma
+
+#SD plot best fit lines and confidence levels
+plt.plot(x, ybest, c='red', label='best fit')
+plt.plot(x, y_1sigma, c='orange', label='68% confidence limit')
+plt.plot(x, y_2sigma, c='yellow', label='95% confidence limit')
+
+plt.xlabel('x')
+plt.ylabel('y')
+plt.legend()
+plt.show()
+
+
 
 
