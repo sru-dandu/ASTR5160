@@ -89,5 +89,25 @@ for bb in b:
 chisquared = np.array(chisquared)
 
 
+#SD find index of minimum chi squared
+chi_min = np.min(chisquared)
+chi_min_idx = np.where(chisquared == chi_min)
+
+#SD find m and b values corresponding to minimum chi squared
+m_best = m[chi_min_idx[1][0]]
+b_best = b[chi_min_idx[0][0]]
+
+
+print('TASK 3:')
+print("The minimum chi squared value is", chi_min)
+print(f"The best fit parameters are m={m_best:.3f} and b={b_best:.3f}")
+
+print("The values are practically the same as the results from the previous class.")
+print("This makes sense. Since we are dealing with a linear dataset, there shouldn't be any ")
+print("correlation between the different bins. Therefore, adding the covariance factor to the ")
+print("chi squared values wouldn't make a difference.")
+print('----------')
+
+
 
 
