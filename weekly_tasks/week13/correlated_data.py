@@ -47,3 +47,47 @@ print("Ignoring the diagonals, the highest correlation seems to be between bin i
         str(highest_corr_idx)[0], 'and', str(highest_corr_idx)[1])
 print('----------')
 
+
+
+### TASK 3 (BLACK) ###
+
+###SD below code is adapted from my line_fitting.py code (previous lecture)
+
+#SD find means for each bin
+means = [np.mean(data[:,i]) for i in range(len(data[0]))]
+
+#SD create x values
+#SD average of each bin range (0-1, 1-2, 2-3, ... , 9-10)
+x = np.linspace(0.5, 9.5, 10)
+
+#SD find possible m and b values for the data
+m = np.linspace(0, 5, 100)
+b = np.linspace(0, 5, 100)
+
+
+#SD find inverse covariance matrix
+inv_cov_matrix = np.matrix(cov_matrix).I
+
+#SD create grid of chi square values
+#SD each row corresponds to a value of m
+#SD each column corresponds to a value of b
+#SD I know this is really messy, I just couldn't figure out a better way with the time I had
+chisquared = []
+for bb in b:
+    cs = []
+    for mm in m:
+        ypred = mm*x + bb
+        summand_list = []
+        for i in range(len(inv_cov_matrix)):
+            summand = [(means[i] - ypred[i]) * np.sum(inv_cov_matrix[i,j] * (means[j] - ypred[j]))
+                        for j in range(len(inv_cov_matrix))]
+            summand_list.append(summand)
+        chi = np.sum(summand_list)
+        cs.append(chi)
+    chisquared.append(cs)
+
+chisquared = np.array(chisquared)
+
+
+
+
