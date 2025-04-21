@@ -133,25 +133,32 @@ print(f"This corresponds to m={m_1sigma:.3f} and b={b_1sigma:.3f}.")
 print("The closest we get to a 2 sigma confidence interval in this dataset is " +
         f"at chisquared={chi_2sigma:.5f}, alpha={conf_2sigma:.5f}.")
 print(f"This corresponds to m={m_2sigma:.3f} and b={b_2sigma:.3f}.")
+print('----------')
 
 
 
 ### TASK 6 (BLACK) ###
 
+#SD find standard deviations of each bin
+bin_std = [np.std(data[:,i], ddof=1) for i in range(len(data[0]))]
+
 #SD plot datapoints with errorbars
-plt.errorbar(x, means, yerr=np.std(means, ddof=1), elinewidth=1, barsabove=False, fmt='none')
-plt.scatter(x, means, edgecolor='black', label='data')
+plt.errorbar(x, means, yerr=bin_std, fmt='o')
+
+#SD find best fit y, y for 68% confidence, and y for 95% confidence
+ybest = 3*x + 4.646
+y_1sigma = m_1sigma*x + b_1sigma
+y_2sigma = m_2sigma*x + b_2sigma
 
 #SD plot best fit lines and confidence levels
-plt.plot(x, 3*x+4.646, c='red', label='best fit')
-
+plt.plot(x, ybest, c='red', label='best fit')
+plt.plot(x, y_1sigma, c='orange', label='68% confidence limit')
+plt.plot(x, y_2sigma, c='yellow', label='95% confidence limit')
 
 plt.xlabel('x')
 plt.ylabel('y')
 plt.legend()
 plt.show()
-
-
 
 
 
