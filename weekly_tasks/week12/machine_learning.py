@@ -136,7 +136,7 @@ def knn_quasar_classify(g_minus_z_given, r_minus_W1_given, plot=False):
     -------
     :class:'numpy.ndarray'
         The inputted data, reformatted to be like a table.
-        Each index is one object. Column 1 is is the g-z color, and column 2 is the r-W1 color.
+        Each index is one object. Column 1 is the g-z color, and column 2 is the r-W1 color.
     :class:'numpy.ndarray'
         The labels of each object in the first outputted numpy array.
         Quasars are labeled 'quasar', while stars are labeled 'star'.
