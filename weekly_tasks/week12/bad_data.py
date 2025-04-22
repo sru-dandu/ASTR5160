@@ -42,17 +42,18 @@ def task3(r_max, PSF=True):
     sweeptables_all = vstack([t for t in sweeptables_list])
 
 
-    #SD create a mask for objs that are point sources
-    psf_mask = (sweeptables_all['TYPE'] == 'PSF')
-
     #SD create mask for objs within 3 deg of (180 deg, 30 deg)
     center_coords = SkyCoord(180, 30, unit=u.deg)
     sweeptables_all_coords = SkyCoord(sweeptables_all['RA'], sweeptables_all['DEC'], unit=u.deg)
     separation_mask = (sweeptables_all_coords.separation(center_coords) < 3*u.deg)
 
     #SD mask the sweepfile objects
+    #SD mask depends on whether PSF is True or False
     if PSF==True:
+        #SD create a mask for objs that are point sources
+        psf_mask = (sweeptables_all['TYPE'] == 'PSF')
         psfobjs = sweeptables_all[psf_mask & separation_mask]
+    
     elif PSF==False:
         psfobjs = sweeptables_all[separation_mask]
 
