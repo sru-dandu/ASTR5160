@@ -6,8 +6,13 @@ import matplotlib.pyplot as plt
 
 
 
+#SD get equation of the line separating stars from quasars
+#SD these numbers were obtained from Task 3 below
+params = np.polyfit([-2, 7], [-3, 6.5], 1)
+f = np.poly1d(params)
+
 #SD function to categorize between stars and quasars
-def classify_func(g_given, z_given, r_given, W1_given, cutoff_eq):
+def classify_func(g_given, z_given, r_given, W1_given, cutoff_eq=f):
     """Classifies whether an object is a star or a quasar using given magnitudes and color cut line.
     
     INPUTS
@@ -20,7 +25,7 @@ def classify_func(g_given, z_given, r_given, W1_given, cutoff_eq):
         The magnitude of the object in r-band.
     W1_given : :class:'float' or 'numpy.float64'
         The magnitude of the object in W1-band.
-    cutoff_eq: :class:'numpy.poly1d'
+    cutoff_eq: :class:'numpy.poly1d' ; Optional, default is np.poly1d(np.polyfit([-2, 7], [-3, 6.5], 1))
         The equation of the line dividing stars from quasars.
         Can be passed as cutoff_eq=numpy.poly1d([m, b]),
         where m and b are the slope and y-intercept of the line.
@@ -31,11 +36,6 @@ def classify_func(g_given, z_given, r_given, W1_given, cutoff_eq):
         Classification of the object.
         Either 'star' or 'quasar'.
     """
-    
-    #SD get equation of the line separating stars from quasars
-    #SD these numbers were obtained from Task 3 below
-    params = np.polyfit([-2, 7], [-3, 6.5], 1)
-    f = np.poly1d(params)
     
     #SD get g-z and r-W1 colors from given inputs
     g_minus_z_given = g_given - z_given
@@ -175,17 +175,10 @@ if __name__ == '__main__':
     g_minus_z = mag_g - mag_z
     r_minus_W1 = mag_r - mag_W1
     
-    #SD create line to divide between stars and quasars
-    #SD found by eye after plotting datapoints
-    linex = [-2, 7]
-    liney = [-3, 6.5]
-    params = np.polyfit(linex, liney, 1)
-    f = np.poly1d(params)
-    
 
     #SD plotting r-W1 vs g-z mags
     plt.scatter(g_minus_z, r_minus_W1, s=5)
-    plt.plot(linex, liney, c='maroon')
+    plt.plot([-2, 7], [-3, 6.5], c='maroon')   #SD line dividing stars and quasars; found by eye
     plt.xlabel('g - z')
     plt.ylabel('r - W1')
     plt.show()
