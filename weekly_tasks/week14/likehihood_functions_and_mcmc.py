@@ -7,11 +7,41 @@ def posterior_prob_func(x, ydata, var, m, b, mrange, brange):
     
     INPUTS
     ------
+    x : :class:'numpy.ndarray'
+        A 1d array containing the x values of the dataset.
+        
+    ydata : :class:'numpy.ndarray'
+        A 1d array containing the y values of the dataset.
+        
+    var : :class:'numpy.ndarray'
+        A 1d array containing the variances in the dataset.
+        
+    m : :class:'int' or 'float'
+        The estimated slope of the linear fit.
+        
+    b : :class:'int' or 'float'
+        The estimated y-intercept of the linear fit.
+        
+    mrange : :class:'list' or 'numpy.ndarray'
+        The lower and upper limits of the acceptable range of slopes.
+        
+    brange : :class:'list' or 'numpy.ndarray'
+        The lower and upper limits of the acceptable range of y-intercepts.
     
     
     RETURNS
     -------
+    :class:'numpy.float64'
+        The natural log of the posterior probability.
+        
+    :class:'numpy.float64'
+        The natural log of the likelihood function.
     
+    
+    NOTES
+    -----
+    - x, ydata, var should be the same length.
+    - mrange and brange should be of length 2.
     
     """
     
@@ -25,8 +55,13 @@ def posterior_prob_func(x, ydata, var, m, b, mrange, brange):
     ln_L = -1 * (1/2) * np.sum(summand)
     
     
-    #SD find prior according to acceptable m and b ranges
-    if (mrange[0] < m < mrange[1]) and (brange[0] < b < brange[1]):
+    #SD make sure mrange and brange are in ascending order
+    #SD and extract lower and upper values
+    m_low, m_high = np.unique(mrange)
+    b_low, b_high = np.unique(brange)
+    
+    #SD set the flat prior according to given acceptable m and b ranges
+    if (m_low < m < m_high) and (b_low < b < b_high):
         #SD prior = 1, therefore ln(prior) = 0
         ln_prior = 0
     
@@ -51,6 +86,10 @@ if __name__ == '__main__':
     #SD import datafile
     #SD unpack=True transposes the array
     data = np.loadtxt('/d/scratch/ASTR5160/week13/line.data', unpack=True)
+    
+    #SD create array of x values
+    #SD correspond to means of bin ranges (0-1, 1-2, 2-3, ... , 9-10)
+    x = np.arange(0.5, 10, 1)
 
     #SD find means of each bin
     means = [np.mean(xbin) for xbin in data]
@@ -77,8 +116,7 @@ if __name__ == '__main__':
     
     ### TASK 3 (RED) ###
     
-    x = np.arange(0.5, 10, 1)
-    
+        
     aaa = posterior_prob_func(x, means, variances, 3, 5, [1,5], [2,6])
     
     print(aaa)
