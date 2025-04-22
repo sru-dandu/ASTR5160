@@ -120,7 +120,7 @@ def iris_problem(weeklytask=False):
 
 
 
-def knn_quasar_classify(g_minus_z_given, r_minus_W1_given, plot=False):
+def knn_quasar_classify(g_minus_z_given, r_minus_W1_given, r_max, plot=False):
     """Classifies objects as either quasars or stars using k-NN with g-z and r-W1 colors.
     
     INPUTS
@@ -131,6 +131,8 @@ def knn_quasar_classify(g_minus_z_given, r_minus_W1_given, plot=False):
         The r-W1 colors for each object to be classified.
     plot : class:'bool' ; Optional, default is False
         If True, prints a scatterplot to screen with the training and test datasets.
+    r_max : :class:'int' or 'float'
+        Upper limit of r band magnitude that survey is being limited to.
     
     RETURNS
     -------
@@ -144,7 +146,7 @@ def knn_quasar_classify(g_minus_z_given, r_minus_W1_given, plot=False):
     NOTES
     -----
     - The training set is made up of objects from the Legacy Survey sweep files
-      within 3 degrees of (180 deg, 30 deg) and with an r mag < 20.
+      within 3 degrees of (180 deg, 30 deg) and with an r mag < r_max.
         - The subset of the dataset that are quasars were obtained by cross-matching the objects
           with a list of known quasars
         - The subset of the dataset that are stars were obtained by
@@ -155,7 +157,7 @@ def knn_quasar_classify(g_minus_z_given, r_minus_W1_given, plot=False):
     """
     
     #SD call function from previous lecture's tasks
-    psfobjs, qsos, idx = task3()
+    psfobjs, qsos, idx = task3(r_max)
     
     #SD extract fluxes of psfobjs
     flux_mask = ((psfobjs['FLUX_G'] > 0) & (psfobjs['FLUX_Z'] > 0) &
@@ -210,8 +212,9 @@ def knn_quasar_classify(g_minus_z_given, r_minus_W1_given, plot=False):
         plt.scatter(data_given[data_given_class=='star', 0], data_given[data_given_class=='star', 1],
                     marker='D', c='red', edgecolor='black', s=10, label='predicted star')
         plt.legend()
-        plt.savefig('plot.png')
-    
+        #plt.savefig('plot.png')
+        plt.show()
+        
     return data_given, data_given_class
 
 
@@ -234,7 +237,7 @@ if __name__ == '__main__':
     ### TASK 2 (BLACK) ###
     
     #SD call function from previous lecture's tasks
-    psfobjs, qsos, idx = task3()
+    psfobjs, qsos, idx = task3(r_max=20)
     
     print('TASK 2:')
     print(f"There are {len(psfobjs)} point-source objects within 3 degrees " +
@@ -248,7 +251,9 @@ if __name__ == '__main__':
     ### TASK 3 (RED) ###
     
     #SD test the k-NN fitting function
-    #knn_quasar_classify([4, 1, 1], [5, -1, 5], plot=True)
+    #data_given, data_class = knn_quasar_classify([4, 1, 1], [5, -1, 5], r_max=20, plot=True)
+    #print(data_given)
+    #print(data_class)
     
     print("TASK 3:")
     print("Wrote the function knn_quasar_classify(),")

@@ -6,19 +6,20 @@ from weekly_tasks.week10.imaging_classification import classify_func
 
 
 
-def task3():
+def task3(r_max):
     """Code for Task 3 of this module.
-        Get objs from sweep files within 3 deg of (180 deg, 30 deg) and with r-band mag < 20.
+        Get objs from sweep files within 3 deg of (180 deg, 30 deg) and with r-band mag < given upper limit for r.
         Then, cross-match with objs from qsos file to find which of those objs are for sure quasars.
     
     INPUTS
     ------
-    None
+    r_max : :class:'int' or 'float'
+        Upper limit of r band magnitude that survey is being limited to.
     
     RETURNS
     -------
     :class:'astropy.table.table.Table'
-        Table of objects from sweep files that are within 3 deg of (180 deg, 30 deg) and have r-band mag < 20.
+        Table of objects from sweep files that are within 3 deg of (180 deg, 30 deg) and have r-band mag < r_max.
     :class:'astropy.table.table.Table'
         Table of objects from first output that cross-matched with objects in qsos file.
         These are the objects from first output that are for sure quasars.
@@ -60,8 +61,8 @@ def task3():
     r_flux = psfobjs['FLUX_R']
     r_mag = 22.5 - 2.5*np.log10(r_flux)
 
-    #SD mask for sources with r < 20
-    psfobjs = psfobjs[r_mag < 20]
+    #SD mask for sources with r < given r_max
+    psfobjs = psfobjs[r_mag < r_max]
 
 
     #SD call function to cross-match psfobjs with known quasars
@@ -156,7 +157,7 @@ if __name__ == '__main__':
     ### TASK 3 (RED) ###
 
     #SD call function to run task 3 code
-    psfobjs, qsos, id1 = task3()
+    psfobjs, qsos, id1 = task3(r_max=20)
     
     print('TASK 3:')
     print(f"There are {len(psfobjs)} point-source objects within 3 degrees of (180 deg, 30 deg) with an r-band magnitude < 20.")
