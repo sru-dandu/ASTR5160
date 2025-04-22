@@ -193,11 +193,13 @@ if __name__ == '__main__':
     #SD because initial guess was added to chain first
     accepted_count = len(chain) - 1
     
+    '''
     print('TASK 4:')
     print("With step=0.1, I was getting an acceptance rate much less than 30%.")
     print(f"After changing the step size to {step}, I'm getting an acceptance rate around 30%.")
+    '''
     
-    
+    print('~~~TEST~~~')
     print("total number of proposals:", iterations)
     print("amount accepted:", accepted_count)
     print("amount rejected:", filtered_count)
