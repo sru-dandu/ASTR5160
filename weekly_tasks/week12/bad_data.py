@@ -179,9 +179,7 @@ if __name__ == '__main__':
     W1_mag = 22.5 - 2.5*np.log10(psfobjs_flux_detected['FLUX_W1'])
 
     #SD run function from Week 10 tasks to classify psfobjs objs as stars or quasars using color cuts
-    params = np.polyfit([-2, 7], [-3, 6.5], 1)   #SD values obtained in previous lecture tasks
-    f = np.poly1d(params)
-    class_list = [classify_func(g_mag[i], z_mag[i], r_mag[i], W1_mag[i], cutoff_eq=f)
+    class_list = [classify_func(g_mag[i], z_mag[i], r_mag[i], W1_mag[i])
                     for i in range(len(psfobjs_flux_detected))]
     class_array = np.array(class_list)
 
@@ -226,7 +224,7 @@ if __name__ == '__main__':
     #SD this time, run function from Week 10 tasks
     #SD to classify the selected good psfobjs objects as stars or quasars using color cuts
     class_list_goodobjs = [classify_func(g_mag_goodobjs[i], z_mag_goodobjs[i],
-                            r_mag_goodobjs[i], W1_mag_goodobjs[i], cutoff_eq=f)
+                            r_mag_goodobjs[i], W1_mag_goodobjs[i])
                             for i in range(len(g_mag_goodobjs))]
     class_array_goodobjs = np.array(class_list_goodobjs)
     num_quasars_goodobjs = len(class_array_goodobjs[class_array_goodobjs=='quasar'])
