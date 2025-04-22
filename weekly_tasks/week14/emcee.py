@@ -1,0 +1,35 @@
+import numpy as np
+import emcee
+
+
+
+### TASK 1 (RED) ###
+###SD code copied from Task 1 of previous lecture (likelihood_functions_and_mcmc.py)
+
+#SD import datafile
+#SD unpack=True transposes the array
+data = np.loadtxt('/d/scratch/ASTR5160/week13/line.data', unpack=True)
+
+#SD create array of x values
+#SD correspond to means of bin ranges (0-1, 1-2, 2-3, ... , 9-10)
+x = np.arange(0.5, 10, 1)
+
+#SD find means of each bin
+means = [np.mean(xbin) for xbin in data]
+means = np.array(means)
+
+#SD find variances of each bin
+variances = [np.var(xbin, ddof=1) for xbin in data]
+variances = np.array(variances)
+
+print('TASK 1:')
+print("bin means:", means)
+print("bin variances:", variances)
+print('----------')
+
+
+
+### TASK 2 (RED) ###
+
+
+
