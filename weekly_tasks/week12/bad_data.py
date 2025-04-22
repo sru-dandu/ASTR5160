@@ -6,7 +6,7 @@ from weekly_tasks.week10.imaging_classification import classify_func
 
 
 
-def task3(r_max):
+def task3(r_max, PSF=True):
     """Code for Task 3 of this module.
         Get objs from sweep files within 3 deg of (180 deg, 30 deg) and with r-band mag < given upper limit for r.
         Then, cross-match with objs from qsos file to find which of those objs are for sure quasars.
@@ -15,6 +15,9 @@ def task3(r_max):
     ------
     r_max : :class:'int' or 'float'
         Upper limit of r band magnitude that survey is being limited to.
+    PSF : :class:'bool' ; Optional, default is True
+        If set to False, then uses all object types in sweep files.
+        Else, uses only objects of type PSF (as asked for in this lecture's tasks).
     
     RETURNS
     -------
@@ -48,7 +51,10 @@ def task3(r_max):
     separation_mask = (sweeptables_all_coords.separation(center_coords) < 3*u.deg)
 
     #SD mask the sweepfile objects
-    psfobjs = sweeptables_all[psf_mask & separation_mask]
+    if PSF==True:
+        psfobjs = sweeptables_all[psf_mask & separation_mask]
+    elif PSF==False:
+        psfobjs = sweeptables_all[separation_mask]
 
 
     #SD create mask to only get objects for which r flux > 0
