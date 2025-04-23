@@ -1,7 +1,8 @@
 from astropy.table import Table
 import numpy as np
 from weekly_tasks.week10.imaging_classification import classify_func
-#SD the below modules are only needed in line_finder()
+import argparse
+#SD the below modules are only needed if running line_finder()
 import matplotlib.pyplot as plt
 from weekly_tasks.week12.bad_data import task3
 
@@ -129,7 +130,15 @@ def line_finder():
 
 if __name__ == '__main__':
 
-    #SD argparse help function and inputs
+    #SD description when passing -h
+    parser = argparse.ArgumentParser(description="""Takes a file containing data of objects.
+    Returns the number of quasars found in the datafile.
+    This number is obtained using color cuts and flag cuts.""")
+    
+    #SD inputs
+    parser.add_argument("datafile", type=str,
+            help="['str'] Datafile of objects to be scanned for quasars.")
+    args = parser.parse_args()
     
     
     #SD uncomment this to run test function to find line separating stars and quasars
@@ -137,13 +146,12 @@ if __name__ == '__main__':
     
     
     #SD read in given datafile as an astropy table
-    objs = Table.read('/d/scratch/ASTR5160/data/legacysurvey/dr9/south/sweep/9.0/sweep-050m025-060m020.fits')
+    objs = Table.read(args.datafile)
     
-    #SD run function to find quasars in given datafile
+    #SD run function to find quasars
     quasar_mask = splendid_function(objs)
     
     print("Number of quasars:", len(quasar_mask[quasar_mask==True]))
-    print(len(q))
 
 
 
