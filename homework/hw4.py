@@ -44,7 +44,7 @@ def splendid_function(objs):
     quasar_mask = (np.array(data_class) == 'quasar')
     
     return quasar_mask
-
+    
 
 
 
@@ -136,11 +136,10 @@ if __name__ == '__main__':
     This number is obtained using color cuts and flag cuts.""")
     
     #SD inputs
-    parser.add_argument("datafile", type=str,
-            help="['str'] Datafile of objects to be scanned for quasars.")
-    parser.add_argument("-t", "--test", action='store_true',
-            help="""Passing this flag runs the code in test mode:
-            Will use a pre-selected sweep file as the input to run the code with.""")
+    parser.add_argument("datafile", type=str, nargs='?',
+            default='/d/scratch/ASTR5160/data/legacysurvey/dr9/south/sweep/9.0/sweep-340p025-350p030.fits',
+            help="""['str'] Datafile of objects to be scanned for quasars.
+                    If none passed, a pre-selected sweep file is used as an example.""")
     args = parser.parse_args()
     
     
@@ -148,14 +147,8 @@ if __name__ == '__main__':
     #line_finder()
     
     
-    #SD read in datafile as an astropy table
-    if args.test is True:
-        #SD pre-selected sweep file for testing purposes
-        objs = Table.read('/d/scratch/ASTR5160/data/legacysurvey/dr9/south/sweep/9.0/sweep-340p025-350p030.fits')
-        
-    elif args.test is False:
-        #SD user-inputted file
-        objs = Table.read(args.datafile)
+    #SD read in given datafile as an astropy table
+    objs = Table.read(args.datafile)
     
     #SD run function to find quasars
     quasar_mask = splendid_function(objs)
