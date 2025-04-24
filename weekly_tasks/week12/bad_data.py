@@ -186,7 +186,7 @@ if __name__ == '__main__':
     W1_mag = 22.5 - 2.5*np.log10(psfobjs_flux_detected['FLUX_W1'])
 
     #SD run function from Week 10 tasks to classify psfobjs objs as stars or quasars using color cuts
-    quasar_mask = classify_func(g_mag, z_mag, r_mag, W1_mag)
+    quasar_mask = classify_func(g_mag, r_mag, z_mag, W1_mag)
 
     #SD print numbers of quasars and stars
     num_quasars = len(quasar_mask[quasar_mask==True])
@@ -228,7 +228,7 @@ if __name__ == '__main__':
     
     #SD this time, run function from Week 10 tasks
     #SD to classify the selected good psfobjs objects as stars or quasars using color cuts
-    quasar_mask_goodobjs = classify_func(g_mag_goodobjs, z_mag_goodobjs, r_mag_goodobjs, W1_mag_goodobjs)
+    quasar_mask_goodobjs = classify_func(g_mag_goodobjs, r_mag_goodobjs, z_mag_goodobjs, W1_mag_goodobjs)
     num_quasars_goodobjs = len(quasar_mask_goodobjs[quasar_mask_goodobjs==True])
     num_stars_goodobjs = len(quasar_mask_goodobjs) - num_quasars_goodobjs
     

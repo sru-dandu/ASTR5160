@@ -12,17 +12,17 @@ params = np.polyfit([-2, 7], [-3, 6.5], 1)
 f = np.poly1d(params)
 
 #SD function to categorize between stars and quasars
-def classify_func(g_given, z_given, r_given, W1_given, cutoff_eq=f):
+def classify_func(g_given, r_given, z_given, W1_given, cutoff_eq=f):
     """Classifies whether objects are stars or quasars using given magnitudes and color cut line.
     
     INPUTS
     ------
     g_given : :class:'float' or 'numpy.ndarray'
         The magnitudes of the objects in g-band.
-    z_given : :class:'float' or 'numpy.ndarray'
-        The magnitudes of the objects in z-band.
     r_given : :class:'float' or 'numpy.ndarray'
         The magnitudes of the objects in r-band.
+    z_given : :class:'float' or 'numpy.ndarray'
+        The magnitudes of the objects in z-band.
     W1_given : :class:'float' or 'numpy.ndarray'
         The magnitudes of the objects in W1-band.
     cutoff_eq: :class:'numpy.poly1d' ; Optional, default is np.poly1d(np.polyfit([-2, 7], [-3, 6.5], 1))
@@ -39,8 +39,8 @@ def classify_func(g_given, z_given, r_given, W1_given, cutoff_eq=f):
     
     #SD make sure inputs are numpy arrays
     g_given = np.array(g_given)
-    z_given = np.array(z_given)
     r_given = np.array(r_given)
+    z_given = np.array(z_given)
     W1_given = np.array(W1_given)
     
     #SD get g-z and r-W1 colors from given inputs
