@@ -159,6 +159,7 @@ if __name__ == '__main__':
     #SD run function to find quasars
     quasar_mask = splendid_function(objs)
     
+    print("Total number of objects in file:", len(quasar_mask))
     print("Number of quasars:", len(quasar_mask[quasar_mask==True]))
 
 
