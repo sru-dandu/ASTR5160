@@ -2,7 +2,7 @@ from astropy.table import Table
 import numpy as np
 from weekly_tasks.week10.imaging_classification import classify_func
 import argparse
-#SD the below modules are only needed if running line_finder()
+#SD the below modules are only needed if running _linefinder()
 import matplotlib.pyplot as plt
 from weekly_tasks.week12.bad_data import task3
 
@@ -23,25 +23,35 @@ def splendid_function(objs):
         Indices containing 'True' correspond to quasars.
     """
     
-    #SD create mask to remove some bad data
-    flag = 2**2 + 2**3 + 2**4 + 2**5 + 2**6 + 2**7 + 2**8
-    bitmask = (objs['MASKBITS'] & flag) == 0
-    objs_good = objs[bitmask]
-    
-    #SD call function to find g-z and r-W1 colors
-    g, r, z, W1 = mag_finder(objs_good)
-    
+    #SD call function to find g, r, z, W1 magnitudes
+    #SD if flux <= 0, results in NaN for that object
+    g, r, z, W1 = mag_finder(objs)
+
     #SD create the line separating quasars from stars
-    #SD found by running line_finder() and estimating by eye
+    #SD found by running _linefinder() and estimating by eye
     params = np.polyfit([-4, 6], [-6, 6], 1)
     f = np.poly1d(params)
     
     #SD call function to apply color cuts using a dividing line
     #SD between quasars and stars in r-W1 vs g-z space (line created by eye)
-    data_class = [classify_func(g[i], r[i], z[i], W1[i], cutoff_eq=f) for i in range(len(g))]
+    quasar_mask = classify_func(g, r, z, W1, cutoff_eq=f)
     
-    #SD get a True/False array, where True corresponds to the object being a quasar
-    quasar_mask = (np.array(data_class) == 'quasar')
+    
+    #SD create mask to remove NaN values
+    g_notnan, r_notnan, z_notnan, W1_notnan = [~np.isnan(mag) for mag in [g, r, z, W1]]
+    nan_mask = g_notnan & r_notnan & z_notnan & W1_notnan
+    
+    #SD create mask to remove objects known to be PSOs
+    pso_mask = ~(objs['TYPE'] == 'PSO')
+    
+    #SD create mask to remove some bad data
+    flag = 2**2 + 2**3 + 2**4 + 2**5 + 2**6 + 2**7 + 2**8
+    bitmask = (objs['MASKBITS'] & flag) == 0
+    
+    #SD mask True/False array with nan_mask and bitmask
+    #SD to remove bad data
+    quasar_mask = quasar_mask & nan_mask & pso_mask & bitmask
+    
     
     return quasar_mask
     
@@ -49,7 +59,7 @@ def splendid_function(objs):
 
 
 
-#SD function to find g, z, r, W1 magnitudes
+#SD function to find g, r, z, W1 magnitudes
 def mag_finder(objs):
     """Find g, r, z, W1 magnitudes for objects in the given table.
     
@@ -71,19 +81,15 @@ def mag_finder(objs):
     
     NOTES
     -----
-    - The outputted arrays are NOT the same length as the inputted table
-      due to masking out objects with nonexistent fluxes.
+    - If there are fluxes <= 0, resulting magnitudes will be NaN values.
     """
     
-    #SD extract good fluxes
-    flux_mask = (objs['FLUX_G'] > 0) & (objs['FLUX_R'] > 0) & (objs['FLUX_Z'] > 0) & (objs['FLUX_W1'] > 0)
-    objs_flux_detected = objs[flux_mask]
+    #SD save column names of fluxes
+    colnames = ['FLUX_G', 'FLUX_R', 'FLUX_Z', 'FLUX_W1']
     
     #SD calculate magnitudes
-    colnames = ['FLUX_G', 'FLUX_R', 'FLUX_Z', 'FLUX_W1']
-    g, r, z, W1 = [(22.5 - 2.5*np.log10(objs_flux_detected[col])) for col in colnames]
+    g, r, z, W1 = [(22.5 - 2.5*np.log10(objs[col])) for col in colnames]
     
-    #SD calculate colors
     return g, r, z, W1
 
 
@@ -91,7 +97,7 @@ def mag_finder(objs):
 
 
 #SD function to find line that separates stars from quasars in r-W1 vs g-z space
-def line_finder():
+def _linefinder():
     """This is a test function to find the line separating stars from quasars
     in r-W1 vs g-z space.
     
@@ -144,7 +150,7 @@ if __name__ == '__main__':
     
     
     #SD uncomment this to run test function to find line separating stars and quasars
-    #line_finder()
+    #_linefinder()
     
     
     #SD read in given datafile as an astropy table
