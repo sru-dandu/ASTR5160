@@ -41,7 +41,7 @@ def splendid_function(objs):
     g_notnan, r_notnan, z_notnan, W1_notnan = [~np.isnan(mag) for mag in [g, r, z, W1]]
     nan_mask = g_notnan & r_notnan & z_notnan & W1_notnan
     
-    #SD create mask to remove objects known to be PSOs
+    #SD create mask to remove objects labeled as PSOs in the file
     pso_mask = ~(objs['TYPE'] == 'PSO')
     
     #SD create mask to remove some bad data
