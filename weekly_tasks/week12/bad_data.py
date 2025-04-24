@@ -186,13 +186,11 @@ if __name__ == '__main__':
     W1_mag = 22.5 - 2.5*np.log10(psfobjs_flux_detected['FLUX_W1'])
 
     #SD run function from Week 10 tasks to classify psfobjs objs as stars or quasars using color cuts
-    class_list = [classify_func(g_mag[i], z_mag[i], r_mag[i], W1_mag[i])
-                    for i in range(len(psfobjs_flux_detected))]
-    class_array = np.array(class_list)
+    quasar_mask = classify_func(g_mag, z_mag, r_mag, W1_mag)
 
     #SD print numbers of quasars and stars
-    num_quasars = len(class_array[class_array=='quasar'])
-    num_stars = len(class_array) - num_quasars
+    num_quasars = len(quasar_mask[quasar_mask==True])
+    num_stars = len(quasar_mask) - num_quasars
     
     print("TASK 4:")
     print("Using my function from the previous week: " +
@@ -230,12 +228,9 @@ if __name__ == '__main__':
     
     #SD this time, run function from Week 10 tasks
     #SD to classify the selected good psfobjs objects as stars or quasars using color cuts
-    class_list_goodobjs = [classify_func(g_mag_goodobjs[i], z_mag_goodobjs[i],
-                            r_mag_goodobjs[i], W1_mag_goodobjs[i])
-                            for i in range(len(g_mag_goodobjs))]
-    class_array_goodobjs = np.array(class_list_goodobjs)
-    num_quasars_goodobjs = len(class_array_goodobjs[class_array_goodobjs=='quasar'])
-    num_stars_goodobjs = len(class_array_goodobjs) - num_quasars_goodobjs
+    quasar_mask_goodobjs = classify_func(g_mag_goodobjs, z_mag_goodobjs, r_mag_goodobjs, W1_mag_goodobjs)
+    num_quasars_goodobjs = len(quasar_mask_goodobjs[quasar_mask_goodobjs==True])
+    num_stars_goodobjs = len(quasar_mask_goodobjs) - num_quasars_goodobjs
     
     print("Using my function from the previous week, but masking for good data using bitmasks:")
     print(f"There are now {num_quasars_goodobjs} quasars and {num_stars_goodobjs} stars.")
