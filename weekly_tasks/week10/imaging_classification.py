@@ -13,18 +13,18 @@ f = np.poly1d(params)
 
 #SD function to categorize between stars and quasars
 def classify_func(g_given, z_given, r_given, W1_given, cutoff_eq=f):
-    """Classifies whether an object is a star or a quasar using given magnitudes and color cut line.
+    """Classifies whether objects are stars or quasars using given magnitudes and color cut line.
     
     INPUTS
     ------
-    g_given : :class:'float' or 'numpy.float64'
-        The magnitude of the object in g-band.
-    z_given : :class:'float' or 'numpy.float64'
-        The magnitude of the object in z-band.
-    r_given : :class:'float' or 'numpy.float64'
-        The magnitude of the object in r-band.
-    W1_given : :class:'float' or 'numpy.float64'
-        The magnitude of the object in W1-band.
+    g_given : :class:'float' or 'numpy.ndarray'
+        The magnitudes of the objects in g-band.
+    z_given : :class:'float' or 'numpy.ndarray'
+        The magnitudes of the objects in z-band.
+    r_given : :class:'float' or 'numpy.ndarray'
+        The magnitudes of the objects in r-band.
+    W1_given : :class:'float' or 'numpy.ndarray'
+        The magnitudes of the objects in W1-band.
     cutoff_eq: :class:'numpy.poly1d' ; Optional, default is np.poly1d(np.polyfit([-2, 7], [-3, 6.5], 1))
         The equation of the line dividing stars from quasars.
         Can be passed as cutoff_eq=numpy.poly1d([m, b]),
@@ -32,10 +32,16 @@ def classify_func(g_given, z_given, r_given, W1_given, cutoff_eq=f):
     
     RETURNS
     -------
-    :class:'str'
-        Classification of the object.
-        Either 'star' or 'quasar'.
+    :class:'bool' or 'np.ndarray'
+        Classification of the objects.
+        True corresponds to quasars, False corresponds to stars.
     """
+    
+    #SD make sure inputs are numpy arrays
+    g_given = np.array(g_given)
+    z_given = np.array(z_given)
+    r_given = np.array(r_given)
+    W1_given = np.array(W1_given)
     
     #SD get g-z and r-W1 colors from given inputs
     g_minus_z_given = g_given - z_given
@@ -44,11 +50,11 @@ def classify_func(g_given, z_given, r_given, W1_given, cutoff_eq=f):
     #SD get r-W1 color the object would have if following the cutoff line
     r_minus_W1_cutoff = f(g_minus_z_given)
     
-    #SD return 'star' or 'quasar' depending on whether point is above or below cutoff line
-    if r_minus_W1_given < r_minus_W1_cutoff:
-        return 'star'
-    elif r_minus_W1_given > r_minus_W1_cutoff:
-        return 'quasar'
+    #SD mask for quasars
+    quasar_mask = (r_minus_W1_given > r_minus_W1_cutoff)
+    
+    #SD return True/False array
+    return quasar_mask
 
 
 
