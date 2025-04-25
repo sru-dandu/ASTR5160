@@ -119,23 +119,23 @@ if __name__ == '__main__':
     ### TASK 3 (RED) ###
     
     #SD set initial guesses for parameters
-    m = 3
-    b = 4
+    m0 = 3
+    b0 = 4
     
     #SD set acceptable ranges for m and b
     m_range = [1, 5]
-    b_range = [2, 6]
+    b_range = [2, 8]
     
     #SD set step size for proposal function
     #SD (standard deviation of Gaussian centered around m and b)
-    step = 0.02
+    step = 0.1
     
     #SD find first iteration of posterior probability and likelihood
-    P, L = posterior_prob_func(x, means, variances, m, b, m_range, b_range)
+    P0, L0 = posterior_prob_func(x, means, variances, m0, b0, m_range, b_range)
     
     #SD start the MCMC chain with the initial values
     #SD each item in the chain corresponds to a single proposal (iteration in for loop)
-    chain = [[m, b, L, P]]
+    chain = [[m0, b0, L0, P0]]
     
     
     #SD counters for the for loop
@@ -145,8 +145,8 @@ if __name__ == '__main__':
     for i in range(iterations):
         
         #SD find new m and b using proposal function
-        m = np.random.normal(m, step)
-        b = np.random.normal(b, step)
+        m = np.random.normal(m0, step)
+        b = np.random.normal(b0, step)
 
         #SD find new posterior probability and likelihood
         P, L = posterior_prob_func(x, means, variances, m, b, m_range, b_range)
@@ -171,8 +171,10 @@ if __name__ == '__main__':
                 append_to_chain = False
         
         #SD append new values to MCMC chain
+        #SD and turn current values into old values for next iteration
         if append_to_chain == True:
             chain.append([m, b, L, P])
+            m0, b0, L0, P0 = m, b, L, P
         else:
             filtered_count += 1
     
