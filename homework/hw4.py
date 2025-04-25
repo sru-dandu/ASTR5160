@@ -34,7 +34,7 @@ def splendid_function(objs):
     
     #SD call function to apply color cuts using a dividing line
     #SD between quasars and stars in r-W1 vs g-z space (line created by eye)
-    quasar_mask = classify_func(g, r, z, W1, cutoff_eq=f)
+    colorcut_mask = classify_func(g, r, z, W1, cutoff_eq=f)
     
     
     #SD create mask to remove NaN values
@@ -48,9 +48,8 @@ def splendid_function(objs):
     flag = 2**2 + 2**3 + 2**4 + 2**5 + 2**6 + 2**7 + 2**8
     bitmask = (objs['MASKBITS'] & flag) == 0
     
-    #SD mask True/False array with nan_mask and bitmask
-    #SD to remove bad data
-    quasar_mask = quasar_mask & nan_mask & pso_mask & bitmask
+    #SD mask the array from the color cut with nan_mask and bitmask to remove bad data
+    quasar_mask = colorcut_mask & nan_mask & pso_mask & bitmask
     
     
     return quasar_mask
