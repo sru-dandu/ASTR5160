@@ -128,7 +128,7 @@ if __name__ == '__main__':
     
     #SD set step size for proposal function
     #SD (standard deviation of Gaussian centered around m and b)
-    step = 0.1
+    step = 0.33
     
     #SD find first iteration of posterior probability and likelihood
     P0, L0 = posterior_prob_func(x, means, variances, m0, b0, m_range, b_range)
@@ -181,33 +181,37 @@ if __name__ == '__main__':
     
     #SD convert completed chain from list to array
     chain = np.array(chain)
-    
+
+
+    #SD total number of proposals accepted to chain is the length of the chain minus 1
+    #SD because initial guess was added to chain first
+    accepted_count = len(chain) - 1
     
     print('TASK 3:')
     print("Created an MCMC chain using the Metropolis-Hastings algorithm.")
+    print("total number of proposals:", iterations)
+    print("step size:", step)
+    print("proposals accepted:", accepted_count)
+    print("proposals rejected:", filtered_count)
+    print(f"acceptance rate: {100 * accepted_count/iterations}%")
     print('----------')
     
     
     
     ### TASK 4 (BLACK) ###
     
-    #SD total number of proposals accepted to chain is the length of the chain minus 1
-    #SD because initial guess was added to chain first
-    accepted_count = len(chain) - 1
+
     
-    '''
+    
     print('TASK 4:')
-    print("With step=0.1, I was getting an acceptance rate much less than 30%.")
-    print(f"After changing the step size to {step}, I'm getting an acceptance rate around 30%.")
-    '''
+    print("With step=0.1, I was getting an acceptance rate of ~67%, which is much greater than 30%.")
+    print(f"After changing the step size to {step}, I'm getting an acceptance rate very close to 30%.")
     
-    print('~~~TEST~~~')
-    print("total number of proposals:", iterations)
-    print("amount accepted:", accepted_count)
-    print("amount rejected:", filtered_count)
-    print(f"acceptance rate: {100 * accepted_count/iterations}%")
     
-    #print(chain)
+
+
+    
+    
     
     
     
