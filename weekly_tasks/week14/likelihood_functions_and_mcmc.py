@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 
@@ -200,16 +201,70 @@ if __name__ == '__main__':
     
     ### TASK 4 (BLACK) ###
     
-
-    
-    
     print('TASK 4:')
     print("With step=0.1, I was getting an acceptance rate of ~67%, which is much greater than 30%.")
     print(f"After changing the step size to {step}, I'm getting an acceptance rate very close to 30%.")
+    print('----------')
     
     
+    
+    ### TASK 5 (BLACK) ###
+    
+    #SD find best fit m and b
+    idx_best = np.argsort(chain[:,3])[-1]
+    m_best, b_best = chain[idx_best][0:2]
+    
+    #SD order the chain by m and by b
+    idx_ordered_m = np.argsort(chain[:,0])
+    idx_ordered_b = np.argsort(chain[:,1])
+    m_ordered = chain[idx_ordered_m][:,0]
+    b_ordered = chain[idx_ordered_b][:,1]
+    
+    #SD 68% of the data around the best fit m and b means 34% below and 34% above
+    #SD 34% below the center is same as 16% away from lower edge of distribution (50-34=16)
+    #SD 34% above the center is same as 84% away from lower edge of distribution (50+34=16)
+    #SD therefore, need to find indices that are .16*len(data) and .84*len(data)
+    idx_68conf_low = int(0.16*len(chain))
+    idx_68conf_high = int(0.84*len(chain))
+    
+    #SD extract the m and b values at 68% confidence
+    m_68conf_low = m_ordered[idx_68conf_low]
+    m_68conf_high = m_ordered[idx_68conf_high]
+    b_68conf_low = b_ordered[idx_68conf_low]
+    b_68conf_high = b_ordered[idx_68conf_high]
+    
+    
+    print('TASK 5:')
+    print(f"m: best fit = {m_best} ; 68% confidence range = {m_68conf_low} to {m_68conf_high}")
+    print(f"b: best fit = {b_best} ; 68% confidence range = {b_68conf_low} to {b_68conf_high}")
+    print('----------')
+    
+    
+    
+    ###SD plot histograms to check confidence ranges
+    fig, (ax1, ax2) = plt.subplots(ncols=2, figsize=(12, 8))
+    
+    #SD histogram of m values in chain
+    ax1.hist(m_ordered)
+    ax1.plot([m_best, m_best], [0, 800], c='red', label='average')
+    ax1.plot([m_68conf_low, m_68conf_low], [0, 800], c='orange', label='68% confidence')
+    ax1.plot([m_68conf_high, m_68conf_high], [0, 800], c='orange')
+    ax1.set_xlabel('m')
+    ax1.set_ylabel('counts')
+    ax1.legend()
 
-
+    #SD histogram of b values in chain
+    ax2.hist(b_ordered)
+    ax2.plot([b_best, b_best], [0, 800], c='red', label='average')
+    ax2.plot([b_68conf_low, b_68conf_low], [0, 800], c='orange', label='68% confidence')
+    ax2.plot([b_68conf_high, b_68conf_high], [0, 800], c='orange')
+    ax2.set_xlabel('b')
+    ax2.set_ylabel('counts')
+    ax2.legend()
+    
+    plt.show()
+    
+    
     
     
     
