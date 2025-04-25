@@ -15,12 +15,10 @@ data = np.loadtxt('/d/scratch/ASTR5160/week13/line.data', unpack=True)
 x = np.arange(0.5, 10, 1)
 
 #SD find means of each bin
-means = [np.mean(xbin) for xbin in data]
-means = np.array(means)
+means = np.mean(data, axis=1)
 
 #SD find variances of each bin
-variances = [np.var(xbin, ddof=1) for xbin in data]
-variances = np.array(variances)
+variances = np.var(data, axis=1, ddof=1)
 
 print('TASK 1:')
 print("bin means:", means)
