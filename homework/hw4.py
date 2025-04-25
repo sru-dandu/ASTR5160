@@ -59,6 +59,7 @@ def splendid_function(objs):
 
 
 #SD function to find g, r, z, W1 magnitudes
+#SD I made this its own function so it can be used in both _linefinder() and splendid_function()
 def mag_finder(objs):
     """Find g, r, z, W1 magnitudes for objects in the given table.
     
