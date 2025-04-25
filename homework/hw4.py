@@ -160,7 +160,7 @@ if __name__ == '__main__':
     quasar_mask = splendid_function(objs)
     
     print("Total number of objects in file:", len(quasar_mask))
-    print("Number of quasars:", len(quasar_mask[quasar_mask==True]))
+    print("Number of potential quasars:", len(quasar_mask[quasar_mask==True]))
 
 
 
