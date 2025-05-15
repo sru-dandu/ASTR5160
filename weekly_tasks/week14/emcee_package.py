@@ -40,7 +40,8 @@ print('TASK 2:')
 
 
 
-#SD adapted from posterior_prob_func() for use in this moduele
+#SD adapted from posterior_prob_func() in likelihood_functions_and_mcmc.py for use in this moduele
+#SD see that function for docstring
 def likelihood_func(params, x, ydata, var):
     
     #SD extract m and b from params
@@ -59,7 +60,8 @@ def likelihood_func(params, x, ydata, var):
 
 
 
-#SD adapted from posterior_prob_func() for use in this moduele
+#SD adapted from posterior_prob_func() in likelihood_functions_and_mcmc.py for use in this moduele
+#SD see that function for docstring
 def post_prob_func(params, x, ydata, var):
     
     #SD extract m and b from params
