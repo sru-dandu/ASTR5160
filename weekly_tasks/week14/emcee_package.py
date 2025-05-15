@@ -115,12 +115,6 @@ if __name__ == '__main__':
     print('TASK 2:')
 
 
-
-
-
-
-
-
     ###SD maximum likelihood estimation
 
     #SD initial guesses for m and b
