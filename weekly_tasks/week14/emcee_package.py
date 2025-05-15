@@ -41,9 +41,25 @@ print('TASK 2:')
 
 
 #SD adapted from posterior_prob_func() in likelihood_functions_and_mcmc.py for use in this moduele
-#SD see that function for docstring
 def likelihood_func(params, x, ydata, var):
+    """Finds the natural log of the likelihood function for a linear fit to the data.
     
+    INPUTS
+    ------
+    params : :class:'list' or 'numpy.ndarray'
+        Contains the m and b values of the linear fit, in that order.
+    x : :class:'list' or 'numpy.ndarray'
+        The x values of the dataset.
+    ydata : :class:'list' or 'numpy.ndarray'
+        The averages of each bin in the dataset.
+    var : :class:'list' or 'numpy.ndarray'
+        The variances of each bin in the dataset.
+    
+    RETURNS
+    -------
+    :class:'float'
+        The natural log of the likelihood function.
+    """
     #SD extract m and b from params
     m, b = params
     
@@ -61,9 +77,25 @@ def likelihood_func(params, x, ydata, var):
 
 
 #SD adapted from posterior_prob_func() in likelihood_functions_and_mcmc.py for use in this moduele
-#SD see that function for docstring
 def post_prob_func(params, x, ydata, var):
+    """Finds the natural log of the posterior probability function for a linear fit to the data.
     
+    INPUTS
+    ------
+    params : :class:'list' or 'numpy.ndarray'
+        Contains the m and b values of the linear fit, in that order.
+    x : :class:'list' or 'numpy.ndarray'
+        The x values of the dataset.
+    ydata : :class:'list' or 'numpy.ndarray'
+        The averages of each bin in the dataset.
+    var : :class:'list' or 'numpy.ndarray'
+        The variances of each bin in the dataset.
+    
+    RETURNS
+    -------
+    :class:'float'
+        The natural log of the posterior probability function.
+    """
     #SD extract m and b from params
     m, b = params
     
