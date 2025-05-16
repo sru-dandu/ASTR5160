@@ -1,9 +1,9 @@
 from astropy.table import Table
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.optimize import minimize
 import emcee
 import corner
+import argparse
 from weekly_tasks.week14.emcee_package import likelihood_func as likelihood_func_linear
 
 
@@ -170,6 +170,7 @@ def finalproject_linearfit(x, y, yerr):
 
 
     #SD print the best fit m and b values with errors
+    print('----------')
     print('linear best-fit parameters:')
     bestfit_params = []
     for i in range(ndim):
@@ -177,12 +178,12 @@ def finalproject_linearfit(x, y, yerr):
         q = np.diff(mcmc)
         bestfit_params.append(mcmc[1])
         print(f"{labels[i]} = {mcmc[1]} ; errors: + {q[0]} , - {q[1]}")
-
+    print('----------')
 
 
     #SD plot datapoints with the best-fit line from
     plt.errorbar(x, y, yerr=yerr, fmt=".k", capsize=0, label='data')
-    plt.plot(x, bestfit_params[0]*x+bestfit_params[1], label='best fit line')
+    plt.plot(x, bestfit_params[0]*x+bestfit_params[1], label='best-fit model')
     plt.xlabel('x')
     plt.ylabel('y')
     plt.legend()
@@ -237,6 +238,7 @@ def finalproject_quadfit(x, y, yerr):
 
 
     #SD print the best fit a2, a1, a0 values with errors
+    print('----------')
     print('quadratic best-fit parameters:')
     bestfit_params = []
     for i in range(ndim):
@@ -244,12 +246,12 @@ def finalproject_quadfit(x, y, yerr):
         q = np.diff(mcmc)
         bestfit_params.append(mcmc[1])
         print(f"{labels[i]} = {mcmc[1]} ; errors: + {q[0]} , - {q[1]}")
-
+    print('----------')
 
 
     #SD plot datapoints with the best-fit line from
     plt.errorbar(x, y, yerr=yerr, fmt=".k", capsize=0, label='data')
-    plt.plot(x, bestfit_params[0]*(x**2)+bestfit_params[1]*x+bestfit_params[2], label='best fit line')
+    plt.plot(x, bestfit_params[0]*(x**2)+bestfit_params[1]*x+bestfit_params[2], label='best-fit model')
     plt.xlabel('x')
     plt.ylabel('y')
     plt.legend()
@@ -263,16 +265,31 @@ def finalproject_quadfit(x, y, yerr):
 
 if __name__ == '__main__':
 
+    #SD description when passing -h
+    parser = argparse.ArgumentParser(
+        description="Takes a file containing data of x and y coordinates with errors on y. \n" +
+        "Computes both a linear and quadratic fit to the data using the emcee package. \n" +
+        "Returns the following for each fit: \n" +
+        "    - a corner plot with the posterior probability distributions of the fitted parameters, \n" +
+        "    - a plot of the datapoints and the model made using the best-fit parameters, \n" +
+        "    - the best-fit paramters, with uncertainties based on " +
+        "the 16th, 50th, and 84th percentiles of the MCMC samples.",
+        formatter_class=argparse.RawTextHelpFormatter)
+
+    args = parser.parse_args()
+
+
     #SD read in data
     data = Table.read('/d/scratch/ASTR5160/final/dataxy.fits')
     x = data['x']
     y = data['y']
     yerr = data['yerr']
-    #variances = yerr**2
 
-    
+
+    #SD linear fit to the data
     finalproject_linearfit(x, y, yerr)
-    
+
+    #SD quadratic fit to the data
     finalproject_quadfit(x, y, yerr)
 
 
