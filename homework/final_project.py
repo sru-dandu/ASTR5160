@@ -111,7 +111,7 @@ def post_prob_func_quadratic(params, x, ydata, var):
     a2, a1, a0 = params
     
     #SD set the flat prior according to given acceptable a2, a1, a0 ranges
-    if (0 <= a2 <= 5) and (-10 <= a1 <= 10) and (-10 <= a0 <= 10):
+    if (0 <= a2 <= 5) and (-10 <= a1 <= 10) and (0 <= a0 <= 20):
         #SD prior = 1, therefore ln(prior) = 0
         ln_prior = 0
     else:
@@ -183,7 +183,7 @@ def finalproject_linearfit(x, y, yerr):
 
     #SD plot datapoints with the best-fit line from
     plt.errorbar(x, y, yerr=yerr, fmt=".k", capsize=0, label='data')
-    plt.plot(x, bestfit_params[0]*x+bestfit_params[1], label='best-fit model')
+    plt.plot(x, bestfit_params[0]*x+bestfit_params[1], label='linear best-fit model')
     plt.xlabel('x')
     plt.ylabel('y')
     plt.legend()
@@ -251,7 +251,9 @@ def finalproject_quadfit(x, y, yerr):
 
     #SD plot datapoints with the best-fit line from
     plt.errorbar(x, y, yerr=yerr, fmt=".k", capsize=0, label='data')
-    plt.plot(x, bestfit_params[0]*(x**2)+bestfit_params[1]*x+bestfit_params[2], label='best-fit model')
+    plt.plot(x,
+        bestfit_params[0]*(x**2) + bestfit_params[1]*x + bestfit_params[2],
+        label='quadratic best-fit model')
     plt.xlabel('x')
     plt.ylabel('y')
     plt.legend()
@@ -291,6 +293,12 @@ if __name__ == '__main__':
 
     #SD quadratic fit to the data
     finalproject_quadfit(x, y, yerr)
+
+
+    print("Looking at the corner plot for the quadratic parameters, I can see that a2's histogram is tightly" +
+    " constrained around its best-fit value of ~0.06, and is shaped like a Gaussian. I can also see that a2 is" +
+    " correlated with a0 and strongly negatively correlated with a1. This all tells me that a" +
+    " quadratic model is justified to represent this dataset.")
 
 
 
