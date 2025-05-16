@@ -142,6 +142,12 @@ def finalproject_linearfit(x, y, yerr):
     -------
     None
     
+    NOTES
+    -----
+    - Best-fit parameters for the model will be printed to screen with their errors.
+    - Two plots will be printed to screen:
+        - A corner plot with the posterior probability distributions of the fitted parameters.
+        - A plot of the datapoints and the model made using the best-fit parameters.
     """
     
     #SD initial guesses for m and b
@@ -210,6 +216,12 @@ def finalproject_quadfit(x, y, yerr):
     -------
     None
     
+    NOTES
+    -----
+    - Best-fit parameters for the model will be printed to screen with their errors.
+    - Two plots will be printed to screen:
+        - A corner plot with the posterior probability distributions of the fitted parameters.
+        - A plot of the datapoints and the model made using the best-fit parameters.
     """
     
     #SD initial guesses for a2, a1, a0
@@ -288,10 +300,10 @@ if __name__ == '__main__':
     yerr = data['yerr']
 
 
-    #SD linear fit to the data
+    #SD fit a linear model to the data
     finalproject_linearfit(x, y, yerr)
 
-    #SD quadratic fit to the data
+    #SD fit a quadratic model to the data
     finalproject_quadfit(x, y, yerr)
 
 
