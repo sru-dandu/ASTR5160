@@ -19,7 +19,7 @@ def post_prob_func_linear(params, x, ydata, var):
     x : :class:'list' or 'numpy.ndarray'
         The x values of the dataset.
     ydata : :class:'list' or 'numpy.ndarray'
-        The y values in the dataset.
+        The y values of the dataset.
     var : :class:'list' or 'numpy.ndarray'
         The variances of each datapoint.
     
@@ -59,7 +59,7 @@ def likelihood_func_quadratic(params, x, ydata, var):
     x : :class:'list' or 'numpy.ndarray'
         The x values of the dataset.
     ydata : :class:'list' or 'numpy.ndarray'
-        The y values in the dataset.
+        The y values of the dataset.
     var : :class:'list' or 'numpy.ndarray'
         The variances of each datapoint.
     
@@ -97,7 +97,7 @@ def post_prob_func_quadratic(params, x, ydata, var):
     x : :class:'list' or 'numpy.ndarray'
         The x values of the dataset.
     ydata : :class:'list' or 'numpy.ndarray'
-        The y values in the dataset.
+        The y values of the dataset.
     var : :class:'list' or 'numpy.ndarray'
         The variances of each datapoint.
     
@@ -110,8 +110,8 @@ def post_prob_func_quadratic(params, x, ydata, var):
     #SD extract a2, a1, a0 from params
     a2, a1, a0 = params
     
-    #SD set the flat prior according to given acceptable m and b ranges
-    if (1 <= a2 <= 5) and (-5 <= a1 <= 0) and (1 <= a0 <= 10):
+    #SD set the flat prior according to given acceptable a2, a1, a0 ranges
+    if (0 <= a2 <= 5) and (-10 <= a1 <= 10) and (-10 <= a0 <= 10):
         #SD prior = 1, therefore ln(prior) = 0
         ln_prior = 0
     else:
@@ -131,7 +131,12 @@ def finalproject_linearfit(x, y, yerr):
     
     INPUTS
     ------
-    None
+    x : :class:'list' or 'numpy.ndarray'
+        The x values of the dataset.
+    y : :class:'list' or 'numpy.ndarray'
+        The y values of the dataset.
+    yerr : :class:'list' or 'numpy.ndarray'
+        The errors on each y.
     
     RETURNS
     -------
@@ -165,6 +170,7 @@ def finalproject_linearfit(x, y, yerr):
 
 
     #SD print the best fit m and b values with errors
+    print('linear best-fit parameters:')
     bestfit_params = []
     for i in range(ndim):
         mcmc = np.percentile(flat_samples[:, i], [16, 50, 84])
@@ -188,11 +194,16 @@ def finalproject_linearfit(x, y, yerr):
 
 ###SD code adapted from https://emcee.readthedocs.io/en/stable/tutorials/line/
 def finalproject_quadfit(x, y, yerr):
-    """Contains code for finding a linear best-fit line to the data given for the final project.
+    """Contains code for finding a quadratic best-fit line to the data given for the final project.
     
     INPUTS
     ------
-    None
+    x : :class:'list' or 'numpy.ndarray'
+        The x values of the dataset.
+    y : :class:'list' or 'numpy.ndarray'
+        The y values of the dataset.
+    yerr : :class:'list' or 'numpy.ndarray'
+        The errors on each y.
     
     RETURNS
     -------
@@ -201,7 +212,7 @@ def finalproject_quadfit(x, y, yerr):
     """
     
     #SD initial guesses for a2, a1, a0
-    initial = np.array([3, -1, 5])
+    initial = np.array([3, 0, 0])
 
 
     #SD marginalization and uncertainty estimation
@@ -226,6 +237,7 @@ def finalproject_quadfit(x, y, yerr):
 
 
     #SD print the best fit a2, a1, a0 values with errors
+    print('quadratic best-fit parameters:')
     bestfit_params = []
     for i in range(ndim):
         mcmc = np.percentile(flat_samples[:, i], [16, 50, 84])
@@ -237,7 +249,7 @@ def finalproject_quadfit(x, y, yerr):
 
     #SD plot datapoints with the best-fit line from
     plt.errorbar(x, y, yerr=yerr, fmt=".k", capsize=0, label='data')
-    plt.plot(x, bestfit_params[0]*(x**2)+bestfit_params[1]*x+bestfit_params[0], label='best fit line')
+    plt.plot(x, bestfit_params[0]*(x**2)+bestfit_params[1]*x+bestfit_params[2], label='best fit line')
     plt.xlabel('x')
     plt.ylabel('y')
     plt.legend()
@@ -262,7 +274,6 @@ if __name__ == '__main__':
     finalproject_linearfit(x, y, yerr)
     
     finalproject_quadfit(x, y, yerr)
-
 
 
 
