@@ -136,11 +136,12 @@ if __name__ == '__main__':
     yerr = data['yerr']
     variances = yerr**2
     
-    """
+    
+    ###SD code adapted from https://emcee.readthedocs.io/en/stable/tutorials/line/
+    
     ###SD maximum likelihood estimation
-
     #SD initial guesses for m and b
-    initial = np.array([-7/9, 3])
+    initial = np.array([-1, 3])
     #SD maximize the likelihood function to find best m and b
     neg_likelihood_func = lambda *args: -1*likelihood_func_linear(*args)
     soln = minimize(neg_likelihood_func, initial, args=(x, y, variances))
@@ -212,6 +213,6 @@ if __name__ == '__main__':
 
 
     print('----------')
-    """
+    
     
     
